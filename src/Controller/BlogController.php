@@ -28,11 +28,21 @@ class BlogController extends AbstractController
         ]);
     }
     /**
-     * @Route("/ticks", name="ticks")
+     * @Route("/tricks", name="tricks")
      */
-    public function ticks(): Response
+    public function tricks(): Response
     {
-        return $this->render('blog/ticks.html.twig', [
+        return $this->render('blog/tricks.html.twig', [
+            'title' => "welcome",
+            'age' => 31,
+        ]);
+    }
+    /**
+     * @Route("/tricks/10", name="tricks_show")
+     */
+    public function read(): Response
+    {
+        return $this->render('blog/read.html.twig', [
             'title' => "welcome",
             'age' => 31,
         ]);
