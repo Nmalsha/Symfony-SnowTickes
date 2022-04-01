@@ -1,0 +1,4 @@
+Not using Composer 2 yet? Upgrade now!
+
+You can use composer self-update --2 to migrate to it. Should you encounter issues, you can go back at any time by using composer self-update --1. Read the Composer 2 announcement for more.
+
