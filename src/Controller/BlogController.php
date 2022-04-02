@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Trick;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -38,7 +41,7 @@ class BlogController extends AbstractController
         ]);
     }
     /**
-     * @Route("/tricks/10", name="tricks_show")
+     * @Route("/tricks/{id}", name="tricks_show")
      */
     public function read(): Response
     {
@@ -66,5 +69,23 @@ class BlogController extends AbstractController
             'title' => "welcome",
             'age' => 31,
         ]);
+    }
+    /**
+     * @Route("/trick/new", name="trick_create")
+     */
+    public function create(Request $request, EntityManagerInterface $manager)
+    {
+        if ($request->request->count() > 0) {
+            $trick = new Trick();
+            $trick->setTrickName($request->request->get('TrickName'))
+                ->setDescription($request->request->get('description'))
+                ->setCategorie($request->request->get('categorie'))
+
+                ->setCreatedOn(new \DateTime());
+
+            $manager->persist($trick);
+            $manager->flush();
+        }
+        return $this->render('blog/createTrick.html.twig');
     }
 }

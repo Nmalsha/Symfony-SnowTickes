@@ -35,24 +35,29 @@
         <div class="collapse navbar-collapse" id="navbarColor01">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link active" href="/"
+              <a class="nav-link active" href="{{ path('home') }}"
                 ><i class="fas fa-home"></i>Home
                 <span class="visually-hidden">(current)</span>
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/tricks"
+              <a class="nav-link" href="{{ path('tricks') }}"
                 ><i class="fas fa-list"></i>Tickes</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/login"
+              <a class="nav-link" href="{{ path('login') }}"
                 ><i class="fas fa-sign-in-alt"></i>Connection</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/signup"
+              <a class="nav-link" href="{{ path('signup') }}"
                 ><i class="fas fa-user-plus"></i>Inscription</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('trick_create') }}"
+                ><i class="fas fa-user-plus"></i>create Trick</a
               >
             </li>
           </ul>
