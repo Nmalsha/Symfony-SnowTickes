@@ -25,9 +25,11 @@ class BlogController extends AbstractController
      */
     public function home(): Response
     {
+        $repo = $this->getDoctrine()->getRepository(Trick::class);
+        $tricks = $repo->findAll();
         return $this->render('blog/home.html.twig', [
-            'title' => "welcome",
-            'age' => 31,
+            'controller_name' => "BlogController",
+            'tricks' => $tricks,
         ]);
     }
     /**
@@ -43,11 +45,12 @@ class BlogController extends AbstractController
     /**
      * @Route("/tricks/{id}", name="tricks_show")
      */
-    public function read(): Response
+    public function read($id): Response
     {
+        $repo = $this->getDoctrine()->getRepository(Trick::class);
+        $trick = $repo->find($id);
         return $this->render('blog/read.html.twig', [
-            'title' => "welcome",
-            'age' => 31,
+            'trick' => $trick,
         ]);
     }
     /**
@@ -85,6 +88,7 @@ class BlogController extends AbstractController
 
             $manager->persist($trick);
             $manager->flush();
+            return $this->redirectToRoute('home');
         }
         return $this->render('blog/createTrick.html.twig');
     }

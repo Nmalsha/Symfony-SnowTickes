@@ -3,13 +3,21 @@
 <h3>HOME</h3>
 <section class="tickes">
   <article>
-    <h3>TITLE</h3>
-    <div class="metadata">fjbfzjegfzejggzeuk</div>
+    {% for trick in tricks %}
+    <h3>{{ trick.trickName }}</h3>
+    <div class="metadata">{{ trick.description }}</div>
     <div class="content">
       <img src="http://placehold.it/350*150" alt="" />
-      <p>hkfrkeeeeeeeeeeeeegerjghregejhgjrehjjg</p>
-      <a href="{{ path('tricks_show') }}" class="btn btn-primary">Lire </a>
+      <p>{{ trick.categorie }}</p>
+      <br />
+
+      <a
+        href="{{ path('tricks_show', { id: trick.id }) }}"
+        class="btn btn-primary"
+        >Lire
+      </a>
     </div>
   </article>
+  {% endfor %}
 </section>
 {% endblock %}

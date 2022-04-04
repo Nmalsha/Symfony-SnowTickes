@@ -1,15 +1,14 @@
 {% extends 'base.html.twig' %} {% block body %}
-<div class="home-bg bg"></div>
 
 <section class="tickes">
   <h3>read</h3>
   <article>
-    <h3>TITLE</h3>
-    <div class="metadata">fjbfzjegfzejggzeuk</div>
+    <h3>{{ trick.trickName }}</h3>
+    <div class="metadata">{{ trick.description }}</div>
     <div class="content">
       <img src="http://placehold.it/350*150" alt="" />
-      <p>hkfrkeeeeeeeeeeeeegerjghregejhgjrehjjg</p>
-    </div>
+      <p>{{ trick.categorie }}</p>
+      <br />
   </article>
 </section>
 {% endblock %}
