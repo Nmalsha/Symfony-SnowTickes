@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Images;
 use App\Entity\Trick;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,9 +29,12 @@ class BlogController extends AbstractController
     {
         $repo = $this->getDoctrine()->getRepository(Trick::class);
         $tricks = $repo->findAll();
+        $repoImage = $this->getDoctrine()->getRepository(Images::class);
+        $Images = $repoImage->findAll();
         return $this->render('blog/home.html.twig', [
             'controller_name' => "BlogController",
             'tricks' => $tricks,
+            'images' => $Images,
         ]);
     }
     /**
@@ -43,7 +48,7 @@ class BlogController extends AbstractController
         ]);
     }
     /**
-     * @Route("/tricks/{id}", name="tricks_show")
+     * @Route("/trick/{id}", name="tricks_show")
      */
     public function read($id): Response
     {
@@ -74,22 +79,78 @@ class BlogController extends AbstractController
         ]);
     }
     /**
-     * @Route("/trick/new", name="trick_create")
+     * @Route("/tricks/new", name="trick_create")
+     * @Route("/trick/{id}/edit", name="trick_edit")
      */
-    public function create(Request $request, EntityManagerInterface $manager)
+    public function form(Trick $trick = null, Request $request, EntityManagerInterface $manager)
     {
-        if ($request->request->count() > 0) {
+        if (!$trick) {
             $trick = new Trick();
-            $trick->setTrickName($request->request->get('TrickName'))
-                ->setDescription($request->request->get('description'))
-                ->setCategorie($request->request->get('categorie'))
+        }
 
-                ->setCreatedOn(new \DateTime());
+        //adding fields to the form
+        $form = $this->createFormBuilder($trick)
+            ->add('TrickName')
+            ->add('description')
+            ->add('categorie')
+            ->add('images', FileType::class, [
+                'multiple' => true,
+                'label' => false,
+                'mapped' => false,
+                'required' => false,
+            ])
 
+            ->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            //get image data
+            $images = $form->get('images')->getData();
+
+            //loop true the images
+            foreach ($images as $image) {
+                $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
+
+                $image->move(
+                    $this->getParameter('images_directory'),
+                    $imageDocument
+                );
+// save image name to the DB
+                $img = new Images();
+
+                $img->setName($imageDocument);
+
+                $trick->addImage($img);
+
+            }
+
+            //if the trick hasn't a id = if the trick already not exist in the DB
+            if (!$trick->getId()) {
+                $trick->setCreatedOn(new \DateTime());
+            }
+
+            //if the form is valid
             $manager->persist($trick);
             $manager->flush();
-            return $this->redirectToRoute('home');
+            //Redirect to the added trick view
+            return $this->redirectToRoute('tricks_show', ['id' => $trick->getId()]);
+
         }
-        return $this->render('blog/createTrick.html.twig');
+        // if ($request->request->count() > 0) {
+        //     $trick = new Trick();
+        //     $trick->setTrickName($request->request->get('TrickName'))
+        //         ->setDescription($request->request->get('description'))
+        //         ->setCategorie($request->request->get('description'))
+        //         ->setImage($request->files->get('myfile'))
+        //         ->setCreatedOn(new \DateTime());
+        //     dump($request->files->get('myfile'));
+        //     die;
+        //     $manager->persist($trick);
+        //     $manager->flush();
+        //     return $this->redirectToRoute('tricks_show', ['id' => $trick->getId()]);
+        // }
+        return $this->render('blog/createTrick.html.twig', [
+            'formTrick' => $form->createView(),
+            'editMode' => $trick->getId() !== null,
+        ]);
     }
 }

@@ -4,10 +4,18 @@
 <section class="tickes">
   <article>
     {% for trick in tricks %}
+
     <h3>{{ trick.trickName }}</h3>
     <div class="metadata">{{ trick.description }}</div>
     <div class="content">
-      <img src="http://placehold.it/350*150" alt="" />
+      {% for image in images %} {% if trick.id == image.Trick.id %} {
+      <pre>
+  {{ dump(image.name) }}
+</pre
+      >
+      }
+      <img src="{{ image.name }}" alt="" />
+      {% endif %} {% endfor %}
       <p>{{ trick.categorie }}</p>
       <br />
 

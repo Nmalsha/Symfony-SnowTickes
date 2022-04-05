@@ -4,3 +4,5 @@ You can use composer self-update --2 to migrate to it. Should you encounter issu
 
 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
 php bin/console server:run
+bin/console make:migration
+php bin/console doctrine:migrations:migrate
