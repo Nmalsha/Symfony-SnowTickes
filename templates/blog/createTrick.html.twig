@@ -1,4 +1,22 @@
-{% extends 'base.html.twig' %} {% block body %}
+{% extends 'base.html.twig' %} {% form_theme formTrick
+'bootstrap_4_layout.html.twig' %} {% block body %}
+<h3>Création d'un Trick</h3>
+<section class="tickes">
+  <div class="card trickcard_style">
+    {{ form_start(formTrick) }}
+    {{ form_row(formTrick.TrickName,{'attr':{'placeholder':"Add name"}}) }}
+    {{ form_row(formTrick.description,{'attr':{'placeholder':"Add description"
+
+    }}) }}
+    {{ form_row(formTrick.categorie,{'attr':{'placeholder':"Add categorie"}}) }}
+    {{ form_row(formTrick.images) }}
+    <button type="submit" class="btn btn-success">
+      {% if editMode %} Edit trick {% else %} Ajouter le trick {% endif %}
+    </button>
+    {{ form_end(formTrick) }}
+  </div>
+</section>
+<!--
 <div class="container margin-top">
   <div class="row text-center">
     <div class="col-md-3"></div>
@@ -41,7 +59,7 @@
           </div>
           <div class="form-group">
             <label for="image"> Image</label>
-            <input type="file" name="fileToUpload" id="fileToUpload" />
+            <input type="file" name="myfile" id="myfile" />
           </div>
 
           <div class="form-group">
@@ -54,4 +72,5 @@
     </div>
   </div>
 </div>
+-->
 {% endblock %}

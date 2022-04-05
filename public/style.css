@@ -8,3 +8,21 @@
 .margin-top {
   margin-top: 50px;
 }
+.tickes {
+  display: flex;
+}
+.trickcard_style {
+  width: 18rem;
+  height: 25rem;
+  margin: 15px;
+  box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.5);
+}
+.card_read {
+  width: 50rem;
+  height: 20rem;
+}
+.read_view {
+  justify-content: center;
+  align-content: center;
+  display: flex;
+}

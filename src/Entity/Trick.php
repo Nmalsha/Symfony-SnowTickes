@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TrickRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,16 +35,6 @@ class Trick
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $photos;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $video;
-
-    /**
      * @ORM\Column(type="string", length=100)
      */
     private $categorie;
@@ -51,6 +43,16 @@ class Trick
      * @ORM\Column(type="datetime")
      */
     private $createdOn;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
+     */
+    private $images;
+
+    public function __construct()
+    {
+        $this->images = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -93,30 +95,6 @@ class Trick
         return $this;
     }
 
-    public function getPhotos(): ?string
-    {
-        return $this->photos;
-    }
-
-    public function setPhotos(?string $photos): self
-    {
-        $this->photos = $photos;
-
-        return $this;
-    }
-
-    public function getVideo(): ?string
-    {
-        return $this->video;
-    }
-
-    public function setVideo(?string $video): self
-    {
-        $this->video = $video;
-
-        return $this;
-    }
-
     public function getCategorie(): ?string
     {
         return $this->categorie;
@@ -137,6 +115,36 @@ class Trick
     public function setCreatedOn(\DateTimeInterface $createdOn): self
     {
         $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Images>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Images $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Images $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getTrick() === $this) {
+                $image->setTrick(null);
+            }
+        }
 
         return $this;
     }
