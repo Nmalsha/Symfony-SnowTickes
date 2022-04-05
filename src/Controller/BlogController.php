@@ -54,8 +54,13 @@ class BlogController extends AbstractController
     {
         $repo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $repo->find($id);
+        $repoImage = $this->getDoctrine()->getRepository(Images::class);
+
+        // $Image = $repoImage->getImages($id);
+
         return $this->render('blog/read.html.twig', [
             'trick' => $trick,
+            // 'image' => $Image,
         ]);
     }
     /**
@@ -84,6 +89,7 @@ class BlogController extends AbstractController
      */
     public function form(Trick $trick = null, Request $request, EntityManagerInterface $manager)
     {
+
         if (!$trick) {
             $trick = new Trick();
         }
@@ -120,7 +126,7 @@ class BlogController extends AbstractController
                 $img->setName($imageDocument);
 
                 $trick->addImage($img);
-
+                $trick->setCreatedOn(new \DateTime());
             }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
@@ -135,22 +141,11 @@ class BlogController extends AbstractController
             return $this->redirectToRoute('tricks_show', ['id' => $trick->getId()]);
 
         }
-        // if ($request->request->count() > 0) {
-        //     $trick = new Trick();
-        //     $trick->setTrickName($request->request->get('TrickName'))
-        //         ->setDescription($request->request->get('description'))
-        //         ->setCategorie($request->request->get('description'))
-        //         ->setImage($request->files->get('myfile'))
-        //         ->setCreatedOn(new \DateTime());
-        //     dump($request->files->get('myfile'));
-        //     die;
-        //     $manager->persist($trick);
-        //     $manager->flush();
-        //     return $this->redirectToRoute('tricks_show', ['id' => $trick->getId()]);
-        // }
+
         return $this->render('blog/createTrick.html.twig', [
             'formTrick' => $form->createView(),
             'editMode' => $trick->getId() !== null,
         ]);
     }
+
 }
