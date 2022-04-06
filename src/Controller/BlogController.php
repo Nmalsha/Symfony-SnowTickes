@@ -50,17 +50,22 @@ class BlogController extends AbstractController
     /**
      * @Route("/trick/{id}", name="tricks_show")
      */
-    public function read($id): Response
+    public function read(int $id, Request $request): Response
     {
+
         $repo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $repo->find($id);
         $repoImage = $this->getDoctrine()->getRepository(Images::class);
 
-        // $Image = $repoImage->getImages($id);
+        // $trickId = $repoImage->findBy('trick_id');
+
+        //  \dump($trickId);
+
+        $Image = $repoImage->find($id);
 
         return $this->render('blog/read.html.twig', [
             'trick' => $trick,
-            // 'image' => $Image,
+            'image' => $Image,
         ]);
     }
     /**
@@ -87,7 +92,7 @@ class BlogController extends AbstractController
      * @Route("/tricks/new", name="trick_create")
      * @Route("/trick/{id}/edit", name="trick_edit")
      */
-    public function form(Trick $trick = null, Request $request, EntityManagerInterface $manager)
+    public function form(Trick $trick = null, Images $images = null, Request $request, EntityManagerInterface $manager)
     {
 
         if (!$trick) {
@@ -116,12 +121,13 @@ class BlogController extends AbstractController
             foreach ($images as $image) {
 
                 $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
-
+//send image name to the images folder
                 $image->move(
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
 // save image name to the DB
+
                 $img = new Images();
 
                 $img->setName($imageDocument);
@@ -145,15 +151,18 @@ class BlogController extends AbstractController
 
         return $this->render('blog/createTrick.html.twig', [
             'formTrick' => $form->createView(),
+            'trick' => $trick,
             'editMode' => $trick->getId() !== null,
         ]);
     }
 
 // /**
 
-// //  * @Route("/trick/{id}/edit", name="trick_edit")
+// //  * @Route("/supprime/trick/{id}", name="trick_edit" metthods=)
     // //  */
     //     // public function deleteImage(Trick $trick = null, Request $request, EntityManagerInterface $manager)
     //     // {
+
+    //  }
 
 }

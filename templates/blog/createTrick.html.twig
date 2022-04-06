@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %} {% form_theme formTrick
-'bootstrap_4_layout.html.twig' %} {% block body %}
-<h3>Création d'un Trick</h3>
+'bootstrap_4_layout.html.twig' %} {% block body %} {% if
+app.request.attributes.get('_route')=='trick_edit' %}
+<h3 class="creation_topic">Edit Trick</h3>
+{% else %}
+<h3 class="creation_topic">Création d'un Trick</h3>
+{% endif %}
 <section class="tickes">
   <div class="card trickcard_style">
     {{ form_start(formTrick) }}
@@ -9,8 +13,19 @@
 
 
 
+
+
+
+
     }}) }}
     {{ form_row(formTrick.categorie,{'attr':{'placeholder':"Add categorie"}}) }}
+    {% if app.request.attributes.get('_route')=='trick_edit' %}
+    <h4>Images</h4>
+    {% for image in trick.images %}
+    <div>
+      <img src="{{ asset('/images/'~ image.name) }}" alt="image" width="150" />
+    </div>
+    {% endfor %} {% endif %}
     {{ form_row(formTrick.images) }}
     <button type="submit" class="btn btn-success">
       {% if editMode %} Edit trick {% else %} Ajouter le trick {% endif %}
