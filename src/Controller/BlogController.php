@@ -114,6 +114,7 @@ class BlogController extends AbstractController
 
             //loop true the images
             foreach ($images as $image) {
+
                 $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
 
                 $image->move(
@@ -124,9 +125,9 @@ class BlogController extends AbstractController
                 $img = new Images();
 
                 $img->setName($imageDocument);
-
                 $trick->addImage($img);
                 $trick->setCreatedOn(new \DateTime());
+
             }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
@@ -147,5 +148,12 @@ class BlogController extends AbstractController
             'editMode' => $trick->getId() !== null,
         ]);
     }
+
+// /**
+
+// //  * @Route("/trick/{id}/edit", name="trick_edit")
+    // //  */
+    //     // public function deleteImage(Trick $trick = null, Request $request, EntityManagerInterface $manager)
+    //     // {
 
 }

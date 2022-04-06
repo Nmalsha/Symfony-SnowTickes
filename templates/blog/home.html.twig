@@ -8,7 +8,11 @@
     <pre>
       {{ dump(image.name) }}
     </pre>
-    <img class="card-img-top" src="{{ image.name }}" alt="Card image cap" />
+    <img
+      class="card-img-top"
+      src="{{ asset('/images/'~ image.name) }}"
+      alt="Trick image"
+    />
     {% endif %} {% endfor %}
     <div class="card-body">
       <h5 class="card-title">{{ trick.trickName }}</h5>
