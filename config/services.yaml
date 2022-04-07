@@ -5,6 +5,9 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
   images_directory: "%kernel.project_dir%/public/images"
+  galarie_images_directory: "%kernel.project_dir%/public/galarieimages"
+  video_directory: "%kernel.project_dir%/public/videos"
+services:
 services:
   # default configuration for services in *this* file
   _defaults:

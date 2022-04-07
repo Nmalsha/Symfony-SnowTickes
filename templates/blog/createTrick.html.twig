@@ -8,29 +8,64 @@ app.request.attributes.get('_route')=='trick_edit' %}
 <section class="tickes">
   <div class="card trickcard_style">
     {{ form_start(formTrick) }}
-    {{ form_row(formTrick.TrickName,{'attr':{'placeholder':"Add name"}}) }}
-    {{ form_row(formTrick.description,{'attr':{'placeholder':"Add description"
-
-
-
-
-
-
-
-    }}) }}
-    {{ form_row(formTrick.categorie,{'attr':{'placeholder':"Add categorie"}}) }}
-    {% if app.request.attributes.get('_route')=='trick_edit' %}
-    <h4>Images</h4>
-    {% for image in trick.images %}
-    <div>
-      <img src="{{ asset('/images/'~ image.name) }}" alt="image" width="150" />
+    <div class="form_row">
+      {{ form_row(formTrick.TrickName,{'attr':{'placeholder':"Add name"}}) }}
     </div>
-    {% endfor %} {% endif %}
-    {{ form_row(formTrick.images) }}
-    <button type="submit" class="btn btn-success">
-      {% if editMode %} Edit trick {% else %} Ajouter le trick {% endif %}
-    </button>
-    {{ form_end(formTrick) }}
+    <div class="form_row">
+      {{ form_row(formTrick.description,{'attr':{'placeholder':"Add description"
+      }}) }}
+    </div>
+    <div class="form_row">
+      {{ form_row(formTrick.categorie,{'attr':{'placeholder':"Add categorie"}})
+      }}
+    </div>
+    <div class="form_row">
+      {% if app.request.attributes.get('_route')=='trick_edit' %}
+      <h4>Main image</h4>
+      {% for image in trick.images %}
+      <div>
+        <img
+          src="{{ asset('/images/'~ image.name) }}"
+          alt="image"
+          width="150"
+        />
+      </div>
+      {% endfor %} {% endif %}
+    </div>
+    <div class="form_row">
+      {% if app.request.attributes.get('_route')=='trick_edit' %}
+      <a href=""><i class="fas fa-trash-alt"></i></a>
+      {% endif %}
+      {{ form_row(formTrick.images) }}
+      {% if app.request.attributes.get('_route')=='trick_edit' %}
+
+      <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+        >Changer l'image principle
+      </a>
+      {% endif %}
+    </div>
+
+    {% if app.request.attributes.get('_route')=='trick_edit' %}
+    <div class="image_galarie form_row">
+      <h4>image galarie</h4>
+      <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+        >Ajouter une image
+      </a>
+    </div>
+    <div class="video_galarie form_row">
+      <h4>Video galarie</h4>
+      <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+        >Ajouter une vidéo
+      </a>
+    </div>
+
+    {% endif %}
+    <div class="form_row">
+      <button type="submit" class="btn btn-success">
+        {% if editMode %} Edit trick {% else %} Ajouter le trick {% endif %}
+      </button>
+      {{ form_end(formTrick) }}
+    </div>
   </div>
 </section>
 

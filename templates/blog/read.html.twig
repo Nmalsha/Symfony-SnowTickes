@@ -2,14 +2,33 @@
 <h3>read</h3>
 <section class="read_view">
   <div class="card card_read">
-    <pre>
-      {{ dump(trick.images) }}
-    </pre>
-    <img class="card-img-top" src="" alt="Card image cap" />
+    <img
+      class="card-img-top"
+      src="{{ asset('/images/'~ imagename) }}"
+      alt="Card image cap"
+    />
+    <div class="trickinfo">
+      <p>Créer par;</p>
+      <p>
+        Ajouter le:{{ trick.createdOn | date('d/m/y') }} à
+        {{ trick.createdOn | date('H:i') }} by{{ trick.userName }}
+      </p>
+      <p>Catagorie :{{ trick.categorie }}</p>
+      <p>number Of Comments</p>
+    </div>
+    <!--Carousel-->
+    <div class="row d-lg-flex load-media">
+      <div class="col-lg-6 col-md-12">
+        <h4>todo image galarie</h4>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <h4>todo video galarie</h4>
+      </div>
+    </div>
+    <div class="card-body"></div>
     <div class="card-body">
       <h4>{{ trick.trickName }}</h4>
       <p class="metadata">{{ trick.description }}</p>
-      <p>{{ trick.categorie }}</p>
     </div>
   </div>
 </section>

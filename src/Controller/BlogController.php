@@ -55,17 +55,30 @@ class BlogController extends AbstractController
 
         $repo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $repo->find($id);
+
         $repoImage = $this->getDoctrine()->getRepository(Images::class);
 
-        // $trickId = $repoImage->findBy('trick_id');
+        $images = $repoImage->findAll();
 
-        //  \dump($trickId);
+        foreach ($images as $image) {
 
-        $Image = $repoImage->find($id);
+            //get the trick from images repo
+
+            $imagesTrick = $image->getTrick();
+            // get trick id from images
+            $imagerepoTrickId = $imagesTrick->getId();
+            if ($id === $imagerepoTrickId) {
+                $imagename = $image->getName();
+
+            }
+
+        }
+
+        // \dump($imagename);
 
         return $this->render('blog/read.html.twig', [
             'trick' => $trick,
-            'image' => $Image,
+            'imagename' => $imagename,
         ]);
     }
     /**
@@ -105,7 +118,8 @@ class BlogController extends AbstractController
             ->add('description')
             ->add('categorie')
             ->add('images', FileType::class, [
-                'multiple' => true,
+                'multiple' => false,
+
                 'label' => false,
                 'mapped' => false,
                 'required' => false,
@@ -154,6 +168,15 @@ class BlogController extends AbstractController
             'trick' => $trick,
             'editMode' => $trick->getId() !== null,
         ]);
+    }
+
+    /**
+
+     * @Route("/trick/addGalarie/{id}", name="trick_galarie")
+     */
+    public function addGalarieImage(Request $request, EntityManagerInterface $manager)
+    {
+
     }
 
 // /**

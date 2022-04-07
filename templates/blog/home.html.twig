@@ -20,6 +20,10 @@
           <h5 class="card-title">{{ trick.trickName }}</h5>
           <p class="card-text">{{ trick.description }}</p>
           <p class="card-text">{{ trick.categorie }}</p>
+          <p class="card-text">
+            Created on:{{ trick.createdOn | date('d/m/y') }} a
+            {{ trick.createdOn | date('H:i') }} by {{ trick.userName }}
+          </p>
           <a
             href="{{ path('tricks_show', { id: trick.id }) }}"
             class="btn btn-primary"
