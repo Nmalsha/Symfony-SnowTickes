@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Images;
 use App\Entity\Trick;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -82,14 +83,22 @@ class BlogController extends AbstractController
         ]);
     }
     /**
-     * @Route("/signup", name="signup")
+     * @Route("/signup/user", name="signup")
+     *
      */
-    public function signup(): Response
+    public function formsignup(Request $request, EntityManagerInterface $manager)
     {
-        return $this->render('blog/signup.html.twig', [
-            'title' => "signup",
-            'age' => 31,
-        ]);
+        dump($request);
+        die;
+        $user = new User();
+
+        // $formsignup = $this->createFormBuilder($user)
+        //     ->add('TrickName')
+        //     ->add('description')
+        //     ->add('categorie')
+        //     ->getForm();
+
+        return $this->render('blog/signup.html.twig');
     }
     /**
      * @Route("/login", name="login")
@@ -118,7 +127,7 @@ class BlogController extends AbstractController
             ->add('description')
             ->add('categorie')
             ->add('images', FileType::class, [
-                'multiple' => false,
+                'multiple' => true,
 
                 'label' => false,
                 'mapped' => false,
@@ -159,7 +168,7 @@ class BlogController extends AbstractController
             $manager->persist($trick);
             $manager->flush();
             //Redirect to the added trick view
-            return $this->redirectToRoute('tricks_show', ['id' => $trick->getId()]);
+            return $this->redirectToRoute('home');
 
         }
 
@@ -179,13 +188,30 @@ class BlogController extends AbstractController
 
     }
 
-// /**
+    /**
 
-// //  * @Route("/supprime/trick/{id}", name="trick_edit" metthods=)
-    // //  */
-    //     // public function deleteImage(Trick $trick = null, Request $request, EntityManagerInterface $manager)
-    //     // {
+     * @Route("/supprime/trick/{id}", name="trick_delete_image" method={"DELETE"})
+     */
 
-    //  }
+    // public function deleteImage(Images $image, Request $request)
+    // {
+    //     $data = json_decode($request->getContent(), true);
+    //     //if token valide
+    //     if ($this->isCsrfTokenValid('delete' . $image - getId(), $data['_token'])) {
+    //         //getting the name of the image
+    //         $nom = $image->getName();
+    //         //delete image
+    //         unlink($this->getParameter('images_directory') . '/' . $nom);
+    //         //delete from DB
+    //         $entitymanage = $this - getDoctrine()->getRepository(Images::class);
+    //         $entitymanage->remove($image);
+    //         $entitymanage->flush();
+
+    //         return new jsonReponse(['success' => 1]);
+    //     } else {
+    //         return new jsonReponse(['error' => 'Token invalide'], 400);
+    //     }
+
+    // }
 
 }
