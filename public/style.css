@@ -10,19 +10,41 @@
 }
 .tickes {
   display: flex;
+  justify-content: center;
 }
 .trickcard_style {
-  width: 18rem;
-  height: 25rem;
+  width: 40rem;
+  height: 55rem;
   margin: 15px;
   box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 0.625em;
 }
 .card_read {
   width: 50rem;
-  height: 20rem;
+  height: 30rem;
+}
+.margin {
+  margin-top: 8px;
+}
+.trick {
+  height: 30rem;
+}
+.trickinfo {
+  display: flex;
+  justify-content: space-around;
+}
+.creation_topic {
+  display: flex;
+  justify-content: center;
 }
 .read_view {
   justify-content: center;
   align-content: center;
   display: flex;
+}
+form {
+  padding: 8px;
+}
+.form_row {
+  margin: 18px;
 }

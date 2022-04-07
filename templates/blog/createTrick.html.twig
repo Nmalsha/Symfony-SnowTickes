@@ -1,76 +1,72 @@
 {% extends 'base.html.twig' %} {% form_theme formTrick
-'bootstrap_4_layout.html.twig' %} {% block body %}
-<h3>Création d'un Trick</h3>
+'bootstrap_4_layout.html.twig' %} {% block body %} {% if
+app.request.attributes.get('_route')=='trick_edit' %}
+<h3 class="creation_topic">Edit Trick</h3>
+{% else %}
+<h3 class="creation_topic">Création d'un Trick</h3>
+{% endif %}
 <section class="tickes">
   <div class="card trickcard_style">
     {{ form_start(formTrick) }}
-    {{ form_row(formTrick.TrickName,{'attr':{'placeholder':"Add name"}}) }}
-    {{ form_row(formTrick.description,{'attr':{'placeholder':"Add description"
-
-    }}) }}
-    {{ form_row(formTrick.categorie,{'attr':{'placeholder':"Add categorie"}}) }}
-    {{ form_row(formTrick.images) }}
-    <button type="submit" class="btn btn-success">
-      {% if editMode %} Edit trick {% else %} Ajouter le trick {% endif %}
-    </button>
-    {{ form_end(formTrick) }}
-  </div>
-</section>
-<!--
-<div class="container margin-top">
-  <div class="row text-center">
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
-      <div class="bg-light py-3 px-3">
-        <h3 class="">Create Trick</h3>
-        <form action="" method="post" enctype="multipart/form-data">
-          <div class="form-group">
-            <label for="TrickName"> Nom du trick</label>
-            <input
-              class="form-control"
-              id="TrickName"
-              type="text"
-              name="TrickName"
-              placeholder="Entrez le nom"
-              required=""
-            />
-          </div>
-          <div class="form-group">
-            <label for="description"> Description</label>
-            <input
-              class="form-control"
-              id="description"
-              type="text"
-              name="description"
-              placeholder="Entrez une description "
-              required=""
-            />
-          </div>
-          <div class="form-group">
-            <label for="categorie"> Catégorie</label>
-            <input
-              class="form-control"
-              id="categorie"
-              type="text"
-              name="categorie"
-              placeholder="Entrez une catégorie"
-              required=""
-            />
-          </div>
-          <div class="form-group">
-            <label for="image"> Image</label>
-            <input type="file" name="myfile" id="myfile" />
-          </div>
-
-          <div class="form-group">
-            <button class="btn btn-success" type="submit">
-              ajouter le trick
-            </button>
-          </div>
-        </form>
+    <div class="form_row">
+      {{ form_row(formTrick.TrickName,{'attr':{'placeholder':"Add name"}}) }}
+    </div>
+    <div class="form_row">
+      {{ form_row(formTrick.description,{'attr':{'placeholder':"Add description"
+      }}) }}
+    </div>
+    <div class="form_row">
+      {{ form_row(formTrick.categorie,{'attr':{'placeholder':"Add categorie"}})
+      }}
+    </div>
+    <div class="form_row">
+      {% if app.request.attributes.get('_route')=='trick_edit' %}
+      <h4>Main image</h4>
+      {% for image in trick.images %}
+      <div>
+        <img
+          src="{{ asset('/images/'~ image.name) }}"
+          alt="image"
+          width="150"
+        />
       </div>
+      {% endfor %} {% endif %}
+    </div>
+    <div class="form_row">
+      {% if app.request.attributes.get('_route')=='trick_edit' %}
+      <a href=""><i class="fas fa-trash-alt"></i></a>
+      {% endif %}
+      {{ form_row(formTrick.images) }}
+      {% if app.request.attributes.get('_route')=='trick_edit' %}
+
+      <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+        >Changer l'image principle
+      </a>
+      {% endif %}
+    </div>
+
+    {% if app.request.attributes.get('_route')=='trick_edit' %}
+    <div class="image_galarie form_row">
+      <h4>image galarie</h4>
+      <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+        >Ajouter une image
+      </a>
+    </div>
+    <div class="video_galarie form_row">
+      <h4>Video galarie</h4>
+      <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+        >Ajouter une vidéo
+      </a>
+    </div>
+
+    {% endif %}
+    <div class="form_row">
+      <button type="submit" class="btn btn-success">
+        {% if editMode %} Edit trick {% else %} Ajouter le trick {% endif %}
+      </button>
+      {{ form_end(formTrick) }}
     </div>
   </div>
-</div>
--->
+</section>
+
 {% endblock %}

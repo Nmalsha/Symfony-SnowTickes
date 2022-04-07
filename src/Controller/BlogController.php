@@ -50,17 +50,35 @@ class BlogController extends AbstractController
     /**
      * @Route("/trick/{id}", name="tricks_show")
      */
-    public function read($id): Response
+    public function read(int $id, Request $request): Response
     {
+
         $repo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $repo->find($id);
+
         $repoImage = $this->getDoctrine()->getRepository(Images::class);
 
-        // $Image = $repoImage->getImages($id);
+        $images = $repoImage->findAll();
+
+        foreach ($images as $image) {
+
+            //get the trick from images repo
+
+            $imagesTrick = $image->getTrick();
+            // get trick id from images
+            $imagerepoTrickId = $imagesTrick->getId();
+            if ($id === $imagerepoTrickId) {
+                $imagename = $image->getName();
+
+            }
+
+        }
+
+        // \dump($imagename);
 
         return $this->render('blog/read.html.twig', [
             'trick' => $trick,
-            // 'image' => $Image,
+            'imagename' => $imagename,
         ]);
     }
     /**
@@ -87,7 +105,7 @@ class BlogController extends AbstractController
      * @Route("/tricks/new", name="trick_create")
      * @Route("/trick/{id}/edit", name="trick_edit")
      */
-    public function form(Trick $trick = null, Request $request, EntityManagerInterface $manager)
+    public function form(Trick $trick = null, Images $images = null, Request $request, EntityManagerInterface $manager)
     {
 
         if (!$trick) {
@@ -100,7 +118,8 @@ class BlogController extends AbstractController
             ->add('description')
             ->add('categorie')
             ->add('images', FileType::class, [
-                'multiple' => true,
+                'multiple' => false,
+
                 'label' => false,
                 'mapped' => false,
                 'required' => false,
@@ -114,19 +133,21 @@ class BlogController extends AbstractController
 
             //loop true the images
             foreach ($images as $image) {
-                $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
 
+                $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
+//send image name to the images folder
                 $image->move(
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
 // save image name to the DB
+
                 $img = new Images();
 
                 $img->setName($imageDocument);
-
                 $trick->addImage($img);
                 $trick->setCreatedOn(new \DateTime());
+
             }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
@@ -144,8 +165,27 @@ class BlogController extends AbstractController
 
         return $this->render('blog/createTrick.html.twig', [
             'formTrick' => $form->createView(),
+            'trick' => $trick,
             'editMode' => $trick->getId() !== null,
         ]);
     }
+
+    /**
+
+     * @Route("/trick/addGalarie/{id}", name="trick_galarie")
+     */
+    public function addGalarieImage(Request $request, EntityManagerInterface $manager)
+    {
+
+    }
+
+// /**
+
+// //  * @Route("/supprime/trick/{id}", name="trick_edit" metthods=)
+    // //  */
+    //     // public function deleteImage(Trick $trick = null, Request $request, EntityManagerInterface $manager)
+    //     // {
+
+    //  }
 
 }
