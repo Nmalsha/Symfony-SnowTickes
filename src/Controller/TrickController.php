@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Images;
 use App\Entity\Trick;
+use App\Form\TrickType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -70,22 +70,13 @@ class TrickController extends AbstractController
         }
 
         //adding fields to the form
+        $form = $this->createForm(TrickType::class, $trick);
 
-        $form = $this->createFormBuilder($trick)
-            ->add('TrickName')
-            ->add('description')
-            ->add('categorie')
-            ->add('images', FileType::class, [
-                'multiple' => true,
-
-                'label' => false,
-                'mapped' => false,
-                'required' => false,
-            ])
-
-            ->getForm();
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            \dump($form);
+            die;
             //get image data
             $images = $form->get('images')->getData();
 
