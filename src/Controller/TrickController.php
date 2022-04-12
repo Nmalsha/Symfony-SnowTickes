@@ -14,15 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class TrickController extends AbstractController
 {
     /**
-     * @Route("/trick", name="app_trick")
+     * @Route("/tricks", name="tricks")
      */
-    public function index(): Response
+    public function tricks(): Response
     {
-        return $this->render('trick/index.html.twig', [
-            'controller_name' => 'TrickController',
-        ]);
+        return $this->render('blog/tricks.html.twig');
     }
-
     /**
      * @Route("/trick/{id}", name="tricks_show")
      */
@@ -75,8 +72,8 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            \dump($form);
-            die;
+
+            $userId = $request->get('userId');
             //get image data
             $images = $form->get('images')->getData();
 
@@ -95,6 +92,7 @@ class TrickController extends AbstractController
 
                 $img->setName($imageDocument);
                 $trick->addImage($img);
+                $trick->setUserId($userId);
                 $trick->setCreatedOn(new \DateTime());
 
             }
