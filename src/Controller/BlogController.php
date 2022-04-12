@@ -4,10 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Images;
 use App\Entity\Trick;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,136 +46,17 @@ class BlogController extends AbstractController
             'age' => 31,
         ]);
     }
-    /**
-     * @Route("/trick/{id}", name="tricks_show")
-     */
-    public function read(int $id, Request $request): Response
-    {
 
-        $repo = $this->getDoctrine()->getRepository(Trick::class);
-        $trick = $repo->find($id);
-
-        $repoImage = $this->getDoctrine()->getRepository(Images::class);
-
-        $images = $repoImage->findAll();
-
-        foreach ($images as $image) {
-
-            //get the trick from images repo
-
-            $imagesTrick = $image->getTrick();
-            // get trick id from images
-            $imagerepoTrickId = $imagesTrick->getId();
-            if ($id === $imagerepoTrickId) {
-                $imagename = $image->getName();
-
-            }
-
-        }
-
-        // \dump($imagename);
-
-        return $this->render('blog/read.html.twig', [
-            'trick' => $trick,
-            'imagename' => $imagename,
-        ]);
-    }
-    /**
-     * @Route("/signup/user", name="signup")
-     *
-     */
-    public function formsignup(Request $request, EntityManagerInterface $manager)
-    {
-        dump($request);
-        die;
-        $user = new User();
-
-        // $formsignup = $this->createFormBuilder($user)
-        //     ->add('TrickName')
-        //     ->add('description')
-        //     ->add('categorie')
-        //     ->getForm();
-
-        return $this->render('blog/signup.html.twig');
-    }
     /**
      * @Route("/login", name="login")
      */
-    public function login(): Response
-    {
-        return $this->render('blog/login.html.twig', [
-            'title' => "welcome",
-            'age' => 31,
-        ]);
-    }
-    /**
-     * @Route("/tricks/new", name="trick_create")
-     * @Route("/trick/{id}/edit", name="trick_edit")
-     */
-    public function form(Trick $trick = null, Images $images = null, Request $request, EntityManagerInterface $manager)
-    {
-
-        if (!$trick) {
-            $trick = new Trick();
-        }
-
-        //adding fields to the form
-        $form = $this->createFormBuilder($trick)
-            ->add('TrickName')
-            ->add('description')
-            ->add('categorie')
-            ->add('images', FileType::class, [
-                'multiple' => true,
-
-                'label' => false,
-                'mapped' => false,
-                'required' => false,
-            ])
-
-            ->getForm();
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            //get image data
-            $images = $form->get('images')->getData();
-
-            //loop true the images
-            foreach ($images as $image) {
-
-                $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
-//send image name to the images folder
-                $image->move(
-                    $this->getParameter('images_directory'),
-                    $imageDocument
-                );
-// save image name to the DB
-
-                $img = new Images();
-
-                $img->setName($imageDocument);
-                $trick->addImage($img);
-                $trick->setCreatedOn(new \DateTime());
-
-            }
-
-            //if the trick hasn't a id = if the trick already not exist in the DB
-            if (!$trick->getId()) {
-                $trick->setCreatedOn(new \DateTime());
-            }
-
-            //if the form is valid
-            $manager->persist($trick);
-            $manager->flush();
-            //Redirect to the added trick view
-            return $this->redirectToRoute('home');
-
-        }
-
-        return $this->render('blog/createTrick.html.twig', [
-            'formTrick' => $form->createView(),
-            'trick' => $trick,
-            'editMode' => $trick->getId() !== null,
-        ]);
-    }
+    // public function login(): Response
+    // {
+    //     return $this->render('blog/login.html.twig', [
+    //         'title' => "welcome",
+    //         'age' => 31,
+    //     ]);
+    // }
 
     /**
 

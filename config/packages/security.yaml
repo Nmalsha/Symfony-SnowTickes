@@ -2,8 +2,9 @@ security:
   encoders:
     App\Entity\User:
       algorithm: bcrypt
-    App\Entity\Utilisateur:
-      algorithm: auto
+
+  # App\Entity\Utilisateur:
+  #     algorithm: bcrypt
 
   enable_authenticator_manager: true
   # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
@@ -15,8 +16,11 @@ security:
     users_in_memory: { memory: null }
     app_user_provider:
       entity:
-        class: App\Entity\Utilisateur
+        class: App\Entity\User
         property: email
+    # used to reload user from session & other features (e.g. switch_user)
+    # class: App\Entity\Utilisateur
+    # property: email
     # used to reload user from session & other features (e.g. switch_user)
   firewalls:
     dev:
@@ -25,6 +29,11 @@ security:
     main:
       lazy: true
       provider: users_in_memory
+      custom_authenticator: App\Security\UsersAuthenticator
+      logout:
+        path: app_logout
+        # where to redirect after logout
+        # target: app_any_route
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall
@@ -37,6 +46,11 @@ security:
   access_control:
     # - { path: ^/admin, roles: ROLE_ADMIN }
     # - { path: ^/profile, roles: ROLE_USER }
+    # access_control:
+    #   - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    #   - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    #   - { path: ^/, roles: ROLE_USER }
+    #   - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
   security:
