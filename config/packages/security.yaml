@@ -13,7 +13,7 @@ security:
     Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
   # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
   providers:
-    users_in_memory: { memory: null }
+    # users_in_memory: { memory: null }
     app_user_provider:
       entity:
         class: App\Entity\User
@@ -28,8 +28,8 @@ security:
       security: false
     main:
       lazy: true
-      provider: users_in_memory
-      custom_authenticator: App\Security\UsersAuthenticator
+      provider: app_user_provider
+      custom_authenticator: App\Security\UserAuthenticator
       logout:
         path: app_logout
         # where to redirect after logout
