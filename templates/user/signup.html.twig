@@ -1,29 +1,64 @@
-{% extends 'base.html.twig' %} {% block body %}
+{# {% extends 'base.html.twig' %} {% block body %}
+<section class="tickes">
+  <div class="card trickcard_style">
+    {{ form_start(formuser) }}
+    <div class="form_row">
+      {{ form_row(formuser.firstName,{'attr':{'placeholder':"Prénom"}}) }}
+    </div>
+    <div class="form_row">
+      {{ form_row(formuser.second_name,{'attr':{'placeholder':"Nom"
+
+
+
+
+
+
+
+      }}) }}
+    </div>
+    <div class="form_row">
+      {{ form_row(formuser.email,{'attr':{'placeholder':"Address email"}}) }}
+    </div>
+
+    <div class="form_row">
+      {{ form_row(formuser.password.first) }}
+    </div>
+    <div class="form_row">
+      {{ form_row(formuser.password.second) }}
+    </div>
+
+    <div class="form_row">
+      <button type="submit" class="btn btn-success">Inscription</button>
+      {{ form_end(formuser) }}
+    </div>
+  </div>
+</section>
+#} {#
 <div class="container margin-top">
   <div class="row text-center">
     <div class="col-md-3"></div>
     <div class="col-md-6">
       <div class="bg-light py-3 px-3">
         <h3 class="">Inscrivez vous</h3>
-        <form action="" method="post">
+        <form name="user" method="post">
           <div class="form-group">
-            <label for="prenom"> Prénom</label>
+            <label for="secondName"> Prénom</label>
             <input
               class="form-control"
               id="prenom"
               type="text"
-              name="prenom"
+              name="secondName"
               placeholder="Prénom"
               required=""
             />
           </div>
           <div class="form-group">
-            <label for="nom"> Nom</label>
+            <label for="firstName"> Nom</label>
             <input
               class="form-control"
               id="nom"
               type="text"
-              name="nom"
+              name="firstName"
               placeholder="Nom"
               required=""
             />
@@ -44,7 +79,7 @@
             <input
               class="form-control"
               id="password1"
-              type="text"
+              type="password"
               name="password1"
               placeholder="Mot de pass"
               required=""
@@ -55,7 +90,7 @@
             <input
               class="form-control"
               id="password2"
-              type="text"
+              type="password"
               name="password2"
               placeholder="Confirmez votre mot de passe"
               required=""
@@ -69,4 +104,4 @@
     </div>
   </div>
 </div>
-{% endblock %}
+#} {% endblock %}

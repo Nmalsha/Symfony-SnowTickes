@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %} {% block title %}Register{% endblock %} {% block
+body %}
+<h1>Register</h1>
+<section class="container">
+  <div class="card trickcard_style">
+    {{ form_start(registrationForm) }}
+
+    <div class="form_row">
+      {{ form_row(registrationForm.firstName,{'attr':{'placeholder':"Prénom"}})
+      }}
+    </div>
+    <div class="form_row">
+      {{ form_row(registrationForm.second_name,{'attr':{'placeholder':"Nom"}})
+      }}
+    </div>
+    <div class="form_row">
+      {{ form_row(registrationForm.email,{'attr':{'placeholder':"Address email"
+
+      }}) }}
+    </div>
+
+    <div class="form_row">
+      {{ form_row(registrationForm.password.first) }}
+    </div>
+    <div class="form_row">
+      {{ form_row(registrationForm.password.second) }}
+    </div>
+
+    <button type="submit" class="btn btn-lg btn-primary m-3">Register</button>
+    {{ form_end(registrationForm) }}
+  </div>
+</section>
+{% endblock %}

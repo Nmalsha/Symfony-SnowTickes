@@ -22,7 +22,7 @@ class Trick
     /**
      * @ORM\Column(type="string", length=70)
      */
-    private $userName;
+    private $userId;
 
     /**
      * @ORM\Column(type="string", length=70)
