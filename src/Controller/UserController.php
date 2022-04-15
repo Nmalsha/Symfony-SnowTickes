@@ -3,7 +3,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Security\UsersAuthenticator;
+use App\Security\UserAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +17,7 @@ class UserController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UsersAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -33,10 +33,12 @@ class UserController extends AbstractController
                     $plaintextPassword
                 )
             );
+// genarate activation token
+
+            $user->setActivationToken(md5(uniqid()));
 
             $entityManager->persist($user);
             $entityManager->flush();
-            // do anything else you need here, like send an email
 
             return $userAuthenticator->authenticateUser(
                 $user,
@@ -49,5 +51,20 @@ class UserController extends AbstractController
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+    /**
+     * @Route("/activation/{token}", name="activation")
+     */
+
+    public function activation($token, UserRepository $userRepository)
+    {
+//check if there is a user with this token
+        $user = $userRepository->findOneBy(['activation_token' => $token]);
+        //if nobody with this token
+
+        if (!$user) {
+// Error 404
+            throw $this->createNotFoundException('Cet utilisateur n\'existe pas');
+        }
     }
 }
