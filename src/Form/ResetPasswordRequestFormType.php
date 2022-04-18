@@ -21,6 +21,7 @@ class ResetPasswordRequestFormType extends AbstractType
                     ]),
                 ],
             ])
+
         ;
     }
 

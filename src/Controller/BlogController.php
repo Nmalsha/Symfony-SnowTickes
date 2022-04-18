@@ -37,10 +37,10 @@ class BlogController extends AbstractController
     /**
      * @Route("/tricks", name="tricks")
      */
-    public function tricks(): Response
-    {
-        return $this->render('blog/tricks.html.twig');
-    }
+    // public function tricks(): Response
+    // {
+    //     return $this->render('blog/tricks.html.twig');
+    // }
 
     /**
      * @Route("/login", name="login")
