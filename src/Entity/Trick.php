@@ -59,14 +59,14 @@ class Trick
         return $this->id;
     }
 
-    public function getUserName(): ?string
+    public function getUserId(): ?string
     {
-        return $this->userName;
+        return $this->userId;
     }
 
-    public function setUserName(string $userName): self
+    public function setUserId(string $userId): self
     {
-        $this->userName = $userName;
+        $this->userId = $userId;
 
         return $this;
     }
@@ -136,6 +136,15 @@ class Trick
 
         return $this;
     }
+    // public function addUserId($userId): self
+    // {
+    //     if (!$this->userId->contains($userId)) {
+    //         $this->userId[] = $userId;
+    //         $userId->setTrick($this);
+    //     }
+
+    //     return $this;
+    // }
 
     public function removeImage(Images $image): self
     {

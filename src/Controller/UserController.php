@@ -3,7 +3,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Security\UsersAuthenticator;
+use App\Repository\UserRepository;
+use App\Security\UserAuthenticator;
+use App\Service\MailServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,8 +19,13 @@ class UserController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UsersAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
-    {
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        UserAuthenticatorInterface $userAuthenticator,
+        UserAuthenticator $authenticator,
+        EntityManagerInterface $entityManager,
+        MailServiceInterface $mailService): Response {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -34,20 +41,53 @@ class UserController extends AbstractController
                 )
             );
 
+            $user->setActivationToken(md5(uniqid()));
+
             $entityManager->persist($user);
             $entityManager->flush();
-            // do anything else you need here, like send an email
 
-            return $userAuthenticator->authenticateUser(
-                $user,
-                $authenticator,
-                $request
+            $mailService->send(
+                $user->getEmail(),
+                'Activate your account',
+                'reset_password/activation.html.twig',
+                ['token' => $user->getActivationToken()]
             );
-            return $this->redirectToRoute('home');
+
+            // return $userAuthenticator->authenticateUser(
+            //     $user,
+            //     $authenticator,
+            //     $request
+            // );
+            return $this->redirectToRoute('activation_message');
         }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/activation/{token}", name="activation")
+     */
+    public function activation($token, UserRepository $userRepository, EntityManagerInterface $entityManager)
+    {
+//check if there is a user with this token
+        $user = $userRepository->findOneBy(['activation_token' => $token]);
+        //if nobody with this token
+
+        if (!$user) {
+// Error 404
+            throw $this->createNotFoundException('Cet utilisateur n\'existe pas');
+        }
+        //delete token
+        $user->setActivationToken(null);
+        $entityManager->persist($user);
+        $entityManager->flush();
+//Send a flash message
+        $this->addFlash('message', 'Vous avez bien activé votre compte');
+//redirect after the activation
+
+        return $this->redirectToRoute('home');
+
     }
 }

@@ -1,0 +1,23 @@
+# See https://symfony.com/doc/current/email/dev_environment.html
+swiftmailer:
+  #    send all emails to a specific address
+
+  delivery_addresses: ["dev@example.com"]
+  #  delivery_whitelist:
+  #       # all email addresses matching these regexes will be delivered
+  #       # like normal, as well as being sent to dev@example.com
+  #       - '/@specialdomain\.com$/'
+  #       - '/^admin@mydomain\.com$/'
+# spool: { type: "memory" }
+# transport: gmail
+# host: smtp.gmail.com
+# port: 465
+# auth_mode: login
+# username: sudani.malsha@gmail.com
+# password: Katupotha@1980
+# encryption: ssl
+# stream_options:
+# ssl:
+# allow_self_signed: true
+# verify_peer: false
+# verify_peer_name: false

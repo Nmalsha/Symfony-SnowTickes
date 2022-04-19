@@ -113,6 +113,9 @@
     "phpdocumentor/type-resolver": {
         "version": "1.6.0"
     },
+    "phpmailer/phpmailer": {
+        "version": "v6.6.0"
+    },
     "phpspec/prophecy": {
         "version": "v1.15.0"
     },
@@ -223,6 +226,9 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "swiftmailer/swiftmailer": {
+        "version": "v6.3.0"
+    },
     "symfony/asset": {
         "version": "v5.4.3"
     },
@@ -331,6 +337,15 @@
             "src/Controller/.gitignore",
             "src/Kernel.php"
         ]
+    },
+    "symfony/google-mailer": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.4",
+            "ref": "f8fd4ddb9b477510f8f4bce2b9c054ab428c0120"
+        }
     },
     "symfony/http-client": {
         "version": "v5.4.5"
@@ -495,6 +510,15 @@
     "symfony/security-http": {
         "version": "v5.4.5"
     },
+    "symfony/sendgrid-mailer": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.4",
+            "ref": "b46e4f8f1adb2864f0aa9c0ff57aea3324a07199"
+        }
+    },
     "symfony/serializer": {
         "version": "v5.4.6"
     },
@@ -506,6 +530,20 @@
     },
     "symfony/string": {
         "version": "v5.4.3"
+    },
+    "symfony/swiftmailer-bundle": {
+        "version": "3.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.5",
+            "ref": "f0b2fccdca2dfd97dc2fd5ad216d5e27c4f895ac"
+        },
+        "files": [
+            "config/packages/dev/swiftmailer.yaml",
+            "config/packages/swiftmailer.yaml",
+            "config/packages/test/swiftmailer.yaml"
+        ]
     },
     "symfony/translation": {
         "version": "5.4",
@@ -584,6 +622,18 @@
     },
     "symfony/yaml": {
         "version": "v5.4.3"
+    },
+    "symfonycasts/reset-password-bundle": {
+        "version": "1.13",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "97c1627c0384534997ae1047b93be517ca16de43"
+        },
+        "files": [
+            "config/packages/reset_password.yaml"
+        ]
     },
     "theseer/tokenizer": {
         "version": "1.2.1"

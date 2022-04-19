@@ -30,8 +30,12 @@
             >Lire</a
           >
           <br />
-          <a href="/trick/{{ trick.id }}/edit"><i class="fas fa-edit"></i></a>
-          <a href=""><i class="fas fa-trash-alt"></i></a>
+          {% if app.user %}
+          <div>
+            <a href="/trick/{{ trick.id }}/edit"><i class="fas fa-edit"></i></a>
+            <a href=""><i class="fas fa-trash-alt"></i></a>
+          </div>
+          {% endif %}
         </div>
       </div>
       {% endfor %}

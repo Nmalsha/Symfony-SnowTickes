@@ -13,11 +13,18 @@ app.request.attributes.get('_route')=='trick_edit' %}
     </div>
     <div class="form_row">
       {{ form_row(formTrick.description,{'attr':{'placeholder':"Add description"
+
+
+
+
       }}) }}
     </div>
     <div class="form_row">
       {{ form_row(formTrick.categorie,{'attr':{'placeholder':"Add categorie"}})
       }}
+    </div>
+    <div class="form_row">
+      <input type="hidden" name="userId" value="{{ app.user.id }}" />
     </div>
     <div class="form_row">
       {% if app.request.attributes.get('_route')=='trick_edit' %}

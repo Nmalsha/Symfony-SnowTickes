@@ -1,0 +1,11 @@
+<h3>Activation de votre compte</h3>
+<p>
+  Vous avez crée un compte sur notre site, veuillez cliquer le lien ci-dessous
+  pour l'activation
+</p>
+<p>
+  <a href="{{ absolute_url(path('activation', { token: token })) }}"
+    >Activer mon compte</a
+  >
+  {{ absolute_url(path("activation", { token: token })) }}
+</p>

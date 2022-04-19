@@ -16,6 +16,7 @@ class TrickType extends AbstractType
             ->add('TrickName')
             ->add('description')
             ->add('categorie')
+
             ->add('images', FileType::class, [
                 'multiple' => true,
 
