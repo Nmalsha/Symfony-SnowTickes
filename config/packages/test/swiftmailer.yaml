@@ -1,4 +1,5 @@
 swiftmailer:
-  disable_delivery: true
+ # disable_delivery: true
    url: '%env(MAILER_URL)%'
         spool: { type: 'memory' }
+       # path: '%kernel.project_dir%/var/spool'

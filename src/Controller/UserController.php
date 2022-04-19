@@ -10,7 +10,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+//use Symfony\Component\Mime\Address;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
@@ -39,21 +41,29 @@ class UserController extends AbstractController
             //genarate activation token
 
             $user->setActivationToken(md5(uniqid()));
-
+            // \dump($user->getActivationToken());die;
             $entityManager->persist($user);
             $entityManager->flush();
             // Create message
+            $email = (new Email())
+                ->from('sudani.malsha@gmail.com')
+                ->to($user->getEmail())
+                ->subject('Activate your account')
+                ->html($this->renderView('reset_password/activation.html.twig', [
+                    'token' => $user->getActivationToken(),
+                ]), 'text/html')
+            ;
 
-            $email = (new \Swift_Message('Activate your account'))
-                ->setFrom('sudani.malsha@gmail.com')
-                ->setTo($user->getEmail())
-                ->setBody(
-                    $this->renderView(
-                        'reset_password/activation.html.twig',
-                        ['token' => $user->getActivationToken()]
-                    ),
-                    'text/html'
-                )
+            // $email = (new TemplatedEmail())
+            //     ->From('sudani.malsha@gmail.com')
+            //     ->To($user->getEmail())
+            //     ->subject('Activate your account')
+            //     ->htmlTemplate('reset_password/activation.html.twig')
+            //     ->context([
+
+            //         'token' => $user->getActivationToken(),
+            //     ])
+
             ;
 
             // $email = (new TemplatedEmail())
@@ -82,10 +92,9 @@ class UserController extends AbstractController
             //     ->to(new Address($user->getEmail()))
 
             //     ->subject('Activate your account')
-            //     ->htmlTemplate('reset_password/actovation.html.twig')
-            //     ->context([
+            //     ->html($this->renderView('reset_password/activation.html.twig', [
             //         'token' => $user->getActivationToken(),
-            //     ])
+            //     ]))
             // ;
             //      $message = (new Email())
             //Define the sender
@@ -112,6 +121,7 @@ class UserController extends AbstractController
 
             // );
             // send mail
+
             $mailer->send($email);
 
             return $userAuthenticator->authenticateUser(
@@ -119,7 +129,7 @@ class UserController extends AbstractController
                 $authenticator,
                 $request
             );
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('reset_password/message.html.twig');
         }
 
         return $this->render('registration/register.html.twig', [

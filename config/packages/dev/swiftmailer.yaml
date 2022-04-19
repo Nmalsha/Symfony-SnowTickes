@@ -3,6 +3,11 @@ swiftmailer:
   #    send all emails to a specific address
 
   delivery_addresses: ["dev@example.com"]
+  #  delivery_whitelist:
+  #       # all email addresses matching these regexes will be delivered
+  #       # like normal, as well as being sent to dev@example.com
+  #       - '/@specialdomain\.com$/'
+  #       - '/^admin@mydomain\.com$/'
 # spool: { type: "memory" }
 # transport: gmail
 # host: smtp.gmail.com

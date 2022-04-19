@@ -4,6 +4,9 @@
   pour l'activation
 </p>
 <p>
-  <a href="{{ absolute_url(path('activation', { token: token })) }}"></a>Activer
-  mon compte
+  <a
+    {# href="{{ path('http://127.0.0.1:8001/activation/', { token: token }) }}"
+  ></a #}
+  <a href="{{absolute_url(path('activation',{'token':token}))}}">Home</a>
+  >Activer mon compte
 </p>
