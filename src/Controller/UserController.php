@@ -53,11 +53,6 @@ class UserController extends AbstractController
                 ['token' => $user->getActivationToken()]
             );
 
-            // return $userAuthenticator->authenticateUser(
-            //     $user,
-            //     $authenticator,
-            //     $request
-            // );
             return $this->redirectToRoute('activation_message');
         }
 
