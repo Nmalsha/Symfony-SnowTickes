@@ -1,12 +1,13 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}New password{% endblock %} {%
+block body %}
+<h1>Enter your new password</h1>
 
-{% block title %}Reset your password{% endblock %}
+{{ form_start(resetForm) }}
+<div class="form_row">
+  <input type="hidden" name="token" value="{{ token }}" />
+</div>
+{{ form_row(resetForm.plainPassword) }}
 
-{% block body %}
-    <h1>Reset your password</h1>
-
-    {{ form_start(resetForm) }}
-        {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Reset password</button>
-    {{ form_end(resetForm) }}
+<button class="btn btn-primary">Reset password</button>
+{{ form_end(resetForm) }}
 {% endblock %}
