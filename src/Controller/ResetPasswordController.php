@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 //use Symfony\Component\Mime\Email;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
@@ -131,8 +132,10 @@ class ResetPasswordController extends AbstractController
      * @Route("/reset/{token}", name="app_reset_password")
      */
     public function reset(Request $request,
-        //   UserPasswordHasherInterface $userPasswordHasher,
-        TranslatorInterface $translator, $token): Response {
+        UserPasswordHasherInterface $userPasswordHasher,
+        TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
+        $token): Response {
 
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
@@ -154,7 +157,7 @@ class ResetPasswordController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('message', 'Password changed succz');
+            return $this->redirectToRoute('app_login');
         }
         // $user->setResetToken(null);
         // $plainPassword = $form->get('plainPassword');
@@ -209,6 +212,7 @@ class ResetPasswordController extends AbstractController
 
         //     return $this->redirectToRoute('home');
         // }
+        //$2y$13$opo74dHF7OdJLCJFh7CD9u.P0Sj9uBto5ry.1BnQhgBHmZ9IoPPGy
 
         return $this->render('reset_password/reset.html.twig', [
             'resetForm' => $form->createView(),
