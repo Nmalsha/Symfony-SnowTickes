@@ -4,8 +4,8 @@
 <pre>
     {{ dump(url) }}
 </pre>
-<a href="{{ url('app_reset_password', { resetToken: token }) }}">
-  {{ url("app_reset_password", { resetToken: token }) }}
+<a href="{{ url('app_reset_password', { token: token }) }}">
+  {{ url("app_reset_password", { token: token }) }}
 </a>
 
 </p>
