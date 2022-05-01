@@ -6,3 +6,12 @@ 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
 php bin/console server:run
 bin/console make:migration
 php bin/console doctrine:migrations:migrate
+
+$sudo /etc/init.d/apache2 stop
+
+$sudo /etc/init.d/mysql stop
+
+$sudo /etc/init.d/proftpd stop
+sudo /opt/lampp/lampp restartn
+
+ ./MailHog_linux_amd64
