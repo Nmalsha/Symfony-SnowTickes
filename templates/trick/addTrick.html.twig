@@ -13,13 +13,6 @@ app.request.attributes.get('_route')=='trick_edit' %}
     </div>
     <div class="form_row">
       {{ form_row(formTrick.description,{'attr':{'placeholder':"Add description"
-
-
-
-
-
-
-
       }}) }}
     </div>
     <div class="form_row">
@@ -47,9 +40,7 @@ app.request.attributes.get('_route')=='trick_edit' %}
     </div>
     <div class="form_row">
       {% if app.request.attributes.get('_route')=='trick_edit' %}
-      <a href="{{ path('annonces_delete_image', { id: image.id }) }}"
-        ><i class="fas fa-trash-alt"></i
-      ></a>
+      <a href=""><i class="fas fa-trash-alt"></i></a>
       {% endif %}
       {{ form_row(formTrick.images) }}
       {% if app.request.attributes.get('_route')=='trick_edit' %}
@@ -59,12 +50,17 @@ app.request.attributes.get('_route')=='trick_edit' %}
       </a>
       {% endif %}
     </div>
-
+    <pre>
+      {{ dump(trick.id) }}
+    </pre>
     {% if app.request.attributes.get('_route')=='trick_edit' %}
     <div class="image_galarie form_row">
       <h4>image galarie</h4>
-      <a type="button" class="btn btn-primary mr-auto m-2" href="#"
-        >Ajouter une image
+      <a
+        type="button"
+        class="btn btn-primary mr-auto m-2"
+        href="{{ path('trick_gallery', { id: trick.id }) }}"
+        >Ajouter gallery image
       </a>
     </div>
     <div class="video_galarie form_row">

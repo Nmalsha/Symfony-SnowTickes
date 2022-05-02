@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\GallaryImage;
 use App\Entity\Images;
 use App\Entity\Trick;
+use App\Form\GallaryImageType;
 use App\Form\TrickType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,9 +61,12 @@ class TrickController extends AbstractController
      * @Route("/tricks/new", name="trick_create")
      * @Route("/trick/{id}/edit", name="trick_edit")
      */
-    public function addTrick(Trick $trick = null, Images $images = null, Request $request, EntityManagerInterface $manager)
+    public function addTrick($id, Trick $trick = null, Images $images = null, Request $request, EntityManagerInterface $manager)
     {
+        // $repo = $this->getDoctrine()->getRepository(Trick::class);
+        // $trick = $repo->find($id);
 
+        // \dump($trick);
         if (!$trick) {
             $trick = new Trick();
         }
@@ -114,6 +119,59 @@ class TrickController extends AbstractController
             'formTrick' => $form->createView(),
             'trick' => $trick,
             'editMode' => $trick->getId() !== null,
+        ]);
+    }
+
+    /**
+
+     * @Route("/trick/{id}/gallery", name="trick_gallery")
+     */
+    public function addGallaryImage($id, Trick $trick = null, GallaryImage $GallaryImage = null, Request $request, EntityManagerInterface $manager)
+    {
+        $repo = $this->getDoctrine()->getRepository(Trick::class);
+        $trick = $repo->find($id);
+
+        $form = $this->createForm(GallaryImageType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $trickId = $request->get('trickId');
+            $galarieimages = $form->get('galarieimages')->getData();
+
+            // dd($galarieimages);
+            // die;
+            foreach ($galarieimages as $galarieimage) {
+
+                $imageDocument = md5(uniqid()) . '.' . $galarieimage->guessExtension();
+//send image name to the gallaryImage folder
+                $galarieimage->move(
+                    $this->getParameter('galarie_images_directory'),
+                    $imageDocument
+                );
+
+                // save image name to the DB
+
+                $img = new GallaryImage();
+
+                $img->setName($imageDocument);
+                $trick->addGallaryImage($img);
+                // // $trick->setTrickId($trickId);
+                // // // $trick->setCreatedOn(new \DateTime());
+
+            }
+
+            //if the form is valid
+            $manager->persist($trick);
+            $manager->flush();
+            //Redirect to the added trick view
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('GallaryImage/addGallaryImage.php', [
+            'formGallary' => $form->createView(),
+            'trick' => $trick,
+            'id' => $trick->getId() !== null,
         ]);
     }
 
