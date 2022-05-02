@@ -2,13 +2,13 @@
 
 // namespace App\Entity;
 
-// use App\Repository\GallaryImageRepository;
+// use App\Repository\GallaryImagesRepository;
 // use Doctrine\ORM\Mapping as ORM;
 
 // /**
-//  * @ORM\Entity(repositoryClass=GallaryImageRepository::class)
+//  * @ORM\Entity(repositoryClass=GallaryImagesRepository::class)
 //  */
-// class GallaryImage
+// class GallaryImages
 // {
 //     /**
 //      * @ORM\Id
@@ -26,12 +26,6 @@
 //      * @ORM\Column(type="integer")
 //      */
 //     private $trickId;
-
-//     /**
-//      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="gallaryImages")
-//      * @ORM\JoinColumn(nullable=false)
-//      */
-//     private $Trick;
 
 //     public function getId(): ?int
 //     {
@@ -61,5 +55,4 @@
 
 //         return $this;
 //     }
-
 // }

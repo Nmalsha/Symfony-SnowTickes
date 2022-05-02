@@ -32,7 +32,9 @@
           <br />
           {% if app.user %}
           <div>
-            <a href="/trick/{{ trick.id }}/edit"><i class="fas fa-edit"></i></a>
+            <a href="{{ path('trick_edit', { id: trick.id }) }}"
+              ><i class="fas fa-edit"></i
+            ></a>
             <a href=""><i class="fas fa-trash-alt"></i></a>
           </div>
           {% endif %}

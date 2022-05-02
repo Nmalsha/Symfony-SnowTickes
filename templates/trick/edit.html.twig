@@ -3,7 +3,7 @@
 
 {% block body %} 
 
-<h3 class="creation_topic">Création d'un Trick</h3>
+<h3 class="creation_topic">Edit d'un Trick</h3>
 <section class="tickes">
   <div class="card trickcard_style">
     {{ form_start(form) }}
@@ -17,17 +17,35 @@
       {{ form_row(form.categorie,{'attr':{'placeholder':"Add categorie"}})
       }}
     </div>
-
-    
-    
+{# <pre>
+    {{ dump( form.data) }}
+</pre> #}
+{% for image in trick.images %}
+    <div>
+        <img
+          src="{{ asset('/images/'~ image.name) }}"
+          alt="image"
+          width="150"
+        />
+        <a href="{{ path('delete_main_image', { id: image.id }) }}"
+        ><i class="fas fa-trash-alt"></i
+      ></a>
+      </div>
   
+  {% endfor %}
+  <div class="form_row">
+  {{ form_row(form.images) }}
+  <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+  >Choisir une image pour changer le image principle
+</a>
+</div>
     <div class="form_row">
       <button type="submit" class="btn btn-success">
-     Ajouter le trick 
+     Editer le trick 
       </button>
       {{ form_end(form) }}
     </div>
-  </div>
+</div>
   </div>
 </section>
 

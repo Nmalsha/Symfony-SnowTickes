@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\GallaryImage;
 use App\Entity\Images;
 use App\Entity\Trick;
-use App\Form\GallaryImageType;
 use App\Form\TrickType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,17 +57,10 @@ class TrickController extends AbstractController
 
     /**
      * @Route("/tricks/new", name="trick_create")
-     * @Route("/trick/{id}/edit", name="trick_edit")
      */
-    public function addTrick($id, Trick $trick = null, Images $images = null, Request $request, EntityManagerInterface $manager)
-    {
-        // $repo = $this->getDoctrine()->getRepository(Trick::class);
-        // $trick = $repo->find($id);
+    function new (Request $request, EntityManagerInterface $manager) {
 
-        // \dump($trick);
-        if (!$trick) {
-            $trick = new Trick();
-        }
+        $trick = new Trick();
 
         //adding fields to the form
         $form = $this->createForm(TrickType::class, $trick);
@@ -78,7 +69,9 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $userId = $request->get('userId');
+            $trick->setUser($this->getUser());
+            // \dump($userId);
+            // die;
             //get image data
             $images = $form->get('images')->getData();
 
@@ -97,15 +90,14 @@ class TrickController extends AbstractController
 
                 $img->setName($imageDocument);
                 $trick->addImage($img);
-                $trick->setUserId($userId);
+
                 $trick->setCreatedOn(new \DateTime());
 
             }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
-            if (!$trick->getId()) {
-                $trick->setCreatedOn(new \DateTime());
-            }
+
+            $trick->setCreatedOn(new \DateTime());
 
             //if the form is valid
             $manager->persist($trick);
@@ -116,63 +108,141 @@ class TrickController extends AbstractController
         }
 
         return $this->render('trick/addTrick.html.twig', [
-            'formTrick' => $form->createView(),
-            'trick' => $trick,
-            'editMode' => $trick->getId() !== null,
+            'form' => $form->createView(),
         ]);
     }
-
     /**
-
-     * @Route("/trick/{id}/gallery", name="trick_gallery")
+     * @Route("/tricks/edit/{id}", name="trick_edit" , methods={"POST", "GET"})
      */
-    public function addGallaryImage($id, Trick $trick = null, GallaryImage $GallaryImage = null, Request $request, EntityManagerInterface $manager)
+    public function edit($id, Trick $trick, Request $request, EntityManagerInterface $manager)
     {
-        $repo = $this->getDoctrine()->getRepository(Trick::class);
-        $trick = $repo->find($id);
-
-        $form = $this->createForm(GallaryImageType::class);
+        $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
+        // $oldImage = $this->getImages($id);
+        // \dump($oldImage);
+        // die;
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $trickId = $request->get('trickId');
-            $galarieimages = $form->get('galarieimages')->getData();
-
-            // dd($galarieimages);
+            $trick->setUser($this->getUser());
+            // \dump($userId);
             // die;
-            foreach ($galarieimages as $galarieimage) {
+            //get image data
+            $images = $form->get('images')->getData();
 
-                $imageDocument = md5(uniqid()) . '.' . $galarieimage->guessExtension();
-//send image name to the gallaryImage folder
-                $galarieimage->move(
-                    $this->getParameter('galarie_images_directory'),
+            //loop true the images
+            foreach ($images as $image) {
+
+                $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
+//send image name to the images folder
+                $image->move(
+                    $this->getParameter('images_directory'),
                     $imageDocument
                 );
+// save image name to the DB
 
-                // save image name to the DB
-
-                $img = new GallaryImage();
+                $img = new Images();
 
                 $img->setName($imageDocument);
-                $trick->addGallaryImage($img);
-                // // $trick->setTrickId($trickId);
-                // // // $trick->setCreatedOn(new \DateTime());
+                $trick->addImage($img);
+
+                // $trick->setCreatedOn(new \DateTime());
 
             }
+
+            //if the trick hasn't a id = if the trick already not exist in the DB
+
+            $trick->setCreatedOn(new \DateTime());
 
             //if the form is valid
             $manager->persist($trick);
             $manager->flush();
             //Redirect to the added trick view
             return $this->redirectToRoute('home');
+
         }
 
-        return $this->render('GallaryImage/addGallaryImage.php', [
-            'formGallary' => $form->createView(),
+        return $this->render('trick/edit.html.twig', [
+            'form' => $form->createView(),
             'trick' => $trick,
-            'id' => $trick->getId() !== null,
         ]);
+
     }
+
+    /**
+     * @Route("/tricks/supprime/mainimage/{id}", name="delete_main_image" , methods={"DELETE"})
+     */
+    public function deleteImage(Images $image, Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+//check if the token valid
+        if ($this->isCsrfTokenValid('delete' . $image - getId(), $data['_token'])) {
+            //getting image name from the DB
+            $name = $image->getName();
+            //Deleting the image from the directory
+            unlink($this->getParameter('images_directory') . '/' . $name);
+            //deleting the image from the DB
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($image);
+            $em->flush();
+
+            return new JsonReponse(['success' => 1]);
+
+        } else {
+            return new JsonReponse(['error' => 'Invalide token'], 400);
+        }
+    }
+
+    /**
+
+     * @Route("/trick/{id}/gallery", name="trick_gallery")
+     */
+//     public function addGallaryImage($id, Trick $trick = null, GallaryImage $GallaryImage = null, Request $request, EntityManagerInterface $manager)
+    //     {
+    //         $repo = $this->getDoctrine()->getRepository(Trick::class);
+    //         $trick = $repo->find($id);
+
+//         $form = $this->createForm(GallaryImageType::class);
+
+//         $form->handleRequest($request);
+    //         if ($form->isSubmitted() && $form->isValid()) {
+
+//             $trickId = $request->get('trickId');
+    //             $galarieimages = $form->get('galarieimages')->getData();
+
+//             // dd($galarieimages);
+    //             // die;
+    //             foreach ($galarieimages as $galarieimage) {
+
+//                 $imageDocument = md5(uniqid()) . '.' . $galarieimage->guessExtension();
+    // //send image name to the gallaryImage folder
+    //                 $galarieimage->move(
+    //                     $this->getParameter('galarie_images_directory'),
+    //                     $imageDocument
+    //                 );
+
+//                 // save image name to the DB
+
+//                 $img = new GallaryImage();
+
+//                 $img->setName($imageDocument);
+    //                 $trick->addGallaryImage($img);
+    //                 // // $trick->setTrickId($trickId);
+    //                 // // // $trick->setCreatedOn(new \DateTime());
+
+//             }
+
+//             //if the form is valid
+    //             $manager->persist($trick);
+    //             $manager->flush();
+    //             //Redirect to the added trick view
+    //             return $this->redirectToRoute('home');
+    //         }
+
+//         return $this->render('GallaryImage/addGallaryImage.php', [
+    //             'formGallary' => $form->createView(),
+    //             'trick' => $trick,
+    //             'id' => $trick->getId() !== null,
+    //         ]);
+    //     }
 
 }
