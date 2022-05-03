@@ -22,14 +22,16 @@
 </pre> #}
 {% for image in trick.images %}
     <div>
+      
         <img
           src="{{ asset('/images/'~ image.name) }}"
-          alt="image"
+          alt="Delete image"
           width="150"
         />
-        <a href="{{ path('delete_main_image', { id: image.id }) }}"
-        ><i class="fas fa-trash-alt"></i
-      ></a>
+        <a href="{{ path('delete_main_image', { id: image.id }) }}" data-delete data-token="{{csrf_token('delete'~ image.id)}}"
+        ><i class="fas fa-trash-alt">sup</i
+      >
+       </a>
       </div>
   
   {% endfor %}
@@ -50,3 +52,6 @@
 </section>
 
 {% endblock %}
+{% block javascript %}
+<script src="{{ asset('js/image.js')}}"
+{% endblock javascript %}

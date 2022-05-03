@@ -173,9 +173,18 @@ class TrickController extends AbstractController
      */
     public function deleteImage(Images $image, Request $request)
     {
-        $data = json_decode($request->getContent(), true);
-//check if the token valid
-        if ($this->isCsrfTokenValid('delete' . $image - getId(), $data['_token'])) {
+        $reqData = $request->getContent();
+
+        $data = json_decode($reqData, true);
+        error_log("************************************");
+        error_log(var_export($data, true));
+
+        error_log($data['_token']);
+        error_log($data['_token']);
+        //error_log(($request->getContent()));
+        //check if the token valid
+        if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
+
             //getting image name from the DB
             $name = $image->getName();
             //Deleting the image from the directory
@@ -185,10 +194,14 @@ class TrickController extends AbstractController
             $em->remove($image);
             $em->flush();
 
-            return new JsonReponse(['success' => 1]);
-
+            //return new JsonReponse(['success' => 1]);
+            error_log("******************TOKEN OK******************");
+            return new Response("OKy");
         } else {
-            return new JsonReponse(['error' => 'Invalide token'], 400);
+            // return new JsonReponse(['error' => 'Invalide token'], 400);
+
+            error_log("******************TOKEN ERR******************");
+            return new Response("KOy");
         }
     }
 
