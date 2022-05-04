@@ -41,6 +41,36 @@
   >Choisir une image pour changer le image principle
 </a>
 </div>
+
+{# <div class="image_galarie form_row">
+    <h4>image galarie</h4>
+    <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+      >Ajouter une image
+    </a>
+  </div> #}
+  {% for image in trick.images %}
+  <div>
+      
+    <img
+      src="{{ asset('/images/'~ image.nameGallaryImages) }}"
+      alt="Delete image"
+      width="150"
+    />
+    <a href="{{ path('delete_main_image', { id: image.id }) }}" data-delete data-token="{{csrf_token('delete'~ image.id)}}"
+    ><i class="fas fa-trash-alt">sup</i
+  >
+   </a>
+  </div>
+
+
+
+  <div class="form_row">
+    
+    <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+    >Choisir une image pour changer le gallary image
+  </a>
+  </div>
+  {% endfor %}
     <div class="form_row">
       <button type="submit" class="btn btn-success">
      Editer le trick 

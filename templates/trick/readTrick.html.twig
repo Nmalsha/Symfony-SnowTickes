@@ -4,7 +4,10 @@
   <div class="card card_read">
     <pre>
       {{ dump(imagename) }}
+    
+
     </pre>
+    <h4>Main image</h4>
     <img
       class="card-img-top"
       src="{{ asset('/images/'~ imagename) }}"
@@ -23,6 +26,13 @@
     <div class="row d-lg-flex load-media">
       <div class="col-lg-6 col-md-12">
         <h4>todo image galarie</h4>
+        {# {% for galaryImageName in trick.galaryImageNames %} #}
+        <img
+          class="card-img-top"
+          src="{{ asset('/images/'~ galaryImageNames) }}"
+          alt="Card image cap"
+        />
+        {# {% endfor %} #}
       </div>
       <div class="col-lg-6 col-md-12">
         <h4>todo video galarie</h4>

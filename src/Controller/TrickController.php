@@ -30,7 +30,9 @@ class TrickController extends AbstractController
         $trick = $repo->find($id);
 
         $repoImage = $this->getDoctrine()->getRepository(Images::class);
-
+        // dump($repoImage);
+        // die;
+        //  $images = $repoImage->findAll();
         $images = $repoImage->findAll();
 
         foreach ($images as $image) {
@@ -38,10 +40,17 @@ class TrickController extends AbstractController
             //get the trick from images repo
 
             $imagesTrick = $image->getTrick();
+
             // get trick id from images
             $imagerepoTrickId = $imagesTrick->getId();
+            // dump($imagerepoTrickId);
+            // die;
             if ($id === $imagerepoTrickId) {
+
                 $imagename = $image->getName();
+                $galaryImageNames = $image->getNameGallaryImages();
+
+                //  $galaryImageNames = $image->getNameGallaryImages();
 
             }
 
@@ -52,6 +61,7 @@ class TrickController extends AbstractController
         return $this->render('trick/readTrick.html.twig', [
             'trick' => $trick,
             'imagename' => $imagename,
+            'galaryImageNames' => $galaryImageNames,
         ]);
     }
 
@@ -61,7 +71,7 @@ class TrickController extends AbstractController
     function new (Request $request, EntityManagerInterface $manager) {
 
         $trick = new Trick();
-
+        $img = new Images();
         //adding fields to the form
         $form = $this->createForm(TrickType::class, $trick);
 
@@ -72,27 +82,47 @@ class TrickController extends AbstractController
             $trick->setUser($this->getUser());
             // \dump($userId);
             // die;
-            //get image data
-            $images = $form->get('images')->getData();
+            //get Main image data
+            $mainimages = $form->get('images')->getData();
+            // \dump($mainimage);
+            // die;
+            foreach ($mainimages as $mainimage) {
 
+                $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
+                // \dump($imageDocument);
+                // die;
+                //send image name to the images folder
+                $mainimage->move(
+                    $this->getParameter('images_directory'),
+                    $imageDocument
+                );
+                // save image name to the DB
+
+                //    $img = new Images();
+
+                $img->setName($imageDocument);
+                $trick->addImage($img);
+                //  $img->setIsMainImage(1);
+                //   $trick->setCreatedOn(new \DateTime());
+
+            }
+
+            $gallaryImages = $form->get('gallaryimages')->getData();
             //loop true the images
-            foreach ($images as $image) {
 
+            foreach ($gallaryImages as $image) {
                 $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
-//send image name to the images folder
+
                 $image->move(
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
-// save image name to the DB
+                // save image name to the DB
 
-                $img = new Images();
+                //  $img = new Images();
 
-                $img->setName($imageDocument);
+                $img->setNameGallaryImages($imageDocument);
                 $trick->addImage($img);
-
-                $trick->setCreatedOn(new \DateTime());
-
             }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
@@ -116,6 +146,8 @@ class TrickController extends AbstractController
      */
     public function edit($id, Trick $trick, Request $request, EntityManagerInterface $manager)
     {
+        $img = new Images();
+
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
@@ -126,27 +158,47 @@ class TrickController extends AbstractController
             $trick->setUser($this->getUser());
             // \dump($userId);
             // die;
-            //get image data
-            $images = $form->get('images')->getData();
+            //get Main image data
+            $mainimages = $form->get('images')->getData();
+            // \dump($mainimage);
+            // die;
+            foreach ($mainimages as $mainimage) {
 
+                $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
+                // \dump($imageDocument);
+                // die;
+                //send image name to the images folder
+                $mainimage->move(
+                    $this->getParameter('images_directory'),
+                    $imageDocument
+                );
+                // save image name to the DB
+
+                //    $img = new Images();
+
+                $img->setName($imageDocument);
+                $trick->addImage($img);
+                //  $img->setIsMainImage(1);
+                //   $trick->setCreatedOn(new \DateTime());
+
+            }
+
+            $gallaryImages = $form->get('gallaryimages')->getData();
             //loop true the images
-            foreach ($images as $image) {
 
+            foreach ($gallaryImages as $image) {
                 $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
-//send image name to the images folder
+
                 $image->move(
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
-// save image name to the DB
+                // save image name to the DB
 
-                $img = new Images();
+                //  $img = new Images();
 
-                $img->setName($imageDocument);
+                $img->setNameGallaryImages($imageDocument);
                 $trick->addImage($img);
-
-                // $trick->setCreatedOn(new \DateTime());
-
             }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
@@ -158,6 +210,42 @@ class TrickController extends AbstractController
             $manager->flush();
             //Redirect to the added trick view
             return $this->redirectToRoute('home');
+
+//             $trick->setUser($this->getUser());
+            //             // \dump($userId);
+            //             // die;
+            //             //get image data
+            //             $images = $form->get('images')->getData();
+
+//             //loop true the images
+            //             foreach ($images as $image) {
+
+//                 $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
+            // //send image name to the images folder
+            //                 $image->move(
+            //                     $this->getParameter('images_directory'),
+            //                     $imageDocument
+            //                 );
+            // // save image name to the DB
+
+//                 $img = new Images();
+
+//                 $img->setName($imageDocument);
+            //                 $trick->addImage($img);
+
+//                 // $trick->setCreatedOn(new \DateTime());
+
+//             }
+
+//             //if the trick hasn't a id = if the trick already not exist in the DB
+
+//             $trick->setCreatedOn(new \DateTime());
+
+//             //if the form is valid
+            //             $manager->persist($trick);
+            //             $manager->flush();
+            //             //Redirect to the added trick view
+            //             return $this->redirectToRoute('home');
 
         }
 
