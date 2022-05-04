@@ -35,6 +35,7 @@ class TrickController extends AbstractController
         //  $images = $repoImage->findAll();
         $images = $repoImage->findAll();
 
+        $selImages = [];
         foreach ($images as $image) {
 
             //get the trick from images repo
@@ -46,6 +47,7 @@ class TrickController extends AbstractController
             // dump($imagerepoTrickId);
             // die;
             if ($id === $imagerepoTrickId) {
+                $selImages[] = $image;
 
                 $imagename = $image->getName();
                 $galaryImageNames = $image->getNameGallaryImages();
@@ -62,6 +64,7 @@ class TrickController extends AbstractController
             'trick' => $trick,
             'imagename' => $imagename,
             'galaryImageNames' => $galaryImageNames,
+            'selImages' => $selImages,
         ]);
     }
 
@@ -160,10 +163,11 @@ class TrickController extends AbstractController
             // die;
             //get Main image data
             $mainimages = $form->get('images')->getData();
-            // \dump($mainimage);
-            // die;
-            foreach ($mainimages as $mainimage) {
 
+            $mainImageTemp = null;
+            foreach ($mainimages as $mainimage) {
+                $mainImageTemp = $mainimage;
+                var_dump($mainImageTemp);die();
                 $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
                 // \dump($imageDocument);
                 // die;
@@ -198,6 +202,7 @@ class TrickController extends AbstractController
                 //  $img = new Images();
 
                 $img->setNameGallaryImages($imageDocument);
+                $img->setName("TOTO");
                 $trick->addImage($img);
             }
 
