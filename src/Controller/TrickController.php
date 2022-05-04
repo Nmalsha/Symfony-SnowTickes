@@ -167,7 +167,7 @@ class TrickController extends AbstractController
             $mainImageTemp = null;
             foreach ($mainimages as $mainimage) {
                 $mainImageTemp = $mainimage;
-                var_dump($mainImageTemp);die();
+                // var_dump($mainImageTemp);die();
                 $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
                 // \dump($imageDocument);
                 // die;
