@@ -68,6 +68,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $tricks;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comments::class,mappedBy="user", orphanRemoval=true)
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->tricks = new ArrayCollection();
@@ -226,6 +231,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $trick->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getComments(): ?Comments
+    {
+        return $this->comments;
+    }
+
+    public function setComments(?Comments $comments): self
+    {
+        $this->comments = $comments;
 
         return $this;
     }

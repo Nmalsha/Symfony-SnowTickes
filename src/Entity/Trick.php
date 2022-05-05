@@ -55,10 +55,15 @@ class Trick
      */
     private $user;
 
-    // /**
-    //  * @ORM\OneToMany(targetEntity=GallaryImage::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
-    //  */
-    // private $gallaryImages;
+    /**
+     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
+     */
+    private $videos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comments::class,  mappedBy="Trick")
+     */
+    private $comments;
 
     public function __construct()
     {
@@ -200,6 +205,30 @@ class Trick
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getVideos(): ?Videos
+    {
+        return $this->videos;
+    }
+
+    public function setVideos(?Videos $videos): self
+    {
+        $this->videos = $videos;
+
+        return $this;
+    }
+
+    public function getComments(): ?Comments
+    {
+        return $this->comments;
+    }
+
+    public function setComments(?Comments $comments): self
+    {
+        $this->comments = $comments;
 
         return $this;
     }

@@ -26,6 +26,7 @@ class BlogController extends AbstractController
     public function home(): Response
     {
         $repo = $this->getDoctrine()->getRepository(Trick::class);
+
         $tricks = $repo->findAll();
         $repoImage = $this->getDoctrine()->getRepository(Images::class);
         $Images = $repoImage->findAll();
