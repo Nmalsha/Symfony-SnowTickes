@@ -62,8 +62,8 @@ class TrickController extends AbstractController
 
         return $this->render('trick/readTrick.html.twig', [
             'trick' => $trick,
-            'imagename' => $imagename,
-            'galaryImageNames' => $galaryImageNames,
+            //   'imagename' => $imagename,
+            //'galaryImageNames' => $galaryImageNames,
             'selImages' => $selImages,
         ]);
     }
@@ -89,6 +89,7 @@ class TrickController extends AbstractController
             $mainimages = $form->get('images')->getData();
             // \dump($mainimage);
             // die;
+
             foreach ($mainimages as $mainimage) {
 
                 $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
@@ -104,6 +105,7 @@ class TrickController extends AbstractController
                 //    $img = new Images();
 
                 $img->setName($imageDocument);
+
                 $trick->addImage($img);
                 //  $img->setIsMainImage(1);
                 //   $trick->setCreatedOn(new \DateTime());
@@ -125,6 +127,7 @@ class TrickController extends AbstractController
                 //  $img = new Images();
 
                 $img->setNameGallaryImages($imageDocument);
+
                 $trick->addImage($img);
             }
 
@@ -202,7 +205,7 @@ class TrickController extends AbstractController
                 //  $img = new Images();
 
                 $img->setNameGallaryImages($imageDocument);
-                $img->setName("TOTO");
+                //$img->setName("TOTO");
                 $trick->addImage($img);
             }
 
@@ -215,42 +218,6 @@ class TrickController extends AbstractController
             $manager->flush();
             //Redirect to the added trick view
             return $this->redirectToRoute('home');
-
-//             $trick->setUser($this->getUser());
-            //             // \dump($userId);
-            //             // die;
-            //             //get image data
-            //             $images = $form->get('images')->getData();
-
-//             //loop true the images
-            //             foreach ($images as $image) {
-
-//                 $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
-            // //send image name to the images folder
-            //                 $image->move(
-            //                     $this->getParameter('images_directory'),
-            //                     $imageDocument
-            //                 );
-            // // save image name to the DB
-
-//                 $img = new Images();
-
-//                 $img->setName($imageDocument);
-            //                 $trick->addImage($img);
-
-//                 // $trick->setCreatedOn(new \DateTime());
-
-//             }
-
-//             //if the trick hasn't a id = if the trick already not exist in the DB
-
-//             $trick->setCreatedOn(new \DateTime());
-
-//             //if the form is valid
-            //             $manager->persist($trick);
-            //             $manager->flush();
-            //             //Redirect to the added trick view
-            //             return $this->redirectToRoute('home');
 
         }
 
@@ -296,6 +263,44 @@ class TrickController extends AbstractController
             error_log("******************TOKEN ERR******************");
             return new Response("KOy");
         }
+    }
+
+    /**
+     * @Route("/tricks/supprime/galleryimage/{id}", name="delete_gallery_image" , methods={"DELETE"})
+     */
+    public function deleteGalleryImage(Images $image, Request $request)
+    {
+        $reqData = $request->getContent();
+
+        $data = json_decode($reqData, true);
+        error_log("************************************");
+        error_log(var_export($data, true));
+
+        error_log($data['_token']);
+        error_log($data['_token']);
+        //error_log(($request->getContent()));
+        //check if the token valid
+        if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
+
+            //getting image name from the DB
+            $name = $image->getNameGallaryImages();
+            //Deleting the image from the directory
+            unlink($this->getParameter('images_directory') . '/' . $name);
+            //deleting the image from the DB
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($image);
+            $em->flush();
+
+            //return new JsonReponse(['success' => 1]);
+            error_log("******************TOKEN OK******************");
+            return new Response("OKy");
+        } else {
+            // return new JsonReponse(['error' => 'Invalide token'], 400);
+
+            error_log("******************TOKEN ERR******************");
+            return new Response("KOy");
+        }
+
     }
 
     /**
