@@ -4,7 +4,11 @@
     <div class="col-md-10 col-md-offset-1 mb-4">
       <div class="card mt-5">
         {% for image in selImages %}
-        <img class="display-top img-fluid" src="{{ asset('/images/'~ image.name) }}" alt="main image">
+        <img
+          class="display-top img-fluid"
+          src="{{ asset('/images/'~ image.name) }}"
+          alt="main image"
+        />
         {% endfor %}
         <div class="card-body">
           <ul class="list-inline trick-data">
@@ -12,14 +16,11 @@
               Créer par:<a target="" href="#"></a>
             </li>
             <li class="list-inline-item">
-              Ajouter le:{{ trick.createdOn | date('d/m/y') }} à   {{ trick.createdOn | date('H:i') }}
+              Ajouter le:{{ trick.createdOn | date('d/m/y') }} à
+              {{ trick.createdOn | date('H:i') }}
             </li>
-            <li class="list-inline-item">
-              Catagorie:{{ trick.categorie }}
-            </li>
-            <li class="list-inline-item">
-              number Of Comments:
-            </li>
+            <li class="list-inline-item">Catagorie:{{ trick.categorie }}</li>
+            <li class="list-inline-item">number Of Comments:</li>
           </ul>
           <!---Start carousel-->
           <div class="row">
@@ -33,13 +34,20 @@
                   src="{{ asset('/images/'~ image.nameGallaryImages) }}"
                   class="w-100"
                 />
-                <a href="#!" data-mdb-toggle="modal" data-mdb-target="#exampleModal1">
-                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.2);"></div>
+                <a
+                  href="#!"
+                  data-mdb-toggle="modal"
+                  data-mdb-target="#exampleModal1"
+                >
+                  <div
+                    class="mask"
+                    style="background-color: rgba(251, 251, 251, 0.2)"
+                  ></div>
                 </a>
               </div>
             </div>
             {% endfor %}
-            </div>
+          </div>
           <!--
           <div class="row d-lg-flex load-media">
             <div class="col-lg-6 col-md-12">
@@ -64,166 +72,57 @@
             <div class="col-lg-6 col-md-12"></div>
           </div>
           -->
-           <!---End  carousel-->
-<h4 class="card-title">
-  <strong>{{ trick.trickName }}</strong>
-</h4>
-<p class="card-text">
-  {{ trick.description }}
-</p>
-<!---Start Comment Add form-->
-<div class="col-md-12 px-0 mb-3">
-  <div class="comments text-center p-3">
-    <p>
-      <a href="#">Inscrivez-vous</a> Ou <a href="#">Connectez-vous</a> Pour commenter cet article
-    </p>
-  </div>
-</div>
+          <!---End  carousel-->
+          <h4 class="card-title">
+            <strong>{{ trick.trickName }}</strong>
+          </h4>
+          <p class="card-text">
+            {{ trick.description }}
+          </p>
+          <!---Start Comment Add form-->
+          <div class="col-md-12 px-0 mb-3">
+            <div class="comments text-center p-3">
+              <p>
+                <a href="/register">Inscrivez-vous</a> Ou
+                <a href="/login">Connectez-vous</a> Pour commenter cet article
+              </p>
+            </div>
+          </div>
 
-<!---End Comment Add form-->
-<!---Start Comment -->
-<div class="col-md-12 bg-light">
-  <div class="mb-3">
-    <div class="border entry-comments">
-     <h6 class="mb-3 pl-2">---Commentaires</h6>
-     <ul class="entry-comments-list list-unstyled">
-       <!-- DO LOOP-->
-       <div class="row mb-3 pl-2 bg-light">
-         <div class="col-md-2 col-sm-4 col-xs-6 text-center">
-           <img class="user-profile" src="#" >
-         </div>
-<div class="col-10 col-sm-8 col-xs-6">
-  <p > Display comment here</p>
-  <p> 
-    <span> Par: <a href="#">Display comment owner here</a></span>
-    <span> Display commented date here</span>
-  </p>
-</div>
-       </div>
-       <!--end loop-->
-     </ul>
-    </div>
-  </div>
-  <div class="p-3"></div>
-</div>
+          <!---End Comment Add form-->
+          <!---Start Comment -->
+          <div class="col-md-12 bg-light">
+            <div class="mb-3">
+              <div class="border entry-comments">
+                <h6 class="mb-3 pl-2">---Commentaires</h6>
+                <ul class="entry-comments-list list-unstyled">
+                  <!-- DO LOOP-->
+                  <div class="row mb-3 pl-2 bg-light">
+                    <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+                      <img class="user-profile" src="#" />
+                    </div>
+                    <div class="col-10 col-sm-8 col-xs-6">
+                      <p>Display comment here</p>
+                      <p>
+                        <span>
+                          Par: <a href="#">Display comment owner here</a></span
+                        >
+                        <span> Display commented date here</span>
+                      </p>
+                    </div>
+                  </div>
+                  <!--end loop-->
+                </ul>
+              </div>
+            </div>
+            <div class="p-3"></div>
+          </div>
 
-<!---End Comment-->
+          <!---End Comment-->
         </div>
       </div>
     </div>
   </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{# 
-
-<h3>read</h3>
-<section class="read_view">
-  <div class="card card_read">
-    <pre>
-      {{ dump(selImages) }}
-    
-
-    </pre>
-    <h4>Main image</h4>
-    
-    {% for image in selImages %}
-    <img
-      class="card-img-top"
-      src="{{ asset('/images/'~ image.name) }}"
-      alt="Card image cap"
-    />
-    {% endfor %}
-    <div class="trickinfo">
-      <p>Créer par;</p>
-      <p>
-        Ajouter le:{{ trick.createdOn | date('d/m/y') }} à
-        {{ trick.createdOn | date('H:i') }} by
-      </p>
-      <p>Catagorie :{{ trick.categorie }}</p>
-      <p>number Of Comments</p>
-    </div>
-    <!--Carousel-->
-    <div class="row d-lg-flex load-media">
-      <div class="col-lg-6 col-md-12">
-        <h4>todo image galarie</h4>
-        {# {% for galaryImageName in image.galaryImageNames %} #}
-        {# <img
-          class="card-img-top"
-          src="{{ asset('/images/'~ galaryImageNames) }}"
-          alt="Card image cap"
-        /> #}
-      
-      {# </div>
-      <div class="col-lg-6 col-md-12">
-        <h4>todo video galarie</h4>
-      </div>
-    </div>
-    <div class="card-body"></div>
-    <div class="card-body">
-      <h4>{{ trick.trickName }}</h4>
-      <p class="metadata">{{ trick.description }}</p>
-    </div>
-  </div> #}
-  {# <pre>
-  {{ dump(selImages) }}
- 
-</pre #}
-  
-  {# {% for image in selImages %}
-  {# {{ dump(toto.name) }}{# #}
-  {# <img
-    class="card-img-top margin"
-    src="{{ asset('/images/'~ image.nameGallaryImages) }}"
-    alt="Trick image" #}
-  /> #}
-  #} 
-  {# {% endfor %} #}
-{# </section> #} #}
 {% endblock %}

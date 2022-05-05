@@ -23,7 +23,7 @@
           <p class="card-text">{{ trick.categorie }}</p>
           <p class="card-text">
             Created on:{{ trick.createdOn | date('d/m/y') }} a
-            {{ trick.createdOn | date('H:i') }} by
+            {{ trick.createdOn | date('H:i') }} by {{ trick.user.secondName }}
           </p>
           <a
             href="{{ path('tricks_show', { id: trick.id }) }}"
