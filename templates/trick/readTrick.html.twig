@@ -3,17 +3,17 @@
   <div class="row justify-content-center">
     <div class="col-md-10 col-md-offset-1 mb-4">
       <div class="card mt-5">
-        {% for image in selImages %}
+        {% for image in selImages %} {% if image.name is not empty %}
         <img
           class="display-top img-fluid"
           src="{{ asset('/images/'~ image.name) }}"
-          alt="main image"
+          alt=""
         />
-        {% endfor %}
+        {% endif %} {% endfor %}
         <div class="card-body">
           <ul class="list-inline trick-data">
             <li class="list-inline-item">
-              Créer par:<a target="" href="#"></a>
+              Créer par:<a target="" href="#">{{ trick.user.secondName }}</a>
             </li>
             <li class="list-inline-item">
               Ajouter le:{{ trick.createdOn | date('d/m/y') }} à
@@ -24,12 +24,17 @@
           </ul>
           <!---Start carousel-->
           <div class="row">
-            {% for image in selImages %}
+            {% for image in selImages %} {% if image.nameGallaryImages is not
+            null %}
             <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
               <div
                 class="bg-image hover-overlay ripple shadow-1-strong rounded"
                 data-ripple-color="light"
               >
+                <pre>
+                {{ dump(image.nameGallaryImages) }}
+              </pre
+                >
                 <img
                   src="{{ asset('/images/'~ image.nameGallaryImages) }}"
                   class="w-100"
@@ -46,7 +51,7 @@
                 </a>
               </div>
             </div>
-            {% endfor %}
+            {% endif %} {% endfor %}
           </div>
           <!--
           <div class="row d-lg-flex load-media">
