@@ -19,10 +19,10 @@ class Trick
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=70)
-     */
-    private $userId;
+    // /**
+    //  * @ORM\Column(type="string", length=70)
+    //  */
+    // private $userId;
 
     /**
      * @ORM\Column(type="string", length=70)
@@ -49,6 +49,17 @@ class Trick
      */
     private $images;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tricks")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    // /**
+    //  * @ORM\OneToMany(targetEntity=GallaryImage::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
+    //  */
+    // private $gallaryImages;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -59,17 +70,17 @@ class Trick
         return $this->id;
     }
 
-    public function getUserId(): ?string
-    {
-        return $this->userId;
-    }
+    // public function getUserId(): ?string
+    // {
+    //     return $this->userId;
+    // }
 
-    public function setUserId(string $userId): self
-    {
-        $this->userId = $userId;
+    // public function setUserId(string $userId): self
+    // {
+    //     $this->userId = $userId;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getTrickName(): ?string
     {
@@ -154,6 +165,41 @@ class Trick
                 $image->setTrick(null);
             }
         }
+
+        return $this;
+    }
+    // /**
+    //  * @return Collection<int, GallaryImages>
+    //  */
+    // public function getGallaryImages(): ?string
+    // {
+    //     return $this->gallaryImages;
+    // }
+
+    // public function setGallaryImages(?string $gallaryImages): self
+    // {
+    //     $this->gallaryImages = $gallaryImages;
+
+    //     return $this;
+    // }
+    // public function addGallaryImage(GallaryImages $gallaryImage): self
+    // {
+    //     if (!$this->gallaryImages->contains($gallaryImage)) {
+    //         $this->gallaryImages[] = $gallaryImage;
+    //         $gallaryImage->setTrick($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

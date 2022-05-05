@@ -28,6 +28,16 @@ class Images
      */
     private $Trick;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isMainImage;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $nameGallaryImages;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,6 +63,30 @@ class Images
     public function setTrick(?Trick $Trick): self
     {
         $this->Trick = $Trick;
+
+        return $this;
+    }
+
+    public function getIsMainImage(): ?bool
+    {
+        return $this->isMainImage;
+    }
+
+    public function setIsMainImage(?bool $isMainImage): self
+    {
+        $this->isMainImage = $isMainImage;
+
+        return $this;
+    }
+
+    public function getNameGallaryImages(): ?string
+    {
+        return $this->nameGallaryImages;
+    }
+
+    public function setNameGallaryImages(?string $nameGallaryImages): self
+    {
+        $this->nameGallaryImages = $nameGallaryImages;
 
         return $this;
     }

@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %} 
+
+<h3 class="creation_topic">Edit d'un Trick</h3>
+<section class="tickes">
+  <div class="card trickcard_style">
+    {{ form_start(form) }}
+    <div class="form_row">
+      {{ form_row(form.TrickName,{'attr':{'placeholder':"Add name"}}) }}
+    </div>
+    <div class="form_row">
+      {{ form_row(form.description,{'attr':{'placeholder':"Add description"}}) }}
+    </div>
+    <div class="form_row">
+      {{ form_row(form.categorie,{'attr':{'placeholder':"Add categorie"}})
+      }}
+    </div>
+{# <pre>
+    {{ dump( form.data) }}
+</pre> #}
+{% for mainimage in trick.images %}
+    <div>
+      
+        <img
+          src="{{ asset('/images/'~ mainimage.name) }}"
+          alt="Delete image"
+          width="150"
+        />
+        <a href="{{ path('delete_main_image', { id: mainimage.id }) }}" data-delete data-token="{{csrf_token('delete'~ mainimage.id)}}"
+        ><i class="fas fa-trash-alt">sup</i
+      >
+       </a>
+      </div>
+  
+  {% endfor %}
+  <div class="form_row">
+  {{ form_row(form.images) }}
+  <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+  >Choisir une image pour changer le image principle
+</a>
+</div>
+
+{# <div class="image_galarie form_row">
+    <h4>image galarie</h4>
+    <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+      >Ajouter une image
+    </a>
+  </div> #}
+  {% for galleryimg in trick.images %}
+  <pre>
+      {{ dump(trick.images) }}
+  </pre>
+
+  {# <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="d-block w-100" src="{{ asset('/images/'~ galleryimg.nameGallaryImages) }}" alt="First slide">
+      </div>
+      
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div> #}
+
+
+  <div>
+      
+    <img
+      src="{{ asset('/images/'~ galleryimg.nameGallaryImages) }}"
+      alt="Delete image"
+      width="150"
+    />
+    {# <a href="{{ path('delete_gallaryimage', { id: image.id }) }}" data-delete data-token="{{csrf_token('delete'~ image.id)}}"
+    ><i class="fas fa-trash-alt">sup</i
+  >
+   </a>
+  </div> #}
+
+
+
+  
+  {% endfor %}
+  <div class="form_row">
+    
+    <a type="button" class="btn btn-primary mr-auto m-2" href="#"
+    >Choisir une image pour changer le gallary image
+  </a>
+
+
+  </div>
+ 
+    <div class="form_row">
+      <button type="submit" class="btn btn-success">
+     Editer le trick 
+      </button>
+      {{ form_end(form) }}
+    </div>
+</div>
+  </div>
+</section>
+
+{% endblock %}
+{% block javascript %}
+<script src="{{ asset('js/image.js')}}"
+{% endblock javascript %}
