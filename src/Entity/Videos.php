@@ -26,9 +26,14 @@ class Videos
     private $url;
 
     /**
-     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="videos")
+     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="videos" )
      */
     private $trick;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $trickId;
 
     public function __construct()
     {
@@ -78,6 +83,18 @@ class Videos
                 $trick->setVideos(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTrickId(): ?int
+    {
+        return $this->trickId;
+    }
+
+    public function setTrickId(int $trickId): self
+    {
+        $this->trickId = $trickId;
 
         return $this;
     }

@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Trick;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-//use Symfony\Component\Form\Extension\Core\Type\textareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -32,6 +31,14 @@ class TrickType extends AbstractType
                 'mapped' => false,
                 'required' => false,
             ])
+
+            // ->add('videos', CollectionType::class, [
+            //     'label' => 'Add video',
+            //     'entry_type' => VideosType::class,
+            //     'entry_options' => ['label' => false],
+            //     'mapped' => false,
+            //     'required' => false,
+            // ]);
             // ->add('videos', CollectionType::class, [
             //     'attr' => [
 

@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Images;
 use App\Entity\Trick;
-//use App\Form\TrickType;
+use App\Entity\Videos;
+use App\Form\TrickType;
 use App\Form\VideosType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,22 +32,26 @@ class TrickController extends AbstractController
         $trick = $repo->find($id);
 
         $repoImage = $this->getDoctrine()->getRepository(Images::class);
+        $repovideos = $this->getDoctrine()->getRepository(Videos::class);
         // dump($repoImage);
         // die;
         //  $images = $repoImage->findAll();
+
         $images = $repoImage->findAll();
 
         $selImages = [];
         foreach ($images as $image) {
-
+            // \dump($image);
+            // die;
             //get the trick from images repo
 
             $imagesTrick = $image->getTrick();
 
             // get trick id from images
             $imagerepoTrickId = $imagesTrick->getId();
+
             // dump($imagerepoTrickId);
-            // die;
+            // // die;
             if ($id === $imagerepoTrickId) {
                 $selImages[] = $image;
 
@@ -54,6 +59,25 @@ class TrickController extends AbstractController
                 $galaryImageNames = $image->getNameGallaryImages();
 
                 //  $galaryImageNames = $image->getNameGallaryImages();
+
+            }
+
+        }
+        $videos = $repovideos->findAll();
+
+        $selVideos = [];
+        foreach ($videos as $video) {
+            // \dump($video);
+            // die;
+            //   $videoTrick = $video->getTrick();
+
+            $videorepoTrickId = $video->getTrickId();
+            // \dump($videorepoTrickId);
+            // die;
+            if ($id === $videorepoTrickId) {
+                $selVideos[] = $video;
+
+                $videoname = $video->getUrl();
 
             }
 
@@ -66,6 +90,7 @@ class TrickController extends AbstractController
             //   'imagename' => $imagename,
             //'galaryImageNames' => $galaryImageNames,
             'selImages' => $selImages,
+            'selVideos' => $selVideos,
         ]);
     }
 
@@ -76,7 +101,7 @@ class TrickController extends AbstractController
 
         $trick = new Trick();
         $img = new Images();
-        //$video = new Videos();
+        $video = new Videos();
         //adding fields to the form
         $form = $this->createForm(TrickType::class, $trick);
 
@@ -87,8 +112,8 @@ class TrickController extends AbstractController
             $trick->setUser($this->getUser());
             // \dump($userId);
             // die;
-            // $video = $form->get('videos')->getData();
-            // \dump($video);
+
+            // \dump($url);
             // die;
             //get Main image data
             $mainimages = $form->get('images')->getData();
@@ -118,11 +143,15 @@ class TrickController extends AbstractController
             }
 //get gallery images data
             $gallaryImages = $form->get('gallaryimages')->getData();
+            \dump($gallaryImages);
+
             //loop true the images
 
             foreach ($gallaryImages as $image) {
                 $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
+                \dump($image);
 
+                //lo
                 $image->move(
                     $this->getParameter('images_directory'),
                     $imageDocument
@@ -135,12 +164,25 @@ class TrickController extends AbstractController
 
                 $trick->addImage($img);
             }
-            // \dump($form);
-            // die;
 
-            //get video data
-            //  $video = new Videos();
-            //  $video = $form->get('videos')->getData();
+            //get image data
+            // foreach ($form->get('videos')->getData() as $url) {
+            //     $trick->addVideo($url);
+            // }
+
+            $trickvideo = $form->get('videos')->getData();
+            // \dump($trickvideo);
+            // die;
+            if ($trickvideo) {
+
+                // $trickvideo->move(
+                //     $this->getParameter(' video_directory'),
+                //     $trickvideo
+                // );
+                $video->setUrl($trickvideo);
+                $trick->addVideo($video);
+
+            }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
 
@@ -160,14 +202,37 @@ class TrickController extends AbstractController
     }
 
 /**
- * @Route("/tricks/add_video", name="add_video" ,methods={"POST", "GET"})
+ * @Route("/tricks/add_video/{id}", name="add_video" ,methods={"POST", "GET"})
  */
-    public function addVideo(Request $request, EntityManagerInterface $manager)
+    public function addVideos($id, Trick $trick, Request $request, EntityManagerInterface $manager)
     {
+        $repo = $this->getDoctrine()->getRepository(Trick::class);
+        $trick = $repo->find($id);
+
+        $video = new Videos();
+
         $form = $this->createForm(VideosType::class);
 
         $form->handleRequest($request);
+        // if ($form->isSubmitted() && $form->isValid()) {
+        $url = $form->get('url')->getData();
+        if ($url) {
 
+            $video->setUrl($url);
+            //$trick->setVideos($video);
+            $video->setTrickId($trick->getId());
+
+            $manager->persist($video);
+            $manager->flush();
+
+            //$trick->setVideos($video);
+
+            // $manager->persist($trick);
+
+            $manager->flush();
+            return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
+
+        }
         return $this->render('videos/addVideos.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -188,7 +253,7 @@ class TrickController extends AbstractController
         // die;
         if ($form->isSubmitted() && $form->isValid()) {
             $trick->setUser($this->getUser());
-            // \dump($userId);
+            // \dump($trick->setUser($this->getUser()));
             // die;
             //get Main image data
             $mainimages = $form->get('images')->getData();
@@ -233,6 +298,7 @@ class TrickController extends AbstractController
                 $img->setNameGallaryImages($imageDocument);
                 //$img->setName("TOTO");
                 $trick->addImage($img);
+
             }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
@@ -241,6 +307,7 @@ class TrickController extends AbstractController
 
             //if the form is valid
             $manager->persist($trick);
+
             $manager->flush();
             //Redirect to the added trick view
             return $this->redirectToRoute('home');

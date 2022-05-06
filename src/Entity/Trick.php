@@ -152,6 +152,7 @@ class Trick
 
         return $this;
     }
+
     // public function addUserId($userId): self
     // {
     //     if (!$this->userId->contains($userId)) {
@@ -173,29 +174,6 @@ class Trick
 
         return $this;
     }
-    // /**
-    //  * @return Collection<int, GallaryImages>
-    //  */
-    // public function getGallaryImages(): ?string
-    // {
-    //     return $this->gallaryImages;
-    // }
-
-    // public function setGallaryImages(?string $gallaryImages): self
-    // {
-    //     $this->gallaryImages = $gallaryImages;
-
-    //     return $this;
-    // }
-    // public function addGallaryImage(GallaryImages $gallaryImage): self
-    // {
-    //     if (!$this->gallaryImages->contains($gallaryImage)) {
-    //         $this->gallaryImages[] = $gallaryImage;
-    //         $gallaryImage->setTrick($this);
-    //     }
-
-    //     return $this;
-    // }
 
     public function getUser(): ?User
     {
@@ -209,6 +187,9 @@ class Trick
         return $this;
     }
 
+    /**
+     * @return Collection<int, Videos>
+     */
     public function getVideos(): ?Videos
     {
         return $this->videos;
@@ -220,7 +201,18 @@ class Trick
 
         return $this;
     }
+    public function addVideo(Videos $video): self
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos[] = $video;
+            $video->setTrick($this);
+        }
 
+        return $this;
+    }
+    /**
+     * @return Collection<int, Comments>
+     */
     public function getComments(): ?Comments
     {
         return $this->comments;

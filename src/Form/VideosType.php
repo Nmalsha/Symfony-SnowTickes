@@ -4,7 +4,7 @@ namespace App\Form;
 
 use App\Entity\Videos;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,7 +13,15 @@ class VideosType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
-        $builder->add('url', TextareaType::class);
+        $builder
+
+            ->add('url', UrlType::class, [
+                'label' => 'Videos',
+                // 'help' => 'If you want to post multiple videos, press the button as many times as needed',
+                'attr' => [
+                    'placeholder' => 'Add a valid URL to put a video for the trick',
+                ],
+            ]);
     }
     public function configureOptions(OptionsResolver $resolver): void
     {
