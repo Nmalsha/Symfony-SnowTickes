@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Images;
 use App\Entity\Trick;
-use App\Form\TrickType;
+//use App\Form\TrickType;
+use App\Form\VideosType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,6 +76,7 @@ class TrickController extends AbstractController
 
         $trick = new Trick();
         $img = new Images();
+        //$video = new Videos();
         //adding fields to the form
         $form = $this->createForm(TrickType::class, $trick);
 
@@ -84,6 +86,9 @@ class TrickController extends AbstractController
 
             $trick->setUser($this->getUser());
             // \dump($userId);
+            // die;
+            // $video = $form->get('videos')->getData();
+            // \dump($video);
             // die;
             //get Main image data
             $mainimages = $form->get('images')->getData();
@@ -111,7 +116,7 @@ class TrickController extends AbstractController
                 //   $trick->setCreatedOn(new \DateTime());
 
             }
-
+//get gallery images data
             $gallaryImages = $form->get('gallaryimages')->getData();
             //loop true the images
 
@@ -130,6 +135,12 @@ class TrickController extends AbstractController
 
                 $trick->addImage($img);
             }
+            // \dump($form);
+            // die;
+
+            //get video data
+            //  $video = new Videos();
+            //  $video = $form->get('videos')->getData();
 
             //if the trick hasn't a id = if the trick already not exist in the DB
 
@@ -147,6 +158,21 @@ class TrickController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+/**
+ * @Route("/tricks/add_video", name="add_video" ,methods={"POST", "GET"})
+ */
+    public function addVideo(Request $request, EntityManagerInterface $manager)
+    {
+        $form = $this->createForm(VideosType::class);
+
+        $form->handleRequest($request);
+
+        return $this->render('videos/addVideos.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
     /**
      * @Route("/tricks/edit/{id}", name="trick_edit" , methods={"POST", "GET"})
      */
