@@ -101,7 +101,7 @@ class TrickController extends AbstractController
 
         $trick = new Trick();
         $img = new Images();
-        $video = new Videos();
+        // $video = new Videos();
         //adding fields to the form
         $form = $this->createForm(TrickType::class, $trick);
 
@@ -170,19 +170,19 @@ class TrickController extends AbstractController
             //     $trick->addVideo($url);
             // }
 
-            $trickvideo = $form->get('videos')->getData();
+            // $trickvideo = $form->get('videos')->getData();
             // \dump($trickvideo);
             // die;
-            if ($trickvideo) {
+            // if ($trickvideo) {
 
-                // $trickvideo->move(
-                //     $this->getParameter(' video_directory'),
-                //     $trickvideo
-                // );
-                $video->setUrl($trickvideo);
-                $trick->addVideo($video);
+            //     // $trickvideo->move(
+            //     //     $this->getParameter(' video_directory'),
+            //     //     $trickvideo
+            //     // );
+            //     $video->setUrl($trickvideo);
+            //     $trick->addVideo($video);
 
-            }
+            // }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
 
