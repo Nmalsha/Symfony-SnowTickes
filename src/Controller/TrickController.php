@@ -304,25 +304,26 @@ class TrickController extends AbstractController
 
             $videorepoTrickId = $video->getTrickId();
             // \dump($videorepoTrickId);
-            // die;
+
             // \dump($videorepoTrickId);
             // dump($id);
             // die;
+            \dump($videorepoTrickId);
+            $id = (int) $id;
+
+            // dump($id);
+            // die;
             if ($id === $videorepoTrickId) {
-                // \dump($videorepoTrickId);
-                // dump($id);
-                // die;
+
                 // $selVideos[] = $video;
-                $videolist = $video;
-                // \dump($video);
-                // die;
+                $selVideos[] = $video;
+                \dump($selVideos);
+
                 $videoname = $video->getUrl();
 
             }
 
         }
-        // dump($selVideos);
-        // die;
 
         $img = new Images();
 

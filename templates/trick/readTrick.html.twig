@@ -106,11 +106,12 @@
           <div class="col-md-12 px-0 mb-3">
             <div class="border entry-comments">
               <!--condition here to display-->
+              {% if app.user is not null %}
               <div class="comments text-center p-3">
                 <h4 class="h4 col pt-3">Ecrivez un commentaire</h4>
                 {{ form_start(form) }}
 
-                <p class="col">{{ trick.user.secondName }}</p>
+                <p class="col">{{ app.user.userIdentifier }}</p>
                 <div class="form_row">
                   {{ form_row(form.content) }}
                 </div>
@@ -118,11 +119,13 @@
                   submit comment
                 </button>
                 {{ form_end(form) }}
+                {% endif %}
                 <p>
                   <a href="/register">Inscrivez-vous</a> Ou
                   <a href="/login">Connectez-vous</a> Pour commenter cet article
                 </p>
               </div>
+
               <!--END condition here to display-->
             </div>
           </div>
