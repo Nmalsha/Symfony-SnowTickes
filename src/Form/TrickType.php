@@ -32,35 +32,6 @@ class TrickType extends AbstractType
                 'required' => false,
             ])
 
-            // ->add('videos', CollectionType::class, [
-            //     'label' => 'Add video',
-            //     'entry_type' => VideosType::class,
-            //     'entry_options' => ['label' => false],
-            //     'mapped' => false,
-            //     'required' => false,
-            // ]);
-            // ->add('videos', CollectionType::class, [
-            //     'attr' => [
-
-            //         'required' => false,
-            //         'class' => 'form-control'],
-            // ])
-            // ->add('videos', textareaType::class, [
-            //     'attr' => [
-
-            //         'label' => 'Add video',
-            //         'required' => false,
-            //         'mapped' => false,
-            //         'class' => 'form-control'],
-            // ])
-            // ->add('videos', CollectionType::class, [
-            //     'entry_type' => VideoType::class,
-            //     'by_reference' => false,
-            //     'allow_add' => true,
-            //     'allow_delete' => true,
-
-            // ])
-
         ;
     }
 

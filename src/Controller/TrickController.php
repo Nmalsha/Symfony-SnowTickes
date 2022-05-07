@@ -76,14 +76,18 @@ class TrickController extends AbstractController
             // die;
             if ($id === $videorepoTrickId) {
                 $selVideos[] = $video;
-
+                // \dump($videorepoTrickId);
+                // dump($id);
+                // die;
+                // \dump($video);
+                // die;
                 $videoname = $video->getUrl();
 
             }
 
         }
 
-        // \dump($imagename);
+        dump($selVideos);
 
         return $this->render('trick/readTrick.html.twig', [
             'trick' => $trick,
@@ -165,25 +169,6 @@ class TrickController extends AbstractController
                 $trick->addImage($img);
             }
 
-            //get image data
-            // foreach ($form->get('videos')->getData() as $url) {
-            //     $trick->addVideo($url);
-            // }
-
-            // $trickvideo = $form->get('videos')->getData();
-            // \dump($trickvideo);
-            // die;
-            // if ($trickvideo) {
-
-            //     // $trickvideo->move(
-            //     //     $this->getParameter(' video_directory'),
-            //     //     $trickvideo
-            //     // );
-            //     $video->setUrl($trickvideo);
-            //     $trick->addVideo($video);
-
-            // }
-
             //if the trick hasn't a id = if the trick already not exist in the DB
 
             $trick->setCreatedOn(new \DateTime());
@@ -243,6 +228,39 @@ class TrickController extends AbstractController
      */
     public function edit($id, Trick $trick, Request $request, EntityManagerInterface $manager)
     {
+        //video handling
+
+        $repovideos = $this->getDoctrine()->getRepository(Videos::class);
+        $videos = $repovideos->findAll();
+
+        $selVideos = [];
+        foreach ($videos as $video) {
+            // \dump($video);
+
+            //    $videoTrick = $video->getTrick();
+
+            $videorepoTrickId = $video->getTrickId();
+            // \dump($videorepoTrickId);
+            // die;
+            // \dump($videorepoTrickId);
+            // dump($id);
+            // die;
+            if ($id === $videorepoTrickId) {
+                // \dump($videorepoTrickId);
+                // dump($id);
+                // die;
+                // $selVideos[] = $video;
+                $videolist = $video;
+                // \dump($video);
+                // die;
+                $videoname = $video->getUrl();
+
+            }
+
+        }
+        // dump($selVideos);
+        // die;
+
         $img = new Images();
 
         $form = $this->createForm(TrickType::class, $trick);
@@ -251,10 +269,12 @@ class TrickController extends AbstractController
         // $oldImage = $this->getImages($id);
         // \dump($oldImage);
         // die;
+
         if ($form->isSubmitted() && $form->isValid()) {
             $trick->setUser($this->getUser());
             // \dump($trick->setUser($this->getUser()));
             // die;
+
             //get Main image data
             $mainimages = $form->get('images')->getData();
 
@@ -317,6 +337,7 @@ class TrickController extends AbstractController
         return $this->render('trick/edit.html.twig', [
             'form' => $form->createView(),
             'trick' => $trick,
+            'selVideos' => $selVideos,
         ]);
 
     }
