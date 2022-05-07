@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Comments;
 use App\Entity\Images;
 use App\Entity\Trick;
 use App\Entity\Videos;
+use App\Form\CommentsType;
 use App\Form\TrickType;
 use App\Form\VideosType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,14 +27,42 @@ class TrickController extends AbstractController
     /**
      * @Route("/trick/{id}", name="tricks_show")
      */
-    public function readTrick(int $id, Request $request): Response
+    public function readTrick(int $id, Trick $trick, Request $request, EntityManagerInterface $manager): Response
     {
+
+        $comment = new Comments;
+
+        $form = $this->createForm(CommentsType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $comment->setCreatedAt(new \DateTimeImmutable());
+            $user = $this->getUser();
+
+            $comment->setUserId($user->getId());
+
+            $manager->persist($comment);
+
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre commentaire a bien été enregistré !'
+            );
+            return $this->redirectToRoute('tricks_show', ['id' => $trick->getId()]);
+            //   $comment->addTrick($trick);
+            //  $comment->addUser($this->getUser());
+
+        }
 
         $repo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $repo->find($id);
 
         $repoImage = $this->getDoctrine()->getRepository(Images::class);
         $repovideos = $this->getDoctrine()->getRepository(Videos::class);
+        $repoComments = $this->getDoctrine()->getRepository(Comments::class);
         // dump($repoImage);
         // die;
         //  $images = $repoImage->findAll();
@@ -87,12 +117,34 @@ class TrickController extends AbstractController
 
         }
 
+        // $commnents = $repoComments->findAll();
+        // $selComments = [];
+        // foreach ($commnents as $commnent) {
+        //     \dump($commnent);
+        //     die;
+        //     //   $videoTrick = $video->getTrick();
+
+        //     $commentrepoTrickId = $video->getTrickId();
+        //     // \dump($videorepoTrickId);
+        //     // die;
+        //     if ($id === $videorepoTrickId) {
+        //         $selVideos[] = $video;
+        //         // \dump($videorepoTrickId);
+        //         // dump($id);
+        //         // die;
+        //         // \dump($video);
+        //         // die;
+        //         $videoname = $video->getUrl();
+
+        //     }
+
+        // }
+
         dump($selVideos);
 
         return $this->render('trick/readTrick.html.twig', [
             'trick' => $trick,
-            //   'imagename' => $imagename,
-            //'galaryImageNames' => $galaryImageNames,
+            'form' => $form->createView(),
             'selImages' => $selImages,
             'selVideos' => $selVideos,
         ]);
@@ -338,6 +390,52 @@ class TrickController extends AbstractController
             'form' => $form->createView(),
             'trick' => $trick,
             'selVideos' => $selVideos,
+        ]);
+
+    }
+
+    /**
+     * @Route("/trick/{id}/comments", name="comment" , methods={"POST", "GET"})
+     */
+    public function addcomment($id, Trick $trick, Request $request, EntityManagerInterface $manager)
+    {
+        //display comment form
+
+        $comment = new Comments;
+
+        $form = $this->createForm(CommentsType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $comment->setCreatedAt(new \DateTimeImmutable());
+            $user = $this->getUser();
+
+            $comment->setUserId($user->getId());
+
+            $manager->persist($comment);
+
+            $manager->flush();
+
+            $comment->addTrick($trick);
+            $comment->addUser($this->getUser());
+
+            dump($comment);
+            \dump($user->getId());
+            die;
+            // $comment->setUserId();
+            $trick->setComments($comment);
+            \dump($comment);
+            die;
+            //Redirect to the added trick view
+            return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
+
+        }
+        return $this->render('comments/addComments.html.twig', [
+            'form' => $form->createView(),
+            'comment' => $comment,
+
         ]);
 
     }

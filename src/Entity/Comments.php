@@ -39,6 +39,11 @@ class Comments
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $userId;
+
     public function __construct()
     {
         $this->trick = new ArrayCollection();
@@ -130,6 +135,18 @@ class Comments
                 $user->setComments(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): self
+    {
+        $this->userId = $userId;
 
         return $this;
     }

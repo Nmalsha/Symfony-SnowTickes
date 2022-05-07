@@ -108,7 +108,18 @@
               <!--condition here to display-->
               <div class="comments text-center p-3">
                 <h4 class="h4 col pt-3">Ecrivez un commentaire</h4>
-                <p class="col">Display user here</p>
+                {{ form_start(form) }}
+                <!-- <pre>
+                  {{ dump(form) }}
+                </pre> -->
+                <p class="col">{{ trick.user.secondName }}</p>
+                <div class="form_row">
+                  {{ form_row(form.content) }}
+                </div>
+                <button type="submit" class="btn btn-lg btn-primary m-3">
+                  submit comment
+                </button>
+                {{ form_end(form) }}
                 <p>
                   <a href="/register">Inscrivez-vous</a> Ou
                   <a href="/login">Connectez-vous</a> Pour commenter cet article
