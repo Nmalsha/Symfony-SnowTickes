@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %} {% block title %}Register{% endblock %} {% block
+body %}
+<h3>Add videos</h3>
+<section class="container">
+  <div class="card trickcard_style">
+    {{ form_start(form) }}
+
+    <div class="form_row">
+      {{ form_row(form.url) }}
+    </div>
+
+    <button type="submit" class="btn btn-lg btn-primary m-3">Add video</button>
+    {{ form_end(form) }}
+  </div>
+</section>
+{% endblock %}

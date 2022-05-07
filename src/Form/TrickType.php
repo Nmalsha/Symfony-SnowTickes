@@ -31,6 +31,7 @@ class TrickType extends AbstractType
                 'mapped' => false,
                 'required' => false,
             ])
+
         ;
     }
 

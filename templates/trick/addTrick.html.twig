@@ -17,10 +17,27 @@
       {{ form_row(form.categorie,{'attr':{'placeholder':"Add categorie"}})
       }}
     </div>
-
-    
-    
+    <div class="form_row">
+      {{ form_row(form.images)
+      }}
+    </div>
+    <div class="form_row">
+      {{ form_row(form.gallaryimages)
+      }}
+    </div>
+    {# <div class="form_row">
+      {{ form_row(form.videos)
+    }}
+      {# <h3>Videos</h3>
+      <ul class="tags">
+          {% for video in form.videos %}
+              <li>{{ form_row(tag.name) }}</li>
+          {% endfor %}
+      </ul> #}
   
+    {# </div>  #}
+   
+
     <div class="form_row">
       <button type="submit" class="btn btn-success">
      Ajouter le trick 
