@@ -109,9 +109,7 @@
               <div class="comments text-center p-3">
                 <h4 class="h4 col pt-3">Ecrivez un commentaire</h4>
                 {{ form_start(form) }}
-                <!-- <pre>
-                  {{ dump(form) }}
-                </pre> -->
+
                 <p class="col">{{ trick.user.secondName }}</p>
                 <div class="form_row">
                   {{ form_row(form.content) }}
@@ -142,15 +140,21 @@
                       <img class="user-profile" src="#" />
                     </div>
                     <div class="col-10 col-sm-8 col-xs-6">
-                      <p>Display comment here</p>
+                      {% for comment in selComments %}
+
+                      <p>{{ comment.content }}</p>
                       <p>
                         <span>
-                          Par: <a href="#">Display comment owner here</a></span
+                          Par: <a href="#">{{ trick.user.secondName }}</a></span
                         >
-                        <span> Display commented date here</span>
+                        <span
+                          >{{ comment.createdAt | date('d/m/y') }} à
+                          {{  comment.createdAt  | date('H:i') }}</span
+                        >
                       </p>
                     </div>
                   </div>
+                  {% endfor %}
                   <!--end loop-->
                 </ul>
               </div>
