@@ -39,6 +39,16 @@ class Comments
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $userId;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $trickId;
+
     public function __construct()
     {
         $this->trick = new ArrayCollection();
@@ -62,12 +72,12 @@ class Comments
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -130,6 +140,30 @@ class Comments
                 $user->setComments(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): self
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getTrickId(): ?int
+    {
+        return $this->trickId;
+    }
+
+    public function setTrickId(int $trickId): self
+    {
+        $this->trickId = $trickId;
 
         return $this;
     }

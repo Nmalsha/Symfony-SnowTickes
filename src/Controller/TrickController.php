@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Comments;
 use App\Entity\Images;
 use App\Entity\Trick;
 use App\Entity\Videos;
+use App\Form\CommentsType;
 use App\Form\TrickType;
 use App\Form\VideosType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,24 +27,63 @@ class TrickController extends AbstractController
     /**
      * @Route("/trick/{id}", name="tricks_show")
      */
-    public function readTrick(int $id, Request $request): Response
+    public function readTrick(int $id, Trick $trick, Request $request, EntityManagerInterface $manager): Response
     {
+        // Add comment
+        $comments = new Comments;
+        // create form
+        $form = $this->createForm(CommentsType::class, $comments);
 
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $comments->setCreatedAt(new \DateTimeImmutable());
+            //get user
+            $user = $this->getUser();
+            //add user id to the comment
+            $comments->setUserId($user->getId());
+
+            $comments->setTrickId($id);
+            //send comment to the DB
+
+            $manager->persist($comments);
+            $manager->flush();
+
+            // $comments->addTrick($trick);
+
+            // $manager->persist($comment);
+
+            // $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Votre commentaire a bien été enregistré !'
+            );
+            //redirect root
+            return $this->redirectToRoute('tricks_show', ['id' => $trick->getId()]);
+            // $comment->addTrick($trick);
+            // $comment->addUser($this->getUser());
+
+        }
+        // $comments->addTrick($trick);
+        // $comments->addUser($this->getUser());
+        // \dump($comments);
+        // die;
+        //display video,image and comment repositorys
         $repo = $this->getDoctrine()->getRepository(Trick::class);
         $trick = $repo->find($id);
 
         $repoImage = $this->getDoctrine()->getRepository(Images::class);
         $repovideos = $this->getDoctrine()->getRepository(Videos::class);
-        // dump($repoImage);
-        // die;
-        //  $images = $repoImage->findAll();
+        $repoComments = $this->getDoctrine()->getRepository(Comments::class);
 
+        //get images
         $images = $repoImage->findAll();
 
         $selImages = [];
         foreach ($images as $image) {
-            // \dump($image);
-            // die;
+
             //get the trick from images repo
 
             $imagesTrick = $image->getTrick();
@@ -50,30 +91,26 @@ class TrickController extends AbstractController
             // get trick id from images
             $imagerepoTrickId = $imagesTrick->getId();
 
-            // dump($imagerepoTrickId);
-            // // die;
+            //if trick id and the imagetrick id is same
             if ($id === $imagerepoTrickId) {
                 $selImages[] = $image;
 
                 $imagename = $image->getName();
                 $galaryImageNames = $image->getNameGallaryImages();
 
-                //  $galaryImageNames = $image->getNameGallaryImages();
-
             }
 
         }
+        //get videos
         $videos = $repovideos->findAll();
 
         $selVideos = [];
         foreach ($videos as $video) {
-            // \dump($video);
-            // die;
-            //   $videoTrick = $video->getTrick();
 
+            //   $videoTrick = $video->getTrick();
+            //get the trickid from images repo
             $videorepoTrickId = $video->getTrickId();
-            // \dump($videorepoTrickId);
-            // die;
+
             if ($id === $videorepoTrickId) {
                 $selVideos[] = $video;
                 // \dump($videorepoTrickId);
@@ -87,14 +124,40 @@ class TrickController extends AbstractController
 
         }
 
-        dump($selVideos);
+        $commnents = $repoComments->findAll();
 
+        $selComments = [];
+        foreach ($commnents as $commnent) {
+            // \dump($commnent);
+            // die;
+            //   $videoTrick = $video->getTrick();
+
+            $commentrepoTrickid = $commnent->getTrickId();
+            $commentrepoUserid = $commnent->getUserId();
+
+            if ($id === $commentrepoTrickid) {
+                $selComments[] = $commnent;
+                $content = $commnent->getContent();
+                // \dump($videorepoTrickId);
+                // dump($id);
+                // die;
+
+                // $videoname = $video->getUrl();
+
+            }
+
+        }
+
+        // dump($selComments);
+        // die;
         return $this->render('trick/readTrick.html.twig', [
             'trick' => $trick,
-            //   'imagename' => $imagename,
-            //'galaryImageNames' => $galaryImageNames,
-            'selImages' => $selImages,
+
             'selVideos' => $selVideos,
+            'selImages' => $selImages,
+            'selComments' => $selComments,
+            'form' => $form->createView(),
+
         ]);
     }
 
@@ -201,6 +264,7 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
         // if ($form->isSubmitted() && $form->isValid()) {
         $url = $form->get('url')->getData();
+
         if ($url) {
 
             $video->setUrl($url);
@@ -241,25 +305,26 @@ class TrickController extends AbstractController
 
             $videorepoTrickId = $video->getTrickId();
             // \dump($videorepoTrickId);
-            // die;
+
             // \dump($videorepoTrickId);
             // dump($id);
             // die;
+            \dump($videorepoTrickId);
+            $id = (int) $id;
+
+            // dump($id);
+            // die;
             if ($id === $videorepoTrickId) {
-                // \dump($videorepoTrickId);
-                // dump($id);
-                // die;
+
                 // $selVideos[] = $video;
-                $videolist = $video;
-                // \dump($video);
-                // die;
+                $selVideos[] = $video;
+                \dump($selVideos);
+
                 $videoname = $video->getUrl();
 
             }
 
         }
-        // dump($selVideos);
-        // die;
 
         $img = new Images();
 
@@ -343,6 +408,52 @@ class TrickController extends AbstractController
     }
 
     /**
+     * @Route("/trick/{id}/comments", name="comment" , methods={"POST", "GET"})
+     */
+    public function addcomment($id, Trick $trick, Request $request, EntityManagerInterface $manager)
+    {
+        //display comment form
+
+        $comment = new Comments;
+
+        $form = $this->createForm(CommentsType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $comment->setCreatedAt(new \DateTimeImmutable());
+            $user = $this->getUser();
+
+            $comment->setUserId($user->getId());
+
+            $manager->persist($comment);
+
+            $manager->flush();
+
+            $comment->addTrick($trick);
+            $comment->addUser($this->getUser());
+
+            dump($comment);
+            \dump($user->getId());
+            die;
+            // $comment->setUserId();
+            $trick->setComments($comment);
+            \dump($comment);
+            die;
+            //Redirect to the added trick view
+            return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
+
+        }
+        return $this->render('comments/addComments.html.twig', [
+            'form' => $form->createView(),
+            'comment' => $comment,
+
+        ]);
+
+    }
+
+    /**
      * @Route("/tricks/supprime/mainimage/{id}", name="delete_main_image" , methods={"DELETE"})
      */
     public function deleteImage(Images $image, Request $request)
@@ -403,6 +514,45 @@ class TrickController extends AbstractController
             //deleting the image from the DB
             $em = $this->getDoctrine()->getManager();
             $em->remove($image);
+            $em->flush();
+
+            //return new JsonReponse(['success' => 1]);
+            error_log("******************TOKEN OK******************");
+            return new Response("OKy");
+        } else {
+            // return new JsonReponse(['error' => 'Invalide token'], 400);
+
+            error_log("******************TOKEN ERR******************");
+            return new Response("KOy");
+        }
+
+    }
+
+    /**
+     * @Route("/tricks/supprime/video/{id}", name="delete_video" , methods={"DELETE"})
+     */
+    public function deleteVideo(Videos $Videos, Request $request)
+    {
+        $reqData = $request->getContent();
+
+        $data = json_decode($reqData, true);
+        error_log("************************************");
+        error_log(var_export($data, true));
+
+        error_log($data['_token']);
+        error_log($data['_token']);
+        //error_log(($request->getContent()));
+        //check if the token valid
+        if ($this->isCsrfTokenValid('delete' . $Videos->getId(), $data['_token'])) {
+
+            //getting image name from the DB
+            $name = $Videos->getUrl();
+            //Deleting the image from the directory
+            // unlink($this->getParameter('video_directory') . '/' . $name);
+
+            //deleting the image from the DB
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($Videos);
             $em->flush();
 
             //return new JsonReponse(['success' => 1]);

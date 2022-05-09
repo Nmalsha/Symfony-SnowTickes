@@ -13,7 +13,11 @@
         <div class="card-body">
           <ul class="list-inline trick-data">
             <li class="list-inline-item">
-              Créer par:<a target="" href="#">{{ trick.user.secondName }}</a>
+              Créer par:<a
+                target=""
+                href="{{ path('user_profile', { id: trick.user.id }) }}"
+                >{{ trick.user.secondName }} {{ trick.user.id }}</a
+              >
             </li>
             <li class="list-inline-item">
               Ajouter le:{{ trick.createdOn | date('d/m/y') }} à
@@ -106,14 +110,26 @@
           <div class="col-md-12 px-0 mb-3">
             <div class="border entry-comments">
               <!--condition here to display-->
+              {% if app.user is not null %}
               <div class="comments text-center p-3">
                 <h4 class="h4 col pt-3">Ecrivez un commentaire</h4>
-                <p class="col">Display user here</p>
+                {{ form_start(form) }}
+
+                <p class="col">{{ app.user.userIdentifier }}</p>
+                <div class="form_row">
+                  {{ form_row(form.content) }}
+                </div>
+                <button type="submit" class="btn btn-lg btn-primary m-3">
+                  submit comment
+                </button>
+                {{ form_end(form) }}
+                {% endif %}
                 <p>
                   <a href="/register">Inscrivez-vous</a> Ou
                   <a href="/login">Connectez-vous</a> Pour commenter cet article
                 </p>
               </div>
+
               <!--END condition here to display-->
             </div>
           </div>
@@ -131,15 +147,21 @@
                       <img class="user-profile" src="#" />
                     </div>
                     <div class="col-10 col-sm-8 col-xs-6">
-                      <p>Display comment here</p>
+                      {% for comment in selComments %}
+
+                      <p>{{ comment.content }}</p>
                       <p>
                         <span>
-                          Par: <a href="#">Display comment owner here</a></span
+                          Par: <a href="#">{{ trick.user.secondName }}</a></span
                         >
-                        <span> Display commented date here</span>
+                        <span
+                          >{{ comment.createdAt | date('d/m/y') }} à
+                          {{  comment.createdAt  | date('H:i') }}</span
+                        >
                       </p>
                     </div>
                   </div>
+                  {% endfor %}
                   <!--end loop-->
                 </ul>
               </div>
