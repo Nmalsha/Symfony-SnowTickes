@@ -27,6 +27,7 @@
             <li class="list-inline-item">number Of Comments:</li>
           </ul>
           <!---Start carousel-->
+          <h4>Image Gallery</h4>
           <div class="row">
             {% for image in selImages %} {% if image.nameGallaryImages is not
             null %}
@@ -35,10 +36,6 @@
                 class="bg-image hover-overlay ripple shadow-1-strong rounded"
                 data-ripple-color="light"
               >
-                <pre>
-                {{ dump(image.nameGallaryImages) }}
-              </pre
-                >
                 <img
                   src="{{ asset('/images/'~ image.nameGallaryImages) }}"
                   class="w-100"
@@ -57,48 +54,23 @@
             </div>
             {% endif %} {% endfor %}
           </div>
-
-          {% for video in selVideos %}
-          <pre>
-            {{ dump(video.url) }}
-          </pre>
-          <div class="col-lg-4 col-md-12 mb-3 pb-3">
-            <div class="card h-100">
+          <h4>Video Gallery</h4>
+          <div class="col-lg-4 col-md-12 mb-3 pb-3 margin">
+            {% for video in selVideos %}
+            <div class="card h-100 width">
               <iframe
                 src="{{ video.url }}"
                 title="YouTube video player"
                 frameborder="0"
                 allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
+                width="200"
               >
               </iframe>
             </div>
+            {% endfor %}
           </div>
-          {% endfor %}
-          <!--
-          <div class="row d-lg-flex load-media">
-            <div class="col-lg-6 col-md-12">
-              {# <div class="carousel slide mt-3 mb-2" data-ride="carousel"> #}
-                {# <ol class="carousel-indicators">
-                  <li class="" data-target=".carousel" data-slide-to="1"></li>
-                  <li class="" data-target=".carousel" data-slide-to="2"></li>
-                  <li class="" data-target=".carousel" data-slide-to="3"></li>
-                  <li class="" data-target=".carousel" data-slide-to="4"></li>
-                  <li class="" data-target=".carousel" data-slide-to="5"></li>
 
-                </ol> #}
-                {# <div lass="carousel-inner enlarge"> #}
-                  {# {% for image in selImages %} #}
-                  <div class="carousel-item">
-                    {# <img class="d-block" src="{{ asset('/images/'~ image.nameGallaryImages) }}" > #}
-                  </div>
-                  {# {% endfor %} #}
-                {# </div> #}
-              {# </div> #}
-            </div>
-            <div class="col-lg-6 col-md-12"></div>
-          </div>
-          -->
           <!---End  carousel-->
           <h4 class="card-title">
             <strong>{{ trick.trickName }}</strong>
@@ -139,7 +111,7 @@
           <div class="col-md-12 bg-light">
             <div class="mb-3">
               <div class="border entry-comments">
-                <h6 class="mb-3 pl-2">---Commentaires</h6>
+                <h6 class="mb-3 pl-2">Commentaires</h6>
                 <ul class="entry-comments-list list-unstyled">
                   <!-- DO LOOP-->
                   <div class="row mb-3 pl-2 bg-light">

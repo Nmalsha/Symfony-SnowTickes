@@ -28,12 +28,13 @@
             <pre>
                 {{ dump( mainimage.name) }}
             </pre>
-                <div>
+                <div class="">
                   
-                    <img class="class="tricks-big img-fluid  p-3""
+                    <img class="class="tricks-big img-fluid   p-3""
                       src="{{ asset('/images/'~ mainimage.name) }}"
                       alt=""
-                      width="200"
+                      width="400"
+                      height="400"
                     />
                     
                     <a href="{{ path('delete_main_image', { id: mainimage.id }) }}" data-delete data-token="{{csrf_token('delete'~ mainimage.id)}}"
@@ -51,7 +52,7 @@
          <!-- display image gallery-->
          <h3>Image gallery</h3>
 <div class="row p-3">
-<div class="d-flex flex-column p-3 align-items-center">
+<div class="d-flex p-3 align-items-center center">
   {% for galleryimg in trick.images %}
   {% if galleryimg.nameGallaryImages is not null %}
 {# <pre>
@@ -77,7 +78,7 @@
 <!--display video gallery-->
 <h3>Video gallery</h3>
       <div class="row p-5">
-       <div class="d-flex flex-column p-3 justify-content-around">
+       <div class="d-flex  p-3 justify-content-around">
         
         {% for video in selVideos %}
          

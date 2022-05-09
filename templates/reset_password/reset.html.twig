@@ -4,14 +4,16 @@ block body %} {% for message in app.flashes('danger') %}
   {{ message }}
 </div>
 {% endfor %}
-<h1>Enter your new password</h1>
+<div class="container">
+  <h1>Enter your new password</h1>
 
-{{ form_start(resetForm) }}
-<div class="form_row">
-  <input type="hidden" name="token" value="{{ token }}" />
+  {{ form_start(resetForm) }}
+  <div class="form_row">
+    <input type="hidden" name="token" value="{{ token }}" />
+  </div>
+  {{ form_row(resetForm.plainPassword) }}
+
+  <button class="btn btn-primary">Reset password</button>
+  {{ form_end(resetForm) }}
 </div>
-{{ form_row(resetForm.plainPassword) }}
-
-<button class="btn btn-primary">Reset password</button>
-{{ form_end(resetForm) }}
 {% endblock %}

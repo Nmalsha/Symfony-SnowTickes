@@ -14,7 +14,7 @@
 }
 .trickcard_style {
   width: 40rem;
-  height: 55rem;
+  height: 500px;
   margin: 15px;
   box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.5);
   border-radius: 0.625em;
@@ -51,4 +51,13 @@ form {
 .user-profile {
   max-height: 128px;
   max-width: 128px;
+}
+.center {
+  justify-content: center;
+}
+.margin {
+  display: flex;
+}
+.width {
+  width: 200px;
 }

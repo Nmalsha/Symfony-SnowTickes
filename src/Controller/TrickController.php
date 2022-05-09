@@ -123,18 +123,28 @@ class TrickController extends AbstractController
             }
 
         }
+//getting comment owner
+        // $repouserOfTheComment = $this->getDoctrine()->getRepository(User::class);
+        // $users = $repouserOfTheComment->findAll();
+        // // $userofthecomment = $user->findBy($commentrepoUserid);
+        // foreach ($users as $user) {
+        //     $commentrepoUserid = $commnent->getUserId();
 
+        //     if(){
+
+        //     }
+        // }
         $commnents = $repoComments->findAll();
 
         $selComments = [];
         foreach ($commnents as $commnent) {
-            // \dump($commnent);
-            // die;
+
             //   $videoTrick = $video->getTrick();
 
             $commentrepoTrickid = $commnent->getTrickId();
-            $commentrepoUserid = $commnent->getUserId();
 
+            // \dump($commentrepoTrickid);
+            // die;
             if ($id === $commentrepoTrickid) {
                 $selComments[] = $commnent;
                 $content = $commnent->getContent();
