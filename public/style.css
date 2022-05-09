@@ -48,3 +48,7 @@ form {
 .form_row {
   margin: 18px;
 }
+.user-profile {
+  max-height: 128px;
+  max-width: 128px;
+}

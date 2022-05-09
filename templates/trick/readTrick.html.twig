@@ -13,7 +13,11 @@
         <div class="card-body">
           <ul class="list-inline trick-data">
             <li class="list-inline-item">
-              Créer par:<a target="" href="#">{{ trick.user.secondName }}</a>
+              Créer par:<a
+                target=""
+                href="{{ path('user_profile', { id: trick.user.id }) }}"
+                >{{ trick.user.secondName }} {{ trick.user.id }}</a
+              >
             </li>
             <li class="list-inline-item">
               Ajouter le:{{ trick.createdOn | date('d/m/y') }} à

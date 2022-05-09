@@ -129,6 +129,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function setprofieImage(string $profieImage): self
+    {
+        $this->profieImage = $profieImage;
+
+        return $this;
+    }
+    public function getprofieImage(): ?string
+    {
+        return $this->profieImage;
+    }
     /**
      * A visual identifier that represents this user.
      *

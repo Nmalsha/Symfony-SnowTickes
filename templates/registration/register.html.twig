@@ -16,6 +16,8 @@ body %}
     <div class="form_row">
       {{ form_row(registrationForm.email,{'attr':{'placeholder':"Address email"
 
+
+
       }}) }}
     </div>
 
@@ -24,6 +26,9 @@ body %}
     </div>
     <div class="form_row">
       {{ form_row(registrationForm.password.second) }}
+    </div>
+    <div class="form_row">
+      {{ form_row(registrationForm.profile_images) }}
     </div>
 
     <button type="submit" class="btn btn-lg btn-primary m-3">Register</button>

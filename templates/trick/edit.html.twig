@@ -91,6 +91,10 @@
                 allowfullscreen
               >
               </iframe>
+              <a href="{{ path('delete_video', { id: video.id }) }}" data-delete data-token="{{csrf_token('delete'~ video.id)}}"
+              ><i class="fas fa-trash-alt">supvideo</i
+            >
+             </a>
             </div>
           </div>
           {% endfor %}

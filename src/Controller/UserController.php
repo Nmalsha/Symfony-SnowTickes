@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserProfileType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Security\UserAuthenticator;
@@ -85,4 +86,41 @@ class UserController extends AbstractController
         return $this->redirectToRoute('home');
 
     }
+
+    /**
+     * @Route("/userProfile/{id}", name="user_profile")
+     */
+    public function userProfile($id, User $user, UserRepository $userRepository, Request $request, EntityManagerInterface $entityManager)
+    {
+        $repo = $this->getDoctrine()->getRepository(User::class);
+        $user = $repo->find($id);
+
+        $form = $this->createForm(UserProfileType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+//get data from the form
+            $profileImages = $form->get('profieImage')->getData();
+            foreach ($profileImages as $profileImage) {
+                // \dump($profileImage.originalName);
+                // die;
+                $imageDocument = md5(uniqid()) . '.' . $profileImage->guessExtension();
+
+                $profileImage->move(
+                    $this->getParameter('images_directory'),
+                    $imageDocument
+                );
+                $user->setprofieImage($imageDocument);
+                $entityManager->persist($user);
+            }
+
+            $entityManager->flush();
+            return $this->redirectToRoute('user_profile', ['id' => $id]);
+        }
+        return $this->render('user/userProfile.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+        ]);
+    }
+
 }

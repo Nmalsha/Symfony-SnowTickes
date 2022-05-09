@@ -264,6 +264,7 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
         // if ($form->isSubmitted() && $form->isValid()) {
         $url = $form->get('url')->getData();
+
         if ($url) {
 
             $video->setUrl($url);
@@ -513,6 +514,45 @@ class TrickController extends AbstractController
             //deleting the image from the DB
             $em = $this->getDoctrine()->getManager();
             $em->remove($image);
+            $em->flush();
+
+            //return new JsonReponse(['success' => 1]);
+            error_log("******************TOKEN OK******************");
+            return new Response("OKy");
+        } else {
+            // return new JsonReponse(['error' => 'Invalide token'], 400);
+
+            error_log("******************TOKEN ERR******************");
+            return new Response("KOy");
+        }
+
+    }
+
+    /**
+     * @Route("/tricks/supprime/video/{id}", name="delete_video" , methods={"DELETE"})
+     */
+    public function deleteVideo(Videos $Videos, Request $request)
+    {
+        $reqData = $request->getContent();
+
+        $data = json_decode($reqData, true);
+        error_log("************************************");
+        error_log(var_export($data, true));
+
+        error_log($data['_token']);
+        error_log($data['_token']);
+        //error_log(($request->getContent()));
+        //check if the token valid
+        if ($this->isCsrfTokenValid('delete' . $Videos->getId(), $data['_token'])) {
+
+            //getting image name from the DB
+            $name = $Videos->getUrl();
+            //Deleting the image from the directory
+            // unlink($this->getParameter('video_directory') . '/' . $name);
+
+            //deleting the image from the DB
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($Videos);
             $em->flush();
 
             //return new JsonReponse(['success' => 1]);
