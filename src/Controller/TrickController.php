@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comments;
 use App\Entity\Images;
 use App\Entity\Trick;
+use App\Entity\User;
 use App\Entity\Videos;
 use App\Form\CommentsType;
 use App\Form\TrickType;
@@ -137,6 +138,12 @@ class TrickController extends AbstractController
         $commnents = $repoComments->findAll();
 
         $selComments = [];
+
+        $repoUser = $this->getDoctrine()->getRepository(User::class);
+
+        //get images
+        $images = $repoImage->findAll();
+
         foreach ($commnents as $commnent) {
 
             //   $videoTrick = $video->getTrick();
@@ -146,12 +153,17 @@ class TrickController extends AbstractController
             // \dump($commentrepoTrickid);
             // die;
             if ($id === $commentrepoTrickid) {
-                $selComments[] = $commnent;
-                $content = $commnent->getContent();
+
+                //$content = $commnent->getContent();
                 // \dump($videorepoTrickId);
-                // dump($id);
+
+                //dump($repoUser->findAll());
+                $commnent->userObj = $repoUser->findOneBy(['id' => $commnent->getUserId()]);
+
+                // dump($commnent);
                 // die;
 
+                $selComments[] = $commnent;
                 // $videoname = $video->getUrl();
 
             }
@@ -304,6 +316,10 @@ class TrickController extends AbstractController
     {
         //video handling
 
+        //$userID =
+
+        //var_dump(array   $GLOBALS['app']);
+        //die("tedt");
         $repovideos = $this->getDoctrine()->getRepository(Videos::class);
         $videos = $repovideos->findAll();
 

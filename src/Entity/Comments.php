@@ -45,6 +45,11 @@ class Comments
     private $userId;
 
     /**
+     * User
+     */
+    public $userObj;
+
+    /**
      * @ORM\Column(type="integer")
      */
     private $trickId;
@@ -119,6 +124,7 @@ class Comments
      */
     public function getUser(): Collection
     {
+
         return $this->user;
     }
 

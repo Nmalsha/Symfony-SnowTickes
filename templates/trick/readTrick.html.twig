@@ -114,17 +114,27 @@
                 <h6 class="mb-3 pl-2">Commentaires</h6>
                 <ul class="entry-comments-list list-unstyled">
                   <!-- DO LOOP-->
+                  {% for comment in selComments %}
+
                   <div class="row mb-3 pl-2 bg-light">
                     <div class="col-md-2 col-sm-4 col-xs-6 text-center">
-                      <img class="user-profile" src="#" />
+                      <img
+                        class="user-profile"
+                        src="{{ asset('/images/'~ comment.userObj.profieImage) }}"
+                      />
                     </div>
-                    <div class="col-10 col-sm-8 col-xs-6">
-                      {% for comment in selComments %}
 
+                    <div class="col-10 col-sm-8 col-xs-6">
                       <p>{{ comment.content }}</p>
                       <p>
                         <span>
-                          Par: <a href="#">{{ trick.user.secondName }}</a></span
+                          Par:
+                          <a
+                            href="{{
+                              path('user_profile', { id: comment.userObj.id })
+                            }}"
+                            >{{ comment.userObj.firstName }}</a
+                          ></span
                         >
                         <span
                           >{{ comment.createdAt | date('d/m/y') }} à
