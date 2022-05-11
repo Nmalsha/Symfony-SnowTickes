@@ -10,6 +10,8 @@ use App\Entity\Videos;
 use App\Form\CommentsType;
 use App\Form\TrickType;
 use App\Form\VideosType;
+use App\Repository\TrickRepository;
+use App\Repository\VideosRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +20,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
+
+    public function __construct(TrickRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * @Route("/tricks", name="tricks")
      */
@@ -202,8 +210,8 @@ class TrickController extends AbstractController
             // \dump($userId);
             // die;
 
-            // \dump($url);
-            // die;
+            \dump($trickuserid);
+            die;
             //get Main image data
             $mainimages = $form->get('images')->getData();
             // \dump($mainimage);
@@ -292,7 +300,7 @@ class TrickController extends AbstractController
             $video->setUrl($url);
             //$trick->setVideos($video);
             $video->setTrickId($trick->getId());
-
+            // $video->addTrick();
             $manager->persist($video);
             $manager->flush();
 
@@ -429,7 +437,78 @@ class TrickController extends AbstractController
             'form' => $form->createView(),
             'trick' => $trick,
             'selVideos' => $selVideos,
+
         ]);
+
+    }
+    /**
+     * * @var KernelInterface
+     * @Route("/tricks/delete/{id}", name="trick_delete" )
+     */
+    public function delete($id, Trick $trick, TrickRepository $repository, VideosRepository $videosRepository, EntityManagerInterface $manager)
+    {
+//get trick
+        $repoTrick = $this->getDoctrine()->getRepository(Trick::class);
+        $trick = $repoTrick->find($id);
+        // dd($trick);
+        // die;
+        //get images
+
+        $repo = $this->getDoctrine()->getRepository(Videos::class);
+        $videos = $repo->findAll();
+
+        foreach ($videos as $video) {
+
+            $videoTrickid = $video->getTrickId();
+
+            $id = (int) $id;
+
+            if ($id === $videoTrickid) {
+
+                $Video = $video;
+                // \dump($VideoUrl);
+                // \dump($videoTrickid);
+                // \dump($VideoUrl);
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($Video);
+
+            }
+
+        }
+
+        $repo = $this->getDoctrine()->getRepository(Images::class);
+        $images = $repo->findAll();
+        foreach ($images as $image) {
+            $imageTrick = $image->getTrick();
+            $imageTrickId = $imageTrick->getId();
+
+            $id = (int) $id;
+            if ($imageTrickId === $id) {
+                $name = $image->getName();
+                if (file_exists($name)) {
+                    $imageMain = $this->getParameter('images_directory') . '/' . $name;
+                    unlink($imageMain);
+                }
+
+                $nameGallery = $image->getNameGallaryImages();
+                if (file_exists($nameGallery)) {
+                    $imageGallery = $this->getParameter('images_directory') . '/' . $nameGallery;
+                    unlink($imageGallery);
+
+                }
+
+            }
+
+        }
+
+        $manager = $this->getDoctrine()->getManager();
+        $manager->remove($trick);
+        $this->addflash(
+            'success',
+            "Le trick a été supprimé avec succès !"
+        );
+
+        return $this->redirectToRoute('home');
 
     }
 
@@ -461,12 +540,12 @@ class TrickController extends AbstractController
             $comment->addUser($this->getUser());
 
             dump($comment);
-            \dump($user->getId());
-            die;
+            // \dump($user->getId());
+            // die;
             // $comment->setUserId();
             $trick->setComments($comment);
-            \dump($comment);
-            die;
+            // \dump($comment);
+            // die;
             //Redirect to the added trick view
             return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
 

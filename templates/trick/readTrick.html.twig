@@ -57,6 +57,9 @@
           <h4>Video Gallery</h4>
           <div class="col-lg-4 col-md-12 mb-3 pb-3 margin">
             {% for video in selVideos %}
+            <pre>
+              {{ dump(video.url) }}
+            </pre>
             <div class="card h-100 width">
               <iframe
                 src="{{ video.url }}"
@@ -112,9 +115,10 @@
             <div class="mb-3">
               <div class="border entry-comments">
                 <h6 class="mb-3 pl-2">Commentaires</h6>
+                 <!-- DO LOOP-->
+                 {% for comment in selComments %}
                 <ul class="entry-comments-list list-unstyled">
-                  <!-- DO LOOP-->
-                  {% for comment in selComments %}
+                 
 
                   <div class="row mb-3 pl-2 bg-light">
                     <div class="col-md-2 col-sm-4 col-xs-6 text-center">
@@ -127,7 +131,7 @@
                     <div class="col-10 col-sm-8 col-xs-6">
                       <p>{{ comment.content }}</p>
                       <p>
-                        <span>
+                        <span></span>
                           Par:
                           <a
                             href="{{
@@ -143,9 +147,10 @@
                       </p>
                     </div>
                   </div>
-                  {% endfor %}
-                  <!--end loop-->
+                
                 </ul>
+                {% endfor %}
+                <!--end loop-->
               </div>
             </div>
             <div class="p-3"></div>

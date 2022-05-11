@@ -2,6 +2,8 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block body %} 
+
+{% if trick.user.id is same as app.user.id %}
 <div class="container">
   <h1 class="text-center">Edit d'un Trick</h1>
   <div class="row text-center">
@@ -25,9 +27,7 @@
             <h3>Image principle</h3>
             {% for mainimage in trick.images %}
             {% if mainimage.name is not null %}
-            <pre>
-                {{ dump( mainimage.name) }}
-            </pre>
+           
                 <div class="">
                   
                     <img class="class="tricks-big img-fluid   p-3""
@@ -130,6 +130,8 @@
     
   </div>
 </div>
+{% endif %} 
+
 {% endblock %} 
 
 

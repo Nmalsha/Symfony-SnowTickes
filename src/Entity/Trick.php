@@ -61,7 +61,7 @@ class Trick
     private $videos;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class,  mappedBy="Trick")
+     * @ORM\OneToMany(targetEntity=Comments::class,  mappedBy="Trick" , orphanRemoval=true,cascade={"persist"})
      */
     private $comments;
 
@@ -75,10 +75,10 @@ class Trick
         return $this->id;
     }
 
-    // public function getUserId(): ?string
-    // {
-    //     return $this->userId;
-    // }
+    public function getUserId(): ?string
+    {
+        return $this->userId;
+    }
 
     // public function setUserId(string $userId): self
     // {

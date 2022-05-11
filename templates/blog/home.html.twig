@@ -32,18 +32,15 @@
           >
 
           <br />
-          {#
-          <pre>
-            {{ dump(app.user.id) }}
-            {{ dump(trick.user.id) }}
-          </pre>
-          #}
+
           <div>
             {% if app.user %} {% if app.user.id == trick.user.id %}
             <a href="{{ path('trick_edit', { id: trick.id }) }}"
               ><i class="fas fa-edit"></i
             ></a>
-            <a href=""><i class="fas fa-trash-alt"></i></a>
+            <a href="{{ path('trick_delete', { id: trick.id }) }}"
+              ><i class="fas fa-trash-alt"></i
+            ></a>
             {% endif %} {% endif %}
           </div>
         </div>
