@@ -32,6 +32,11 @@ class Images
      */
     private $nameGallaryImages;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="images")
+     */
+    private $trick;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,6 +74,18 @@ class Images
     public function setNameGallaryImages(?string $nameGallaryImages): self
     {
         $this->nameGallaryImages = $nameGallaryImages;
+
+        return $this;
+    }
+
+    public function getTrick(): ?Trick
+    {
+        return $this->trick;
+    }
+
+    public function setTrick(?Trick $trick): self
+    {
+        $this->trick = $trick;
 
         return $this;
     }
