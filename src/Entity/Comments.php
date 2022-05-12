@@ -44,6 +44,11 @@ class Comments
      */
     public $userObj;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="comments")
+     */
+    private $trick;
+
     public function __construct()
     {
 
@@ -118,6 +123,18 @@ class Comments
     public function setUserId(int $userId): self
     {
         $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function getTrick(): ?Trick
+    {
+        return $this->trick;
+    }
+
+    public function setTrick(?Trick $trick): self
+    {
+        $this->trick = $trick;
 
         return $this;
     }
