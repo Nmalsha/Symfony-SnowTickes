@@ -47,12 +47,6 @@ class Trick
     private $createdOn;
 
     /**
-     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
-     *  @ORM\JoinColumn(onDelete="CASCADE")
-     */
-    private $videos;
-
-    /**
      * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="trick")
      */
     private $comments;
@@ -62,11 +56,23 @@ class Trick
      */
     private $images;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick")
+     */
+    private $videos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="trick")
+     */
+    private $user;
+
     public function __construct()
     {
 
         $this->comments = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->videos = new ArrayCollection();
+        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -188,6 +194,66 @@ class Trick
             // set the owning side to null (unless already changed)
             if ($image->getTrick() === $this) {
                 $image->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Videos>
+     */
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    public function addVideo(Videos $video): self
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos[] = $video;
+            $video->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(Videos $video): self
+    {
+        if ($this->videos->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getTrick() === $this) {
+                $video->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUser(): Collection
+    {
+        return $this->user;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
+            $user->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->user->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getTrick() === $this) {
+                $user->setTrick(null);
             }
         }
 

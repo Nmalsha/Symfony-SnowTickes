@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -62,9 +64,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $reset_token;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class,mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="user")
      */
     private $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -204,14 +211,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getComments(): ?Comments
+    /**
+     * @return Collection<int, Comments>
+     */
+    public function getComments(): Collection
     {
         return $this->comments;
     }
 
-    public function setComments(?Comments $comments): self
+    public function addComment(Comments $comment): self
     {
-        $this->comments = $comments;
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
 
         return $this;
     }
