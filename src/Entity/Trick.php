@@ -19,10 +19,10 @@ class Trick
      */
     private $id;
 
-    // /**
-    //  * @ORM\Column(type="string", length=70)
-    //  */
-    // private $userId;
+    /**
+     * @ORM\Column(type="string", length=70)
+     */
+    private $userId;
 
     /**
      * @ORM\Column(type="string", length=70)
@@ -30,8 +30,15 @@ class Trick
     private $trickName;
 
     /**
+
+     * @ORM\column(type="string", length=255, nullable=true)
+     */
+    private $slug;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
+
     private $description;
 
     /**
@@ -45,7 +52,7 @@ class Trick
     private $createdOn;
 
     /**
-     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist" , "remove"})
      */
     private $images;
 
@@ -56,12 +63,12 @@ class Trick
     private $user;
 
     /**
-     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist" , "remove"})
      */
     private $videos;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class,  mappedBy="Trick" , orphanRemoval=true,cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Comments::class,  mappedBy="Trick" , orphanRemoval=true,cascade={"persist" , "remove"})
      */
     private $comments;
 
@@ -131,6 +138,18 @@ class Trick
     public function setCreatedOn(\DateTimeInterface $createdOn): self
     {
         $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setslug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
@@ -210,6 +229,17 @@ class Trick
 
         return $this;
     }
+    public function removeVideo(Videos $video): self
+    {
+        if ($this->images->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getTrick() === $this) {
+                $video->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
     /**
      * @return Collection<int, Comments>
      */
@@ -221,6 +251,17 @@ class Trick
     public function setComments(?Comments $comments): self
     {
         $this->comments = $comments;
+
+        return $this;
+    }
+    public function removeComments(Comments $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getTrick() === $this) {
+                $comment->setTrick(null);
+            }
+        }
 
         return $this;
     }

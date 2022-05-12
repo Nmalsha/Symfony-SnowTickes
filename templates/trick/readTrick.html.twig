@@ -3,6 +3,9 @@
   <div class="row justify-content-center">
     <div class="col-md-10 col-md-offset-1 mb-4">
       <div class="card mt-5">
+        <pre>
+          {{ dump(trick) }}
+        </pre>
         {% for image in selImages %} {% if image.name is not empty %}
         <img
           class="display-top img-fluid"
@@ -58,7 +61,7 @@
           <div class="col-lg-4 col-md-12 mb-3 pb-3 margin">
             {% for video in selVideos %}
             <pre>
-              {{ dump(video.url) }}
+            
             </pre>
             <div class="card h-100 width">
               <iframe

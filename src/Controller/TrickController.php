@@ -10,6 +10,7 @@ use App\Entity\Videos;
 use App\Form\CommentsType;
 use App\Form\TrickType;
 use App\Form\VideosType;
+use App\Repository\ImagesRepository;
 use App\Repository\TrickRepository;
 use App\Repository\VideosRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,10 +35,11 @@ class TrickController extends AbstractController
         return $this->render('blog/tricks.html.twig');
     }
     /**
-     * @Route("/trick/{id}", name="tricks_show")
+     * @Route("/trick/{slug}", name="tricks_show", )
      */
-    public function readTrick(int $id, Trick $trick, Request $request, EntityManagerInterface $manager): Response
+    public function readTrick(string $slug, Trick $trick, Request $request, EntityManagerInterface $manager): Response
     {
+
         // Add comment
         $comments = new Comments;
         // create form
@@ -53,7 +55,7 @@ class TrickController extends AbstractController
             //add user id to the comment
             $comments->setUserId($user->getId());
 
-            $comments->setTrickId($id);
+            $comments->setTrickId($trick->getId());
             //send comment to the DB
 
             $manager->persist($comments);
@@ -70,7 +72,7 @@ class TrickController extends AbstractController
                 'Votre commentaire a bien été enregistré !'
             );
             //redirect root
-            return $this->redirectToRoute('tricks_show', ['id' => $trick->getId()]);
+            return $this->redirectToRoute('tricks_show', ['slug' => $slug]);
             // $comment->addTrick($trick);
             // $comment->addUser($this->getUser());
 
@@ -79,9 +81,16 @@ class TrickController extends AbstractController
         // $comments->addUser($this->getUser());
         // \dump($comments);
         // die;
+        // $repo = $this->getDoctrine()->getRepository(Trick::class);
+        // $trick = $repo->find($slug);
+        // \dump($trick);
+        // die;
+
         //display video,image and comment repositorys
         $repo = $this->getDoctrine()->getRepository(Trick::class);
-        $trick = $repo->find($id);
+        $trick = $repo->findOneBy(['slug' => $slug]);
+
+        $id = $trick->getId();
 
         $repoImage = $this->getDoctrine()->getRepository(Images::class);
         $repovideos = $this->getDoctrine()->getRepository(Videos::class);
@@ -210,8 +219,6 @@ class TrickController extends AbstractController
             // \dump($userId);
             // die;
 
-            \dump($trickuserid);
-            die;
             //get Main image data
             $mainimages = $form->get('images')->getData();
             // \dump($mainimage);
@@ -442,18 +449,35 @@ class TrickController extends AbstractController
 
     }
     /**
-     * * @var KernelInterface
+
      * @Route("/tricks/delete/{id}", name="trick_delete" )
      */
-    public function delete($id, Trick $trick, TrickRepository $repository, VideosRepository $videosRepository, EntityManagerInterface $manager)
+    public function delete($id, Trick $trick, VideosRepository $repoVideo, ImagesRepository $repoImage, EntityManagerInterface $manager)
     {
-//get trick
-        $repoTrick = $this->getDoctrine()->getRepository(Trick::class);
-        $trick = $repoTrick->find($id);
-        // dd($trick);
-        // die;
-        //get images
+        //delete comment
+        $repo = $this->getDoctrine()->getRepository(Comments::class);
+        $comments = $repo->findAll();
+        foreach ($comments as $comment) {
 
+            $trickCommentId = $comment->getTrickId();
+
+            $id = (int) $id;
+
+            if ($id === $trickCommentId) {
+
+                //   $trick->removeComments($comment);
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($comment);
+                $manager->flush();
+
+            }
+
+        }
+        // \dump('comment removed');
+
+        // die;
+
+        //delete videos
         $repo = $this->getDoctrine()->getRepository(Videos::class);
         $videos = $repo->findAll();
 
@@ -466,24 +490,31 @@ class TrickController extends AbstractController
             if ($id === $videoTrickid) {
 
                 $Video = $video;
-                // \dump($VideoUrl);
-                // \dump($videoTrickid);
-                // \dump($VideoUrl);
+
+                $trick->removeVideo($Video);
+
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($Video);
+                $manager->flush();
 
             }
 
         }
 
+        // \dump('video deleted');
+        // die;
+
+        //delete images
         $repo = $this->getDoctrine()->getRepository(Images::class);
         $images = $repo->findAll();
+
         foreach ($images as $image) {
             $imageTrick = $image->getTrick();
             $imageTrickId = $imageTrick->getId();
 
             $id = (int) $id;
             if ($imageTrickId === $id) {
+                $trick->removeImage($image);
                 $name = $image->getName();
                 if (file_exists($name)) {
                     $imageMain = $this->getParameter('images_directory') . '/' . $name;
@@ -497,12 +528,44 @@ class TrickController extends AbstractController
 
                 }
 
+                $manager->remove($image);
+
+                $manager->flush();
+
             }
 
         }
 
-        $manager = $this->getDoctrine()->getManager();
+        // dump($trick);
+        // die;
+        // $trick->removeImage($image);
+        // $trick->removeVideo($video);
+
+        // \dump('img deleted');
+        // die;
+
+        // $trick = $repoTrick->findOneBy(['id' => $id]);
+        // //$manager2 = $this->getDoctrine()->getManager();
+        // dump($image);
+        // die;
+        // dump($trick);
+        // die;
         $manager->remove($trick);
+        $manager->flush();
+
+        // dump($trick);
+        // die;
+        // $manager->detach($trick);
+        // $manager->flush();
+
+        // die();
+        // try {
+
+        // } catch (\Exception $e) {
+        //     \dump($e);
+        // }
+
+        // die();
         $this->addflash(
             'success',
             "Le trick a été supprimé avec succès !"
