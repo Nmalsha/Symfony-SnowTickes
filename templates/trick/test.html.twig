@@ -3,19 +3,16 @@
   <div class="row justify-content-center">
     <div class="col-md-10 col-md-offset-1 mb-4">
       <div class="card mt-5">
-       
-        {% for image in selImages %} {% if image.name is not empty %}
-       <pre>
-         {{ dump(image) }}
-       </pre>
+        <pre>
+          {{ dump(trick) }}
+        </pre>
+        <!-- {% for image in selImages %} {% if image.name is not empty %}
         <img
           class="display-top img-fluid"
           src="{{ asset('/images/'~ image.name) }}"
           alt=""
         />
-        
-        {% endif %} {% endfor %}
-        
+        {% endif %} {% endfor %} -->
         <div class="card-body">
           <ul class="list-inline trick-data">
             <li class="list-inline-item">
@@ -34,8 +31,7 @@
           <!---Start carousel-->
           <h4>Image Gallery</h4>
           <div class="row">
-         
-          {% for image in selImages %} {% if image.nameGallaryImages is not
+            {% for image in selImages %} {% if image.nameGallaryImages is not
             null %}
             <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
               <div
@@ -62,7 +58,7 @@
           </div>
           <h4>Video Gallery</h4>
           <div class="col-lg-4 col-md-12 mb-3 pb-3 margin">
-            {% for video in selVideos %}
+             {% for video in selVideos %}
             <pre>
             
             </pre>
@@ -76,8 +72,8 @@
                 width="200"
               >
               </iframe>
-            </div>
-            {% endfor %}
+            </div> 
+            {% endfor %} 
           </div>
 
           <!---End  carousel-->
@@ -123,7 +119,6 @@
                 <h6 class="mb-3 pl-2">Commentaires</h6>
                  <!-- DO LOOP-->
                  {% for comment in selComments %}
-               
                 <ul class="entry-comments-list list-unstyled">
                  
 
@@ -131,7 +126,7 @@
                     <div class="col-md-2 col-sm-4 col-xs-6 text-center">
                       <img
                         class="user-profile"
-                        src="{{ asset('/images/'~ comment.user.profieImage) }}"
+                        src="{{ asset('/images/'~ comment.userObj.profieImage) }}"
                       />
                     </div>
 
@@ -142,15 +137,14 @@
                           Par:
                           <a
                             href="{{
-                              path('user_profile', { id: comment.user.id })
+                              path('user_profile', { id: comment.userObj.id })
                             }}"
-                            ></a
+                            >{{ comment.userObj.firstName }}</a
                           ></span
                         >
                         <span
-                          > {{ comment.createdAt | date('d/m/y') }} à
-                          {{  comment.createdAt  | date('H:i') }}
-                          </span
+                          >{{ comment.createdAt | date('d/m/y') }} à
+                          {{  comment.createdAt  | date('H:i') }}</span
                         >
                       </p>
                     </div>

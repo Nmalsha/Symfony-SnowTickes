@@ -47,22 +47,22 @@ class Trick
     private $createdOn;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="trick")
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="trick",cascade={"persist"})
      */
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="trick")
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="trick",cascade={"persist"})
      */
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick")
+     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick"  ,cascade={"persist"})
      */
     private $videos;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="trick")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tricks")
      */
     private $user;
 
@@ -72,7 +72,7 @@ class Trick
         $this->comments = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->videos = new ArrayCollection();
-        $this->user = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -230,32 +230,14 @@ class Trick
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function addUser(User $user): self
+    public function setUser(?User $user): self
     {
-        if (!$this->user->contains($user)) {
-            $this->user[] = $user;
-            $user->setTrick($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->user->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getTrick() === $this) {
-                $user->setTrick(null);
-            }
-        }
+        $this->user = $user;
 
         return $this;
     }
