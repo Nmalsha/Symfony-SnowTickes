@@ -22,11 +22,6 @@ class Trick
     /**
      * @ORM\Column(type="string", length=70)
      */
-    private $userId;
-
-    /**
-     * @ORM\Column(type="string", length=70)
-     */
     private $trickName;
 
     /**
@@ -52,25 +47,16 @@ class Trick
     private $createdOn;
 
     /**
-     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist" , "remove"})
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
+     * * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $images;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tricks")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist" , "remove"})
+     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
+     *  @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $videos;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Comments::class,  mappedBy="Trick" , orphanRemoval=true,cascade={"persist" , "remove"})
-     */
-    private $comments;
 
     public function __construct()
     {
@@ -81,18 +67,6 @@ class Trick
     {
         return $this->id;
     }
-
-    public function getUserId(): ?string
-    {
-        return $this->userId;
-    }
-
-    // public function setUserId(string $userId): self
-    // {
-    //     $this->userId = $userId;
-
-    //     return $this;
-    // }
 
     public function getTrickName(): ?string
     {
@@ -172,16 +146,6 @@ class Trick
         return $this;
     }
 
-    // public function addUserId($userId): self
-    // {
-    //     if (!$this->userId->contains($userId)) {
-    //         $this->userId[] = $userId;
-    //         $userId->setTrick($this);
-    //     }
-
-    //     return $this;
-    // }
-
     public function removeImage(Images $image): self
     {
         if ($this->images->removeElement($image)) {
@@ -190,18 +154,6 @@ class Trick
                 $image->setTrick(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }
@@ -240,29 +192,5 @@ class Trick
 
         return $this;
     }
-    /**
-     * @return Collection<int, Comments>
-     */
-    public function getComments(): ?Comments
-    {
-        return $this->comments;
-    }
 
-    public function setComments(?Comments $comments): self
-    {
-        $this->comments = $comments;
-
-        return $this;
-    }
-    public function removeComments(Comments $comment): self
-    {
-        if ($this->comments->removeElement($comment)) {
-            // set the owning side to null (unless already changed)
-            if ($comment->getTrick() === $this) {
-                $comment->setTrick(null);
-            }
-        }
-
-        return $this;
-    }
 }

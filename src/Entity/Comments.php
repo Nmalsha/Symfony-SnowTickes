@@ -30,12 +30,7 @@ class Comments
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="comments")
-     */
-    private $trick;
-
-    /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="comments")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      */
     private $user;
 
@@ -49,14 +44,9 @@ class Comments
      */
     public $userObj;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $trickId;
-
     public function __construct()
     {
-        $this->trick = new ArrayCollection();
+
         $this->user = new ArrayCollection();
     }
 
@@ -85,36 +75,6 @@ class Comments
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Trick>
-     */
-    public function getTrick(): Collection
-    {
-        return $this->trick;
-    }
-
-    public function addTrick(Trick $trick): self
-    {
-        if (!$this->trick->contains($trick)) {
-            $this->trick[] = $trick;
-            $trick->setComments($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTrick(Trick $trick): self
-    {
-        if ($this->trick->removeElement($trick)) {
-            // set the owning side to null (unless already changed)
-            if ($trick->getComments() === $this) {
-                $trick->setComments(null);
-            }
-        }
 
         return $this;
     }
@@ -162,15 +122,4 @@ class Comments
         return $this;
     }
 
-    public function getTrickId(): ?int
-    {
-        return $this->trickId;
-    }
-
-    public function setTrickId(int $trickId): self
-    {
-        $this->trickId = $trickId;
-
-        return $this;
-    }
 }

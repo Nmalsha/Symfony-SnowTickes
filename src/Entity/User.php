@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -39,7 +37,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $profieImage;
 
@@ -49,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="integer", length=100)
+     * @ORM\Column(type="integer", length=100 ,nullable=true)
      */
     private $roles;
 
@@ -64,19 +62,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $reset_token;
 
     /**
-     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="user", orphanRemoval=true)
-     */
-    private $tricks;
-
-    /**
      * @ORM\OneToMany(targetEntity=Comments::class,mappedBy="user", orphanRemoval=true)
      */
     private $comments;
-
-    public function __construct()
-    {
-        $this->tricks = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -212,36 +200,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setResetToken(?string $reset_token): self
     {
         $this->reset_token = $reset_token;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Trick>
-     */
-    public function getTricks(): Collection
-    {
-        return $this->tricks;
-    }
-
-    public function addTrick(Trick $trick): self
-    {
-        if (!$this->tricks->contains($trick)) {
-            $this->tricks[] = $trick;
-            $trick->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTrick(Trick $trick): self
-    {
-        if ($this->tricks->removeElement($trick)) {
-            // set the owning side to null (unless already changed)
-            if ($trick->getUser() === $this) {
-                $trick->setUser(null);
-            }
-        }
 
         return $this;
     }

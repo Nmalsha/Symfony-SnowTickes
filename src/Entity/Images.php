@@ -23,12 +23,6 @@ class Images
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="images")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $Trick;
-
-    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $isMainImage;
@@ -51,18 +45,6 @@ class Images
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getTrick(): ?Trick
-    {
-        return $this->Trick;
-    }
-
-    public function setTrick(?Trick $Trick): self
-    {
-        $this->Trick = $Trick;
 
         return $this;
     }
