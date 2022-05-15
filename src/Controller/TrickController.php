@@ -124,10 +124,9 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $slugname = $form->get("TrickName")->getData();
 
             $trick->setUser($this->getUser());
-            // \dump($userId);
-            // die;
 
             //get Main image data
             $mainimages = $form->get('images')->getData();
@@ -151,22 +150,20 @@ class TrickController extends AbstractController
                 $img->setName($imageDocument);
 
                 $trick->addImage($img);
+
                 $img->setTrick($trick);
-                var_dump($trick);
-                die;
+
                 //  $img->setIsMainImage(1);
                 //   $trick->setCreatedOn(new \DateTime());
 
             }
 //get gallery images data
             $gallaryImages = $form->get('gallaryimages')->getData();
-            \dump($gallaryImages);
 
             //loop true the images
 
             foreach ($gallaryImages as $image) {
                 $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
-                \dump($image);
 
                 //lo
                 $image->move(
@@ -183,6 +180,8 @@ class TrickController extends AbstractController
             }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
+
+            $trick->setslug($slugname);
 
             $trick->setCreatedOn(new \DateTime());
 
@@ -352,30 +351,6 @@ class TrickController extends AbstractController
             }
         }
 
-        // $repo = $this->getDoctrine()->getRepository(Comments::class);
-        // $comments = $repo->findBy(['id' => $trick->getId()]);
-        // \dump($comments);
-        // die;
-        // foreach ($comments as $comment) {
-
-        //     $trickCommentId = $comment->getTrickId();
-
-        //     $id = (int) $id;
-
-        //     if ($id === $trickCommentId) {
-
-        //         //   $trick->removeComments($comment);
-        //         $em = $this->getDoctrine()->getManager();
-        //         $em->remove($comment);
-        //         $manager->flush();
-
-        //     }
-
-        // }
-        // \dump('comment removed');
-
-        // die;
-
         //delete videos
         $videos = $repoVideo->findAll();
 
@@ -387,32 +362,6 @@ class TrickController extends AbstractController
                 $manager->flush();
             }
         }
-
-        // $repo = $this->getDoctrine()->getRepository(Videos::class);
-        // $videos = $repo->findAll();
-
-        // foreach ($videos as $video) {
-
-        //     $videoTrickid = $video->getTrickId();
-
-        //     $id = (int) $id;
-
-        //     if ($id === $videoTrickid) {
-
-        //         $Video = $video;
-
-        //         $trick->removeVideo($Video);
-
-        //         $em = $this->getDoctrine()->getManager();
-        //         $em->remove($Video);
-        //         $manager->flush();
-
-        //     }
-
-        // }
-
-        // \dump('video deleted');
-        // die;
 
         //delete images
         $repo = $this->getDoctrine()->getRepository(Images::class);
@@ -446,36 +395,9 @@ class TrickController extends AbstractController
 
         }
 
-        // dump($trick);
-        // die;
-        // $trick->removeImage($image);
-        // $trick->removeVideo($video);
-
-        // \dump('img deleted');
-        // die;
-
-        // $trick = $repoTrick->findOneBy(['id' => $id]);
-        // //$manager2 = $this->getDoctrine()->getManager();
-        // dump($image);
-        // die;
-        // dump($trick);
-        // die;
         $manager->remove($trick);
         $manager->flush();
 
-        // dump($trick);
-        // die;
-        // $manager->detach($trick);
-        // $manager->flush();
-
-        // die();
-        // try {
-
-        // } catch (\Exception $e) {
-        //     \dump($e);
-        // }
-
-        // die();
         $this->addflash(
             'success',
             "Le trick a été supprimé avec succès !"

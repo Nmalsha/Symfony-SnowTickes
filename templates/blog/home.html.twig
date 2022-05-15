@@ -8,6 +8,7 @@
   <div class="container">
     <div class="row">
       {% for trick in tricks %}
+    
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 trick trickcard_style">
         <div class="card card_tricks md-3">
           {% for image in images %} {% if trick.id == image.Trick.id %} {% if

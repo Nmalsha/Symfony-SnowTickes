@@ -24,6 +24,9 @@ class BlogController extends AbstractController
         $Images = $repoImage->findAll();
         $repoUser = $this->getDoctrine()->getRepository(User::class);
         $user = $repoUser->findAll();
+        // dump($user);
+        // dump($tricks);
+        // die;
         return $this->render('blog/home.html.twig', [
             'controller_name' => "BlogController",
             'tricks' => $tricks,
