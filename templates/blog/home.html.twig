@@ -8,7 +8,7 @@
   <div class="container">
     <div class="row">
       {% for trick in tricks %}
-    
+
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 trick trickcard_style">
         <div class="card card_tricks md-3">
           {% for image in images %} {% if trick.id == image.Trick.id %} {% if
@@ -39,7 +39,10 @@
             <a href="{{ path('trick_edit', { id: trick.id }) }}"
               ><i class="fas fa-edit"></i
             ></a>
-            <a href="{{ path('trick_delete', { id: trick.id }) }}" trick-delete data-token="{{csrf_token('delete'~ trick.id)}}""
+            <a
+              href="{{ path('trick_delete', { id: trick.id }) }}"
+              trick-delete
+              data-token="{{csrf_token('delete'~ trick.id)}}"
               ><i class="fas fa-trash-alt"></i
             ></a>
             {% endif %} {% endif %}
@@ -50,7 +53,8 @@
     </div>
   </div>
 </section>
+
 {% endblock %} {% block javascripts %}
 <script src="{{ asset('/js/button.js') }}"></script>
-<script src="{{ asset('/js/trick.js')}}"></script>
+<script src="{{ asset('/js/trick.js') }}"></script>
 {% endblock %}

@@ -14,6 +14,7 @@ use App\Repository\ImagesRepository;
 use App\Repository\TrickRepository;
 use App\Repository\VideosRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,8 +38,15 @@ class TrickController extends AbstractController
     /**
      * @Route("/trick/{slug}", name="tricks_show", )
      */
-    public function readTrick(string $slug, Trick $trick, VideosRepository $videosRepository, ImagesRepository $imagesRepository, TrickRepository $trickRepository, CommentsRepository $commentRepository, Request $request, EntityManagerInterface $manager): Response
-    {
+    public function readTrick(string $slug,
+        PaginatorInterface $paginator,
+        Trick $trick,
+        VideosRepository $videosRepository,
+        ImagesRepository $imagesRepository,
+        TrickRepository $trickRepository,
+        CommentsRepository $commentRepository,
+        Request $request,
+        EntityManagerInterface $manager): Response {
         //get trick
         $trick = $trickRepository->findOneBy(['slug' => $slug]);
 
@@ -65,15 +73,33 @@ class TrickController extends AbstractController
 
         //get comments
         $comments = $commentRepository->find(['id' => $trick->getId()]);
-        $comments = $commentRepository->findAll();
+        $comments = $commentRepository->findBy([], ['createdAt' => 'desc']);
+        // $comments = $commentRepository->findBy([], ['createdAt' => 'desc']);
+        // $commentsbyorder = $comments->find(['id' => $trick->getId()]);
+        // $selComments = $paginator->paginate(
+        //     $comments,
+        //     $request->query->getInt('page', 1),
+        //     6
+        // );
+
         $selComments = [];
+
         foreach ($comments as $comment) {
 
             if ($trick->getId() === $comment->getTrick()->getId()) {
                 $selComments[] = $comment;
+
             }
         }
 
+        $selCommentspag = $paginator->paginate(
+            $selComments,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+        // \dump($selComments);
+        // die;
         //add comment
         $comments = new Comments;
         $form = $this->createForm(CommentsType::class, $comments);
@@ -103,7 +129,7 @@ class TrickController extends AbstractController
             'selImages' => $selImages,
 
             'selVideos' => $selVideos,
-            'selComments' => $selComments,
+            'selCommentspag' => $selCommentspag,
 
             'form' => $form->createView(),
 
