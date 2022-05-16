@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CommentsRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,29 +28,18 @@ class Comments
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="comments")
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="comments")
      */
     private $trick;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="comments")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      */
     private $user;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $userId;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $trickId;
-
     public function __construct()
     {
-        $this->trick = new ArrayCollection();
-        $this->user = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -84,87 +71,28 @@ class Comments
         return $this;
     }
 
-    /**
-     * @return Collection<int, Trick>
-     */
-    public function getTrick(): Collection
+    public function getTrick(): ?Trick
     {
         return $this->trick;
     }
 
-    public function addTrick(Trick $trick): self
+    public function setTrick(?Trick $trick): self
     {
-        if (!$this->trick->contains($trick)) {
-            $this->trick[] = $trick;
-            $trick->setComments($this);
-        }
+        $this->trick = $trick;
 
         return $this;
     }
 
-    public function removeTrick(Trick $trick): self
-    {
-        if ($this->trick->removeElement($trick)) {
-            // set the owning side to null (unless already changed)
-            if ($trick->getComments() === $this) {
-                $trick->setComments(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    public function addUser(User $user): self
+    public function setUser(?User $user): self
     {
-        if (!$this->user->contains($user)) {
-            $this->user[] = $user;
-            $user->setComments($this);
-        }
+        $this->user = $user;
 
         return $this;
     }
 
-    public function removeUser(User $user): self
-    {
-        if ($this->user->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getComments() === $this) {
-                $user->setComments(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getUserId(): ?int
-    {
-        return $this->userId;
-    }
-
-    public function setUserId(int $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
-    public function getTrickId(): ?int
-    {
-        return $this->trickId;
-    }
-
-    public function setTrickId(int $trickId): self
-    {
-        $this->trickId = $trickId;
-
-        return $this;
-    }
 }

@@ -9,7 +9,12 @@ use App\Entity\Videos;
 use App\Form\CommentsType;
 use App\Form\TrickType;
 use App\Form\VideosType;
+use App\Repository\CommentsRepository;
+use App\Repository\ImagesRepository;
+use App\Repository\TrickRepository;
+use App\Repository\VideosRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +22,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
+
+    public function __construct(TrickRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
     /**
      * @Route("/tricks", name="tricks")
      */
@@ -25,147 +36,101 @@ class TrickController extends AbstractController
         return $this->render('blog/tricks.html.twig');
     }
     /**
-     * @Route("/trick/{id}", name="tricks_show")
+     * @Route("/trick/{slug}", name="tricks_show", )
      */
-    public function readTrick(int $id, Trick $trick, Request $request, EntityManagerInterface $manager): Response
-    {
-        // Add comment
+    public function readTrick(string $slug,
+        PaginatorInterface $paginator,
+        Trick $trick,
+        VideosRepository $videosRepository,
+        ImagesRepository $imagesRepository,
+        TrickRepository $trickRepository,
+        CommentsRepository $commentRepository,
+        Request $request,
+        EntityManagerInterface $manager): Response {
+        //get trick
+        $trick = $trickRepository->findOneBy(['slug' => $slug]);
+
+        //get images
+
+        $images = $imagesRepository->findAll();
+        $selImages = [];
+        foreach ($images as $image) {
+
+            if ($trick->getId() === $image->getTrick()->getId()) {
+                $selImages[] = $image;
+            }
+        }
+
+        //get videos
+        $videos = $videosRepository->findAll();
+        $selVideos = [];
+        foreach ($videos as $video) {
+
+            if ($trick->getId() === $video->getTrick()->getId()) {
+                $selVideos[] = $video;
+            }
+        }
+
+        //get comments
+        $comments = $commentRepository->find(['id' => $trick->getId()]);
+        $comments = $commentRepository->findBy([], ['createdAt' => 'desc']);
+        // $comments = $commentRepository->findBy([], ['createdAt' => 'desc']);
+        // $commentsbyorder = $comments->find(['id' => $trick->getId()]);
+        // $selComments = $paginator->paginate(
+        //     $comments,
+        //     $request->query->getInt('page', 1),
+        //     6
+        // );
+
+        $selComments = [];
+
+        foreach ($comments as $comment) {
+
+            if ($trick->getId() === $comment->getTrick()->getId()) {
+                $selComments[] = $comment;
+
+            }
+        }
+
+        $selCommentspag = $paginator->paginate(
+            $selComments,
+            $request->query->getInt('page', 1),
+            6
+        );
+
+        // \dump($selComments);
+        // die;
+        //add comment
         $comments = new Comments;
-        // create form
         $form = $this->createForm(CommentsType::class, $comments);
-
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-
             $comments->setCreatedAt(new \DateTimeImmutable());
-            //get user
-            $user = $this->getUser();
-            //add user id to the comment
-            $comments->setUserId($user->getId());
 
-            $comments->setTrickId($id);
-            //send comment to the DB
+            // get user
+            $user = $this->getUser();
+
+            $comments->setUser($user);
+            $comments->setTrick($trick);
 
             $manager->persist($comments);
             $manager->flush();
-
-            // $comments->addTrick($trick);
-
-            // $manager->persist($comment);
-
-            // $manager->flush();
+            dump('here');
 
             $this->addFlash(
                 'success',
                 'Votre commentaire a bien été enregistré !'
             );
-            //redirect root
-            return $this->redirectToRoute('tricks_show', ['id' => $trick->getId()]);
-            // $comment->addTrick($trick);
-            // $comment->addUser($this->getUser());
-
-        }
-        // $comments->addTrick($trick);
-        // $comments->addUser($this->getUser());
-        // \dump($comments);
-        // die;
-        //display video,image and comment repositorys
-        $repo = $this->getDoctrine()->getRepository(Trick::class);
-        $trick = $repo->find($id);
-
-        $repoImage = $this->getDoctrine()->getRepository(Images::class);
-        $repovideos = $this->getDoctrine()->getRepository(Videos::class);
-        $repoComments = $this->getDoctrine()->getRepository(Comments::class);
-
-        //get images
-        $images = $repoImage->findAll();
-
-        $selImages = [];
-        foreach ($images as $image) {
-
-            //get the trick from images repo
-
-            $imagesTrick = $image->getTrick();
-
-            // get trick id from images
-            $imagerepoTrickId = $imagesTrick->getId();
-
-            //if trick id and the imagetrick id is same
-            if ($id === $imagerepoTrickId) {
-                $selImages[] = $image;
-
-                $imagename = $image->getName();
-                $galaryImageNames = $image->getNameGallaryImages();
-
-            }
-
-        }
-        //get videos
-        $videos = $repovideos->findAll();
-
-        $selVideos = [];
-        foreach ($videos as $video) {
-
-            //   $videoTrick = $video->getTrick();
-            //get the trickid from images repo
-            $videorepoTrickId = $video->getTrickId();
-
-            if ($id === $videorepoTrickId) {
-                $selVideos[] = $video;
-                // \dump($videorepoTrickId);
-                // dump($id);
-                // die;
-                // \dump($video);
-                // die;
-                $videoname = $video->getUrl();
-
-            }
-
-        }
-//getting comment owner
-        // $repouserOfTheComment = $this->getDoctrine()->getRepository(User::class);
-        // $users = $repouserOfTheComment->findAll();
-        // // $userofthecomment = $user->findBy($commentrepoUserid);
-        // foreach ($users as $user) {
-        //     $commentrepoUserid = $commnent->getUserId();
-
-        //     if(){
-
-        //     }
-        // }
-        $commnents = $repoComments->findAll();
-
-        $selComments = [];
-        foreach ($commnents as $commnent) {
-
-            //   $videoTrick = $video->getTrick();
-
-            $commentrepoTrickid = $commnent->getTrickId();
-
-            // \dump($commentrepoTrickid);
-            // die;
-            if ($id === $commentrepoTrickid) {
-                $selComments[] = $commnent;
-                $content = $commnent->getContent();
-                // \dump($videorepoTrickId);
-                // dump($id);
-                // die;
-
-                // $videoname = $video->getUrl();
-
-            }
-
+            return $this->redirectToRoute('tricks_show', ['slug' => $slug]);
         }
 
-        // dump($selComments);
-        // die;
         return $this->render('trick/readTrick.html.twig', [
             'trick' => $trick,
+            'selImages' => $selImages,
 
             'selVideos' => $selVideos,
-            'selImages' => $selImages,
-            'selComments' => $selComments,
+            'selCommentspag' => $selCommentspag,
+
             'form' => $form->createView(),
 
         ]);
@@ -185,13 +150,10 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $slugname = $form->get("TrickName")->getData();
 
             $trick->setUser($this->getUser());
-            // \dump($userId);
-            // die;
 
-            // \dump($url);
-            // die;
             //get Main image data
             $mainimages = $form->get('images')->getData();
             // \dump($mainimage);
@@ -214,19 +176,20 @@ class TrickController extends AbstractController
                 $img->setName($imageDocument);
 
                 $trick->addImage($img);
+
+                $img->setTrick($trick);
+
                 //  $img->setIsMainImage(1);
                 //   $trick->setCreatedOn(new \DateTime());
 
             }
 //get gallery images data
             $gallaryImages = $form->get('gallaryimages')->getData();
-            \dump($gallaryImages);
 
             //loop true the images
 
             foreach ($gallaryImages as $image) {
                 $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
-                \dump($image);
 
                 //lo
                 $image->move(
@@ -238,11 +201,13 @@ class TrickController extends AbstractController
                 //  $img = new Images();
 
                 $img->setNameGallaryImages($imageDocument);
-
+                $img->setTrick($trick);
                 $trick->addImage($img);
             }
 
             //if the trick hasn't a id = if the trick already not exist in the DB
+
+            $trick->setslug($slugname);
 
             $trick->setCreatedOn(new \DateTime());
 
@@ -256,6 +221,7 @@ class TrickController extends AbstractController
 
         return $this->render('trick/addTrick.html.twig', [
             'form' => $form->createView(),
+            'trick' => $trick,
         ]);
     }
 
@@ -279,8 +245,8 @@ class TrickController extends AbstractController
 
             $video->setUrl($url);
             //$trick->setVideos($video);
-            $video->setTrickId($trick->getId());
-
+            $video->setTrick($trick);
+            // $video->addTrick();
             $manager->persist($video);
             $manager->flush();
 
@@ -305,36 +271,7 @@ class TrickController extends AbstractController
         //video handling
 
         $repovideos = $this->getDoctrine()->getRepository(Videos::class);
-        $videos = $repovideos->findAll();
-
-        $selVideos = [];
-        foreach ($videos as $video) {
-            // \dump($video);
-
-            //    $videoTrick = $video->getTrick();
-
-            $videorepoTrickId = $video->getTrickId();
-            // \dump($videorepoTrickId);
-
-            // \dump($videorepoTrickId);
-            // dump($id);
-            // die;
-            \dump($videorepoTrickId);
-            $id = (int) $id;
-
-            // dump($id);
-            // die;
-            if ($id === $videorepoTrickId) {
-
-                // $selVideos[] = $video;
-                $selVideos[] = $video;
-                \dump($selVideos);
-
-                $videoname = $video->getUrl();
-
-            }
-
-        }
+        $videos = $repovideos->findBy(['id' => $id]);
 
         $img = new Images();
 
@@ -391,6 +328,8 @@ class TrickController extends AbstractController
                 //  $img = new Images();
 
                 $img->setNameGallaryImages($imageDocument);
+                // \dump($img);
+                // die;
                 //$img->setName("TOTO");
                 $trick->addImage($img);
 
@@ -412,8 +351,85 @@ class TrickController extends AbstractController
         return $this->render('trick/edit.html.twig', [
             'form' => $form->createView(),
             'trick' => $trick,
-            'selVideos' => $selVideos,
+            'videos' => $videos,
+
         ]);
+
+    }
+    /**
+
+     * @Route("/tricks/delete/{id}", name="trick_delete" )
+     */
+    public function delete($id, Trick $trick, VideosRepository $repoVideo, CommentsRepository $commentRepository, ImagesRepository $repoImage, EntityManagerInterface $manager)
+    {
+
+        //delete comment
+
+        $comments = $commentRepository->find(['id' => $trick->getId()]);
+        $comments = $commentRepository->findAll();
+
+        foreach ($comments as $comment) {
+
+            if ($trick->getId() === $comment->getTrick()->getId()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($comment);
+                $manager->flush();
+            }
+        }
+
+        //delete videos
+        $videos = $repoVideo->findAll();
+
+        foreach ($videos as $video) {
+
+            if ($trick->getId() === $video->getTrick()->getId()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->remove($video);
+                $manager->flush();
+            }
+        }
+
+        //delete images
+        $repo = $this->getDoctrine()->getRepository(Images::class);
+        $images = $repo->findAll();
+
+        foreach ($images as $image) {
+            $imageTrick = $image->getTrick();
+            $imageTrickId = $imageTrick->getId();
+
+            $id = (int) $id;
+            if ($imageTrickId === $id) {
+                $trick->removeImage($image);
+                $name = $image->getName();
+                if (file_exists($name)) {
+                    $imageMain = $this->getParameter('images_directory') . '/' . $name;
+                    unlink($imageMain);
+                }
+
+                $nameGallery = $image->getNameGallaryImages();
+                if (file_exists($nameGallery)) {
+                    $imageGallery = $this->getParameter('images_directory') . '/' . $nameGallery;
+                    unlink($imageGallery);
+
+                }
+
+                $manager->remove($image);
+
+                $manager->flush();
+
+            }
+
+        }
+
+        $manager->remove($trick);
+        $manager->flush();
+
+        $this->addflash(
+            'success',
+            "Le trick a été supprimé avec succès !"
+        );
+
+        return $this->redirectToRoute('home');
 
     }
 
@@ -445,12 +461,12 @@ class TrickController extends AbstractController
             $comment->addUser($this->getUser());
 
             dump($comment);
-            \dump($user->getId());
-            die;
+            // \dump($user->getId());
+            // die;
             // $comment->setUserId();
             $trick->setComments($comment);
-            \dump($comment);
-            die;
+            // \dump($comment);
+            // die;
             //Redirect to the added trick view
             return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
 

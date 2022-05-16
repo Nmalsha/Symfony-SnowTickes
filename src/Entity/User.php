@@ -39,7 +39,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $profieImage;
 
@@ -49,7 +49,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="integer", length=100)
+     * @ORM\Column(type="integer", length=100 ,nullable=true)
      */
     private $roles;
 
@@ -64,17 +64,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $reset_token;
 
     /**
-     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="user", orphanRemoval=true)
-     */
-    private $tricks;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Comments::class,mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="user")
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="user")
+     */
+    private $tricks;
+
     public function __construct()
     {
+        $this->comments = new ArrayCollection();
         $this->tricks = new ArrayCollection();
     }
 
@@ -217,6 +218,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return Collection<int, Comments>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comments $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Trick>
      */
     public function getTricks(): Collection
@@ -242,18 +273,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $trick->setUser(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getComments(): ?Comments
-    {
-        return $this->comments;
-    }
-
-    public function setComments(?Comments $comments): self
-    {
-        $this->comments = $comments;
 
         return $this;
     }

@@ -19,19 +19,21 @@ class Trick
      */
     private $id;
 
-    // /**
-    //  * @ORM\Column(type="string", length=70)
-    //  */
-    // private $userId;
-
     /**
      * @ORM\Column(type="string", length=70)
      */
     private $trickName;
 
     /**
+
+     * @ORM\column(type="string", length=255, nullable=true)
+     */
+    private $slug;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
+
     private $description;
 
     /**
@@ -45,47 +47,38 @@ class Trick
     private $createdOn;
 
     /**
-     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Comments::class, mappedBy="trick",cascade={"persist"})
+     */
+    private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="trick",cascade={"persist"})
      */
     private $images;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tricks")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="Trick", orphanRemoval=true,cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick"  ,cascade={"persist"})
      */
     private $videos;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comments::class,  mappedBy="Trick")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tricks")
      */
-    private $comments;
+    private $user;
 
     public function __construct()
     {
+
+        $this->comments = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->videos = new ArrayCollection();
+
     }
 
     public function getId(): ?int
     {
         return $this->id;
     }
-
-    // public function getUserId(): ?string
-    // {
-    //     return $this->userId;
-    // }
-
-    // public function setUserId(string $userId): self
-    // {
-    //     $this->userId = $userId;
-
-    //     return $this;
-    // }
 
     public function getTrickName(): ?string
     {
@@ -135,6 +128,48 @@ class Trick
         return $this;
     }
 
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setslug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comments>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comments $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comments $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getTrick() === $this) {
+                $comment->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Images>
      */
@@ -153,22 +188,42 @@ class Trick
         return $this;
     }
 
-    // public function addUserId($userId): self
-    // {
-    //     if (!$this->userId->contains($userId)) {
-    //         $this->userId[] = $userId;
-    //         $userId->setTrick($this);
-    //     }
-
-    //     return $this;
-    // }
-
     public function removeImage(Images $image): self
     {
         if ($this->images->removeElement($image)) {
             // set the owning side to null (unless already changed)
             if ($image->getTrick() === $this) {
                 $image->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Videos>
+     */
+    public function getVideos(): Collection
+    {
+        return $this->videos;
+    }
+
+    public function addVideo(Videos $video): self
+    {
+        if (!$this->videos->contains($video)) {
+            $this->videos[] = $video;
+            $video->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideo(Videos $video): self
+    {
+        if ($this->videos->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getTrick() === $this) {
+                $video->setTrick(null);
             }
         }
 
@@ -187,41 +242,4 @@ class Trick
         return $this;
     }
 
-    /**
-     * @return Collection<int, Videos>
-     */
-    public function getVideos(): ?Videos
-    {
-        return $this->videos;
-    }
-
-    public function setVideos(?Videos $videos): self
-    {
-        $this->videos = $videos;
-
-        return $this;
-    }
-    public function addVideo(Videos $video): self
-    {
-        if (!$this->videos->contains($video)) {
-            $this->videos[] = $video;
-            $video->setTrick($this);
-        }
-
-        return $this;
-    }
-    /**
-     * @return Collection<int, Comments>
-     */
-    public function getComments(): ?Comments
-    {
-        return $this->comments;
-    }
-
-    public function setComments(?Comments $comments): self
-    {
-        $this->comments = $comments;
-
-        return $this;
-    }
 }

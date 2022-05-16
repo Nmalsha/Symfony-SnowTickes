@@ -4,7 +4,7 @@ window.onload = () => {
   for (link of links) {
     link.addEventListener("click", function (responce) {
       responce.preventDefault();
-      if (confirm("voulez-vous supprimer cett video?")) {
+      if (confirm("voulez-vous supprimer cett video ?")) {
         //console.log(this.dataset.token);
 
         fetch(this.getAttribute("href"), {
@@ -22,10 +22,12 @@ window.onload = () => {
           //()
           .then((data) => {
             // console.log("data out");
-            // console.log(data);
+            console.log(data);
             // console.log(data.body);
             if (data.success) this.parentElement.remove();
-            else alert(data.error);
+            else {
+            }
+            //alert(data.error);
           })
           .catch((e) => alert(e));
       }

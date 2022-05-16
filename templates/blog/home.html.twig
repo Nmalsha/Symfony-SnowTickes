@@ -1,10 +1,14 @@
 {% extends 'base.html.twig' %} {% block body %}
 <div class="home-bg bg"></div>
+<button type="button" id="myBtn" onclick="topFunction()">
+  <i class="fas fa-arrow-up"></i>
+</button>
 <h3>HOME</h3>
 <section class="tickes">
   <div class="container">
     <div class="row">
       {% for trick in tricks %}
+
       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 trick trickcard_style">
         <div class="card card_tricks md-3">
           {% for image in images %} {% if trick.id == image.Trick.id %} {% if
@@ -25,25 +29,22 @@
             Created on:{{ trick.createdOn | date('d/m/y') }} a
             {{ trick.createdOn | date('H:i') }} by {{ trick.user.secondName }}
           </p>
-          <a
-            href="{{ path('tricks_show', { id: trick.id }) }}"
-            class="btn btn-primary"
-            >Lire</a
-          >
+
+          <a href="/trick/{{ trick.slug }}" class="btn btn-primary">Lire</a>
 
           <br />
-          {#
-          <pre>
-            {{ dump(app.user.id) }}
-            {{ dump(trick.user.id) }}
-          </pre>
-          #}
+
           <div>
             {% if app.user %} {% if app.user.id == trick.user.id %}
             <a href="{{ path('trick_edit', { id: trick.id }) }}"
               ><i class="fas fa-edit"></i
             ></a>
-            <a href=""><i class="fas fa-trash-alt"></i></a>
+            <a
+              href="{{ path('trick_delete', { id: trick.id }) }}"
+              trick-delete
+              data-token="{{csrf_token('delete'~ trick.id)}}"
+              ><i class="fas fa-trash-alt"></i
+            ></a>
             {% endif %} {% endif %}
           </div>
         </div>
@@ -52,4 +53,8 @@
     </div>
   </div>
 </section>
+
+{% endblock %} {% block javascripts %}
+<script src="{{ asset('/js/button.js') }}"></script>
+<script src="{{ asset('/js/trick.js') }}"></script>
 {% endblock %}

@@ -3,21 +3,26 @@
   <div class="row justify-content-center">
     <div class="col-md-10 col-md-offset-1 mb-4">
       <div class="card mt-5">
+       
         {% for image in selImages %} {% if image.name is not empty %}
+       <pre>
+         {{ dump(image) }}
+       </pre>
         <img
           class="display-top img-fluid"
           src="{{ asset('/images/'~ image.name) }}"
           alt=""
         />
+        
         {% endif %} {% endfor %}
+        
         <div class="card-body">
           <ul class="list-inline trick-data">
             <li class="list-inline-item">
               Créer par:<a
                 target=""
                 href="{{ path('user_profile', { id: trick.user.id }) }}"
-                >{{ trick.user.secondName }} {{ trick.user.id }}</a
-              >
+                >{{ trick.user.secondName }} {{ trick.user.id }}</a>
             </li>
             <li class="list-inline-item">
               Ajouter le:{{ trick.createdOn | date('d/m/y') }} à
@@ -29,7 +34,8 @@
           <!---Start carousel-->
           <h4>Image Gallery</h4>
           <div class="row">
-            {% for image in selImages %} {% if image.nameGallaryImages is not
+         
+          {% for image in selImages %} {% if image.nameGallaryImages is not
             null %}
             <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
               <div
@@ -57,6 +63,9 @@
           <h4>Video Gallery</h4>
           <div class="col-lg-4 col-md-12 mb-3 pb-3 margin">
             {% for video in selVideos %}
+            <pre>
+            
+            </pre>
             <div class="card h-100 width">
               <iframe
                 src="{{ video.url }}"
@@ -112,30 +121,46 @@
             <div class="mb-3">
               <div class="border entry-comments">
                 <h6 class="mb-3 pl-2">Commentaires</h6>
+                 <!-- DO LOOP-->
+                 {% do selCommentspag.setPageRange(2) %}
+                 {{ knp_pagination_render(selCommentspag,'blog/pagination.html.twig') }}
+                 {% for comment in selCommentspag %}
+               
                 <ul class="entry-comments-list list-unstyled">
-                  <!-- DO LOOP-->
+                 
+
                   <div class="row mb-3 pl-2 bg-light">
                     <div class="col-md-2 col-sm-4 col-xs-6 text-center">
-                      <img class="user-profile" src="#" />
+                      <img
+                        class="user-profile"
+                        src="{{ asset('/images/'~ comment.user.profieImage) }}"
+                      />
                     </div>
-                    <div class="col-10 col-sm-8 col-xs-6">
-                      {% for comment in selComments %}
 
+                    <div class="col-10 col-sm-8 col-xs-6">
                       <p>{{ comment.content }}</p>
                       <p>
-                        <span>
-                          Par: <a href="#">{{ trick.user.secondName }}</a></span
+                        <span></span>
+                          Par:
+                          <a
+                            href="{{
+                              path('user_profile', { id: comment.user.id })
+                            }}"
+                            ></a
+                          ></span
                         >
                         <span
-                          >{{ comment.createdAt | date('d/m/y') }} à
-                          {{  comment.createdAt  | date('H:i') }}</span
+                          > {{ comment.createdAt | date('d/m/y') }} à
+                          {{  comment.createdAt  | date('H:i') }}
+                          </span
                         >
                       </p>
                     </div>
                   </div>
-                  {% endfor %}
-                  <!--end loop-->
+                
                 </ul>
+                {% endfor %}
+                <!--end loop-->
               </div>
             </div>
             <div class="p-3"></div>

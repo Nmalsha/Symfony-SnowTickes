@@ -18,15 +18,9 @@ class Images
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $name;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="images")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $Trick;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -37,6 +31,11 @@ class Images
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $nameGallaryImages;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="images")
+     */
+    private $trick;
 
     public function getId(): ?int
     {
@@ -51,18 +50,6 @@ class Images
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getTrick(): ?Trick
-    {
-        return $this->Trick;
-    }
-
-    public function setTrick(?Trick $Trick): self
-    {
-        $this->Trick = $Trick;
 
         return $this;
     }
@@ -87,6 +74,18 @@ class Images
     public function setNameGallaryImages(?string $nameGallaryImages): self
     {
         $this->nameGallaryImages = $nameGallaryImages;
+
+        return $this;
+    }
+
+    public function getTrick(): ?Trick
+    {
+        return $this->trick;
+    }
+
+    public function setTrick(?Trick $trick): self
+    {
+        $this->trick = $trick;
 
         return $this;
     }
