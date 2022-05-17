@@ -35,6 +35,9 @@
             <li class="list-inline-item">number Of Comments:</li>
           </ul>
           <!---Start carousel-->
+          <a type="button" class="  btn btn-primary mr-auto m-2  media_btn" 
+           >See medias</a>
+           <div class="media_visibility " >
           <h4>Image Gallery</h4>
        
           <div class="row ">
@@ -83,7 +86,7 @@
             </div>
             {% endfor %}
           </div>
-
+        </div>
           <!---End  carousel-->
           <h4 class="card-title">
             <strong>{{ trick.trickName }}</strong>
@@ -175,6 +178,54 @@
     </div>
   </div>
 </div>
+<footer>
+  <div class="visibility_footer">
+    <p><a href="mailto:hege@example.com">Copyright @ 2022</a></p>
+  </div>
+  <div class="visibility_user">
+       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 display" style="display: flex;
+       flex-direction: row;justify-content: space-evenly;">
+            {% if app.user %} 
+            
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('user_profile', { id: app.user.id }) }}"
+                ><i class="fas fa-user-plus"></i></i> {{ app.user.userIdentifier }} </a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('trick_create') }}"
+                ><i class="fa fa-plus" aria-hidden="true"></i>
+               </a
+              >
+              
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('app_logout') }}"
+                ><i class="fas fa-sign-in-alt"></i> </a
+              >
+            </li>
+            
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('app_register') }}"
+                ><i class="fas fa-user-plus"></i>Inscription</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('app_login') }}"
+                ><i class="fas fa-sign-in-alt"></i>Connection</a
+              >
+            </li>
 
+            {% endif %}
+            
+           
+          </ul>
+  </div>
+</footer>
 {% endblock %}
 
+{% block javascripts %}
+<script src="{{ asset('/js/visibleMedia.js') }}"></script>
+
+{% endblock %}

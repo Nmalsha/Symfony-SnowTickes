@@ -95,6 +95,9 @@ form {
 .item_center {
   justify-content: center;
 }
+.media_btn {
+  visibility: hidden;
+}
 
 /*Mobile*/
 @media screen and (max-width: 768px) {
@@ -107,6 +110,9 @@ form {
     margin-top: 0;
     margin-top: 30px;
     flex-shrink: 2;
+  }
+  .form_style {
+    width: auto;
   }
   .visibility_user {
     visibility: visible;
@@ -129,6 +135,19 @@ form {
   }
   .item_center {
     flex-direction: column;
+  }
+  .img_main {
+    width: -moz-available;
+    height: auto;
+  }
+  .media_visibility {
+    display: none;
+    overflow: hidden;
+  }
+  .media_btn {
+    visibility: visible;
+  }
+  .collapsible {
   }
 }
 

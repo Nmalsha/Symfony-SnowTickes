@@ -22,6 +22,9 @@
           {{ form_row(form.categorie,{'attr':{'placeholder':"Add categorie"}})}}
         </div>
          <!--display main image-->
+         <a type="button" class="  btn btn-primary mr-auto m-2  media_btn" 
+           >See medias</a>
+<div class="media_visibility " >
         <div class="row ">
           <div class="col text-center">
             <h3>Image principle</h3>
@@ -30,7 +33,7 @@
            
                 <div class="">
                   
-                    <img class="class="tricks-big img-fluid   p-3""
+                    <img class="img_main"tricks-big img-fluid   p-3""
                       src="{{ asset('/images/'~ mainimage.name) }}"
                       alt=""
                       width="400"
@@ -115,6 +118,7 @@
 </a>
 </div>
 </div>
+</div>
 <!--END display buttons-->
 
       </div>
@@ -130,9 +134,56 @@
   </div>
 </div>
 {% endif %} 
+<footer>
+  <div class="visibility_footer">
+    <p><a href="mailto:hege@example.com">Copyright @ 2022</a></p>
+  </div>
+  <div class="visibility_user">
+       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 display" style="display: flex;
+       flex-direction: row;justify-content: space-evenly;">
+            {% if app.user %} 
+            
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('user_profile', { id: app.user.id }) }}"
+                ><i class="fas fa-user-plus"></i></i> {{ app.user.userIdentifier }} </a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('trick_create') }}"
+                ><i class="fa fa-plus" aria-hidden="true"></i>
+               </a
+              >
+              
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('app_logout') }}"
+                ><i class="fas fa-sign-in-alt"></i> </a
+              >
+            </li>
+            
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('app_register') }}"
+                ><i class="fas fa-user-plus"></i>Inscription</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ path('app_login') }}"
+                ><i class="fas fa-sign-in-alt"></i>Connection</a
+              >
+            </li>
 
+            {% endif %}
+            
+           
+          </ul>
+  </div>
+</footer>
 {% endblock %} 
+{% block javascripts %}
+<script src="{{ asset('/js/visibleMedia.js') }}"></script>
 
+{% endblock %}
 
 
 
