@@ -126,7 +126,7 @@
           <!---Start Comment -->
           <div class="col-md-12 bg-light">
             <div class="mb-3">
-              <div class="border entry-comments">
+              <div class="border entry-comments ">
                 <h6 class="mb-3 pl-2">Commentaires</h6>
                  <!-- DO LOOP-->
                  {% do selCommentspag.setPageRange(2) %}
@@ -136,15 +136,15 @@
                 <ul class="entry-comments-list list-unstyled">
                  
 
-                  <div class="row mb-3 pl-2 bg-light">
-                    <div class="col-md-2 col-sm-4 col-xs-6 text-center">
+                  <div class=" mb-3 pl-2 bg-light  flex">
+                    <div class="col-md-2 col-sm-4 col-xs-6 text-center sty_comment">
                       <img
                         class="user-profile"
                         src="{{ asset('/images/'~ comment.user.profieImage) }}"
                       />
                     </div>
 
-                    <div class="col-10 col-sm-8 col-xs-6">
+                    <div class="col-10 col-sm-8 col-xs-6 comment_sec">
                     
                       <p>{{ comment.content }}</p>
                       <p>

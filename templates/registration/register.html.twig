@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %} {% block title %}Register{% endblock %} {% block
 body %}
-<h1>Register</h1>
-<section class="container">
+<h1 class="adjust">Register</h1>
+<section class="container adjust">
   <div class="card trickcard_style form_style">
     {{ form_start(registrationForm) }}
 
@@ -22,6 +22,9 @@ body %}
 
 
 
+
+
+
       }}) }}
     </div>
 
@@ -31,8 +34,10 @@ body %}
     <div class="form_row">
       {{ form_row(registrationForm.password.second) }}
     </div>
+    <div class="adjust">
+      <button type="submit" class="btn btn-lg btn-primary m-3">Register</button>
+    </div>
 
-    <button type="submit" class="btn btn-lg btn-primary m-3">Register</button>
     {{ form_end(registrationForm) }}
   </div>
 </section>
