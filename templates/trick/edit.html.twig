@@ -22,7 +22,7 @@
           {{ form_row(form.categorie,{'attr':{'placeholder':"Add categorie"}})}}
         </div>
          <!--display main image-->
-        <div class="row p-5">
+        <div class="row ">
           <div class="col text-center">
             <h3>Image principle</h3>
             {% for mainimage in trick.images %}
@@ -38,7 +38,7 @@
                     />
                     
                     <a href="{{ path('delete_main_image', { id: mainimage.id }) }}" data-delete data-token="{{csrf_token('delete'~ mainimage.id)}}"
-                    ><i class="fas fa-trash-alt">supmain</i
+                    ><i class="fas fa-trash-alt"></i
                   >
                    </a>
                   
@@ -51,6 +51,7 @@
          <!--END display main image-->
          <!-- display image gallery-->
          <h3>Image gallery</h3>
+         <div class="visibility_gallery">
 <div class="row p-3">
 <div class="d-flex p-3 align-items-center center">
   {% for galleryimg in trick.images %}
@@ -59,15 +60,15 @@
     {{ dump(galleryimg.nameGallaryImages) }}
 </pre> #}
 
-      
+   <div class="margin">
     <img
-    class="tricks add-tricks img-fluid"
+    class="tricks add-tricks img-fluid width"
       src="{{ asset('/images/'~ galleryimg.nameGallaryImages) }}"
       alt=""
-      width="150" />
+      />
     <a href="{{ path('delete_gallery_image', { id: galleryimg.id }) }}" data-delete data-token="{{csrf_token('delete'~ galleryimg.id)}}"
-    ><i class="fas fa-trash-alt">supGalleryimages</i  > </a>
-   
+    ><i class="fas fa-trash-alt"></i  > </a>
+    </div>   
  
 {% endif %}
   
@@ -79,13 +80,11 @@
 <h3>Video gallery</h3>
       <div class="row p-5">
        <div class="d-flex  p-3 justify-content-around">
-     <pre>
-       {{ dump(selVideos) }}
-     </pre>
+     
         {% for video in selVideos %}
         
           <div class="col-lg-4 col-md-12 mb-3 pb-3">
-            <div class="card h-100">
+            <div class="card ">
               <iframe
                 src="{{ video.url }}"
                 title="YouTube video player"
@@ -95,7 +94,7 @@
               >
               </iframe>
               <a href="{{ path('delete_video', { id: video.id }) }}" data-delete data-token="{{csrf_token('delete'~ video.id)}}"
-              ><i class="fas fa-trash-alt">supvideo</i
+              ><i class="fas fa-trash-alt"></i
             >
              </a>
             </div>
@@ -103,20 +102,18 @@
           {% endfor %}
        </div> 
       </div>
+      </div>
 <!--ENDdisplay video gallery-->
 <!--display buttons-->
-<div class="d-flex">
-  {# {{ form_row(form.images) }} #}
-  <a type="button" class="btn btn-primary mr-auto m-2" href="#"
-  >Changer l'image principle
-</a>
-
-<a type="button" class="btn btn-primary mr-auto m-2" href="#"
->Ajouter une gallary image
-</a>
-<a type="button" class="btn btn-primary mr-auto m-2" href="{{ path('add_video',{ id: trick.id })}}"
+<div class="d-flex item_center">
+   {{ form_row(form.images,{'attr':{'class':"btn btn-primary mr-auto m-2"}}) }}
+ 
+   {{ form_row(form.gallaryimages,{'attr':{'class':"btn btn-primary mr-auto m-2"}}) }}
+<div class="style_btn">
+<a type="button" class="btn btn-primary mr-auto m-2 videos_btn" href="{{ path('add_video',{ id: trick.id })}}"
 >Add video
 </a>
+</div>
 </div>
 <!--END display buttons-->
 

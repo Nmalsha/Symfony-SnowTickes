@@ -20,14 +20,14 @@ class TrickType extends AbstractType
             ->add('images', FileType::class, [
                 'multiple' => true,
 
-                'label' => 'Main Image',
+                'label' => 'Add main_img',
                 'mapped' => false,
                 'required' => false,
             ])
             ->add('gallaryimages', FileType::class, [
                 'multiple' => true,
 
-                'label' => 'Gallary images',
+                'label' => 'Add Gallary_imgs',
                 'mapped' => false,
                 'required' => false,
             ])
