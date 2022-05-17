@@ -52,12 +52,12 @@ class Trick
     private $comments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="trick",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Images::class, mappedBy="trick",cascade={"persist"},fetch="EAGER")
      */
     private $images;
 
     /**
-     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick"  ,cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Videos::class, mappedBy="trick"  ,cascade={"persist"},fetch="EAGER")
      */
     private $videos;
 

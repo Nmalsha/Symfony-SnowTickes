@@ -47,40 +47,36 @@ class TrickController extends AbstractController
         CommentsRepository $commentRepository,
         Request $request,
         EntityManagerInterface $manager): Response {
+
         //get trick
         $trick = $trickRepository->findOneBy(['slug' => $slug]);
 
         //get images
+        // $trick->getImages();
+        // dd($trick->getImages(), $trick->getVideos());
+        // // die;
+        // $images = $imagesRepository->findAll();
+        $selImages = $trick->getImages();
+        // foreach ($images as $image) {
 
-        $images = $imagesRepository->findAll();
-        $selImages = [];
-        foreach ($images as $image) {
-
-            if ($trick->getId() === $image->getTrick()->getId()) {
-                $selImages[] = $image;
-            }
-        }
+        //     if ($trick->getId() === $image->getTrick()->getId()) {
+        //         $selImages[] = $image;
+        //     }
+        // }
 
         //get videos
-        $videos = $videosRepository->findAll();
-        $selVideos = [];
-        foreach ($videos as $video) {
+        //  $videos = $videosRepository->findAll();
+        $selVideos = $trick->getVideos();
+        // foreach ($videos as $video) {
 
-            if ($trick->getId() === $video->getTrick()->getId()) {
-                $selVideos[] = $video;
-            }
-        }
+        //     if ($trick->getId() === $video->getTrick()->getId()) {
+        //         $selVideos[] = $video;
+        //     }
+        // }
 
         //get comments
         $comments = $commentRepository->find(['id' => $trick->getId()]);
         $comments = $commentRepository->findBy([], ['createdAt' => 'desc']);
-        // $comments = $commentRepository->findBy([], ['createdAt' => 'desc']);
-        // $commentsbyorder = $comments->find(['id' => $trick->getId()]);
-        // $selComments = $paginator->paginate(
-        //     $comments,
-        //     $request->query->getInt('page', 1),
-        //     6
-        // );
 
         $selComments = [];
 
@@ -91,15 +87,13 @@ class TrickController extends AbstractController
 
             }
         }
-
+//adding pagenation to the comments list
         $selCommentspag = $paginator->paginate(
             $selComments,
             $request->query->getInt('page', 1),
             6
         );
 
-        // \dump($selComments);
-        // die;
         //add comment
         $comments = new Comments;
         $form = $this->createForm(CommentsType::class, $comments);
@@ -109,13 +103,13 @@ class TrickController extends AbstractController
 
             // get user
             $user = $this->getUser();
-
+            //set user to the comment
             $comments->setUser($user);
+            //set trick ti the comment
             $comments->setTrick($trick);
-
+            //save to the DB
             $manager->persist($comments);
             $manager->flush();
-            dump('here');
 
             $this->addFlash(
                 'success',
@@ -143,7 +137,7 @@ class TrickController extends AbstractController
 
         $trick = new Trick();
         $img = new Images();
-        // $video = new Videos();
+
         //adding fields to the form
         $form = $this->createForm(TrickType::class, $trick);
 
@@ -156,14 +150,11 @@ class TrickController extends AbstractController
 
             //get Main image data
             $mainimages = $form->get('images')->getData();
-            // \dump($mainimage);
-            // die;
 
             foreach ($mainimages as $mainimage) {
 
                 $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
-                // \dump($imageDocument);
-                // die;
+
                 //send image name to the images folder
                 $mainimage->move(
                     $this->getParameter('images_directory'),
@@ -171,19 +162,14 @@ class TrickController extends AbstractController
                 );
                 // save image name to the DB
 
-                //    $img = new Images();
-
                 $img->setName($imageDocument);
 
                 $trick->addImage($img);
 
                 $img->setTrick($trick);
 
-                //  $img->setIsMainImage(1);
-                //   $trick->setCreatedOn(new \DateTime());
-
             }
-//get gallery images data
+            //get gallery images data
             $gallaryImages = $form->get('gallaryimages')->getData();
 
             //loop true the images
@@ -191,24 +177,22 @@ class TrickController extends AbstractController
             foreach ($gallaryImages as $image) {
                 $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
 
-                //lo
+                //Save image to the directory
                 $image->move(
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
                 // save image name to the DB
 
-                //  $img = new Images();
-
                 $img->setNameGallaryImages($imageDocument);
                 $img->setTrick($trick);
                 $trick->addImage($img);
             }
 
-            //if the trick hasn't a id = if the trick already not exist in the DB
+            //set slug name
 
             $trick->setslug($slugname);
-
+            //set created date
             $trick->setCreatedOn(new \DateTime());
 
             //if the form is valid
@@ -238,23 +222,18 @@ class TrickController extends AbstractController
         $form = $this->createForm(VideosType::class);
 
         $form->handleRequest($request);
-        // if ($form->isSubmitted() && $form->isValid()) {
+
         $url = $form->get('url')->getData();
 
         if ($url) {
-
+            //set url to the video
             $video->setUrl($url);
-            //$trick->setVideos($video);
+            //set trick to the video
             $video->setTrick($trick);
-            // $video->addTrick();
+            //save to the DB
             $manager->persist($video);
             $manager->flush();
 
-            //$trick->setVideos($video);
-
-            // $manager->persist($trick);
-
-            $manager->flush();
             return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
 
         }
@@ -271,21 +250,24 @@ class TrickController extends AbstractController
         //video handling
 
         $repovideos = $this->getDoctrine()->getRepository(Videos::class);
-        $videos = $repovideos->findBy(['id' => $id]);
 
+        $videos = $repovideos->findAll();
+        $selVideos = [];
+        foreach ($videos as $video) {
+
+            if ($trick->getId() === $video->getTrick()->getId()) {
+                $selVideos[] = $video;
+            }
+        }
+        //Main Images handling
         $img = new Images();
 
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
-        // $oldImage = $this->getImages($id);
-        // \dump($oldImage);
-        // die;
 
         if ($form->isSubmitted() && $form->isValid()) {
             $trick->setUser($this->getUser());
-            // \dump($trick->setUser($this->getUser()));
-            // die;
 
             //get Main image data
             $mainimages = $form->get('images')->getData();
@@ -293,10 +275,9 @@ class TrickController extends AbstractController
             $mainImageTemp = null;
             foreach ($mainimages as $mainimage) {
                 $mainImageTemp = $mainimage;
-                // var_dump($mainImageTemp);die();
+
                 $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
-                // \dump($imageDocument);
-                // die;
+
                 //send image name to the images folder
                 $mainimage->move(
                     $this->getParameter('images_directory'),
@@ -304,15 +285,11 @@ class TrickController extends AbstractController
                 );
                 // save image name to the DB
 
-                //    $img = new Images();
-
                 $img->setName($imageDocument);
                 $trick->addImage($img);
-                //  $img->setIsMainImage(1);
-                //   $trick->setCreatedOn(new \DateTime());
 
             }
-
+            //Gallery Images handling
             $gallaryImages = $form->get('gallaryimages')->getData();
             //loop true the images
 
@@ -325,19 +302,11 @@ class TrickController extends AbstractController
                 );
                 // save image name to the DB
 
-                //  $img = new Images();
-
                 $img->setNameGallaryImages($imageDocument);
-                // \dump($img);
-                // die;
-                //$img->setName("TOTO");
+
                 $trick->addImage($img);
 
             }
-
-            //if the trick hasn't a id = if the trick already not exist in the DB
-
-            $trick->setCreatedOn(new \DateTime());
 
             //if the form is valid
             $manager->persist($trick);
@@ -351,7 +320,7 @@ class TrickController extends AbstractController
         return $this->render('trick/edit.html.twig', [
             'form' => $form->createView(),
             'trick' => $trick,
-            'videos' => $videos,
+            'selVideos' => $selVideos,
 
         ]);
 
@@ -438,44 +407,45 @@ class TrickController extends AbstractController
      */
     public function addcomment($id, Trick $trick, Request $request, EntityManagerInterface $manager)
     {
-        //display comment form
+        // display comment form
 
-        $comment = new Comments;
+        // $comment = new Comments;
 
-        $form = $this->createForm(CommentsType::class, $comment);
+        // $form = $this->createForm(CommentsType::class, $comment);
 
-        $form->handleRequest($request);
+        // $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        // if ($form->isSubmitted() && $form->isValid()) {
 
-            $comment->setCreatedAt(new \DateTimeImmutable());
-            $user = $this->getUser();
+        //     $comment->setCreatedAt(new \DateTimeImmutable());
+        //     //set user to the comment
+        //     $user = $this->getUser();
 
-            $comment->setUserId($user->getId());
+        //     $comment->setUserId($user->getId());
 
-            $manager->persist($comment);
+        //     $manager->persist($comment);
 
-            $manager->flush();
+        //     $manager->flush();
 
-            $comment->addTrick($trick);
-            $comment->addUser($this->getUser());
+        //     $comment->addTrick($trick);
+        //     $comment->addUser($this->getUser());
 
-            dump($comment);
-            // \dump($user->getId());
-            // die;
-            // $comment->setUserId();
-            $trick->setComments($comment);
-            // \dump($comment);
-            // die;
-            //Redirect to the added trick view
-            return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
+        //     dump($comment);
+        //     // \dump($user->getId());
+        //     // die;
+        //     // $comment->setUserId();
+        //     $trick->setComments($comment);
+        //     // \dump($comment);
+        //     // die;
+        //     //Redirect to the added trick view
+        //     return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
 
-        }
-        return $this->render('comments/addComments.html.twig', [
-            'form' => $form->createView(),
-            'comment' => $comment,
+        // }
+        // return $this->render('comments/addComments.html.twig', [
+        //     'formcomment' => $form->createView(),
+        //     'comment' => $comment,
 
-        ]);
+        // ]);
 
     }
 
@@ -487,11 +457,11 @@ class TrickController extends AbstractController
         $reqData = $request->getContent();
 
         $data = json_decode($reqData, true);
-        error_log("************************************");
-        error_log(var_export($data, true));
+        // error_log("************************************");
+        // error_log(var_export($data, true));
 
-        error_log($data['_token']);
-        error_log($data['_token']);
+        // error_log($data['_token']);
+        // error_log($data['_token']);
         //error_log(($request->getContent()));
         //check if the token valid
         if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
@@ -506,12 +476,12 @@ class TrickController extends AbstractController
             $em->flush();
 
             //return new JsonReponse(['success' => 1]);
-            error_log("******************TOKEN OK******************");
+            // error_log("******************TOKEN OK******************");
             return new Response("OKy");
         } else {
             // return new JsonReponse(['error' => 'Invalide token'], 400);
 
-            error_log("******************TOKEN ERR******************");
+            // error_log("******************TOKEN ERR******************");
             return new Response("KOy");
         }
     }
@@ -524,11 +494,11 @@ class TrickController extends AbstractController
         $reqData = $request->getContent();
 
         $data = json_decode($reqData, true);
-        error_log("************************************");
-        error_log(var_export($data, true));
+        // error_log("************************************");
+        // error_log(var_export($data, true));
 
-        error_log($data['_token']);
-        error_log($data['_token']);
+        // error_log($data['_token']);
+        // error_log($data['_token']);
         //error_log(($request->getContent()));
         //check if the token valid
         if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
@@ -543,12 +513,12 @@ class TrickController extends AbstractController
             $em->flush();
 
             //return new JsonReponse(['success' => 1]);
-            error_log("******************TOKEN OK******************");
+            // error_log("******************TOKEN OK******************");
             return new Response("OKy");
         } else {
             // return new JsonReponse(['error' => 'Invalide token'], 400);
 
-            error_log("******************TOKEN ERR******************");
+            // error_log("******************TOKEN ERR******************");
             return new Response("KOy");
         }
 
@@ -562,11 +532,11 @@ class TrickController extends AbstractController
         $reqData = $request->getContent();
 
         $data = json_decode($reqData, true);
-        error_log("************************************");
-        error_log(var_export($data, true));
+        // error_log("************************************");
+        // error_log(var_export($data, true));
 
-        error_log($data['_token']);
-        error_log($data['_token']);
+        // error_log($data['_token']);
+        // error_log($data['_token']);
         //error_log(($request->getContent()));
         //check if the token valid
         if ($this->isCsrfTokenValid('delete' . $Videos->getId(), $data['_token'])) {
@@ -582,68 +552,15 @@ class TrickController extends AbstractController
             $em->flush();
 
             //return new JsonReponse(['success' => 1]);
-            error_log("******************TOKEN OK******************");
+            // error_log("******************TOKEN OK******************");
             return new Response("OKy");
         } else {
             // return new JsonReponse(['error' => 'Invalide token'], 400);
 
-            error_log("******************TOKEN ERR******************");
+            // error_log("******************TOKEN ERR******************");
             return new Response("KOy");
         }
 
     }
-
-    /**
-
-     * @Route("/trick/{id}/gallery", name="trick_gallery")
-     */
-//     public function addGallaryImage($id, Trick $trick = null, GallaryImage $GallaryImage = null, Request $request, EntityManagerInterface $manager)
-    //     {
-    //         $repo = $this->getDoctrine()->getRepository(Trick::class);
-    //         $trick = $repo->find($id);
-
-//         $form = $this->createForm(GallaryImageType::class);
-
-//         $form->handleRequest($request);
-    //         if ($form->isSubmitted() && $form->isValid()) {
-
-//             $trickId = $request->get('trickId');
-    //             $galarieimages = $form->get('galarieimages')->getData();
-
-//             // dd($galarieimages);
-    //             // die;
-    //             foreach ($galarieimages as $galarieimage) {
-
-//                 $imageDocument = md5(uniqid()) . '.' . $galarieimage->guessExtension();
-    // //send image name to the gallaryImage folder
-    //                 $galarieimage->move(
-    //                     $this->getParameter('galarie_images_directory'),
-    //                     $imageDocument
-    //                 );
-
-//                 // save image name to the DB
-
-//                 $img = new GallaryImage();
-
-//                 $img->setName($imageDocument);
-    //                 $trick->addGallaryImage($img);
-    //                 // // $trick->setTrickId($trickId);
-    //                 // // // $trick->setCreatedOn(new \DateTime());
-
-//             }
-
-//             //if the form is valid
-    //             $manager->persist($trick);
-    //             $manager->flush();
-    //             //Redirect to the added trick view
-    //             return $this->redirectToRoute('home');
-    //         }
-
-//         return $this->render('GallaryImage/addGallaryImage.php', [
-    //             'formGallary' => $form->createView(),
-    //             'trick' => $trick,
-    //             'id' => $trick->getId() !== null,
-    //         ]);
-    //     }
 
 }

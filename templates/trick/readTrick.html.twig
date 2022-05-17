@@ -5,9 +5,7 @@
       <div class="card mt-5">
        
         {% for image in selImages %} {% if image.name is not empty %}
-       <pre>
-         {{ dump(image) }}
-       </pre>
+      
         <img
           class="display-top img-fluid"
           src="{{ asset('/images/'~ image.name) }}"
@@ -104,13 +102,13 @@
                   submit comment
                 </button>
                 {{ form_end(form) }}
-                {% endif %}
+                {% else %}
                 <p>
                   <a href="/register">Inscrivez-vous</a> Ou
                   <a href="/login">Connectez-vous</a> Pour commenter cet article
                 </p>
               </div>
-
+              {% endif %}
               <!--END condition here to display-->
             </div>
           </div>
@@ -138,15 +136,14 @@
                     </div>
 
                     <div class="col-10 col-sm-8 col-xs-6">
+                    
                       <p>{{ comment.content }}</p>
                       <p>
-                        <span></span>
-                          Par:
-                          <a
-                            href="{{
-                              path('user_profile', { id: comment.user.id })
-                            }}"
-                            ></a
+                        <span>
+                          Par:<a href="{{
+                            path('user_profile', { id: comment.user.id })
+                          }}">{{ comment.user.secondName }}</a></span
+                        
                           ></span
                         >
                         <span
