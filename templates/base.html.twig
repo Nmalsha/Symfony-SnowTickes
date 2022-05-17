@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Welcome!{% endblock %}</title>
 
     {% block stylesheets %}
@@ -60,7 +61,8 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ path('trick_create') }}"
-                ><i class="fas fa-user-plus"></i>create Trick</a
+                ><i class="fa fa-plus" aria-hidden="true"></i>
+                create Trick</a
               >
               
             </li>
@@ -90,7 +92,9 @@
       </div>
     </nav>
 
-    <div class="wrapp">{% block body %}{% endblock %}</div>
+    <div class="wrapp">{% block body %}
+      
+      {% endblock %}</div>
 
     {% block javascripts %}
     <script src="{{ asset('/js/image.js')}}"></script>
