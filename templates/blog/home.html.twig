@@ -1,27 +1,30 @@
 {% extends 'base.html.twig' %} {% block body %}
 <div class="home-bg bg"></div>
-<button type="button" id="myBtn" onclick="topFunction()">
-  <i class="fas fa-arrow-up"></i>
+<button type="button" id="myBBtn" onclick="bottomFunction()">
+  <i class="fas fa-arrow-down"></i>
 </button>
-
 <section class="tickes">
+ 
   <div class="container">
     <div class="row">
       {% for trick in tricks %}
 
       <div
-        class="col-xs-12 col-sm-12 col-md-6 col-lg-3 trick trickcard_style"
+        class="col-xs-12 col-sm-12  col-lg-3 trick trickcard_style"
         style="flex-shrink: 1"
       >
+     
         <div class="card card_tricks md-3">
           {% for image in images %} {% if trick.id == image.Trick.id %} {% if
           image.name is not null %}
+
           <img
             class="card-img-top margin"
             src="{{ asset('/images/'~ image.name) }}"
             alt="Trick image"
           />
           {% endif %} {% endif %} {% endfor %}
+      
         </div>
 
         <div class="card-body">
@@ -56,6 +59,9 @@
     </div>
   </div>
 </section>
+<button type="button" id="myBtn" onclick="topFunction()">
+  <i class="fas fa-arrow-up"></i>
+</button>
 <footer>
   <div class="visibility_footer">
     <p><a href="mailto:hege@example.com">Copyright @ 2022</a></p>
@@ -103,5 +109,6 @@
 </footer>
 {% endblock %} {% block javascripts %}
 <script src="{{ asset('/js/button.js') }}"></script>
+<script src="{{ asset('/js/buttonbottom.js') }}"></script>
 <script src="{{ asset('/js/trick.js') }}"></script>
 {% endblock %}
