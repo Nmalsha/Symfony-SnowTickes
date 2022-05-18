@@ -52,27 +52,12 @@ class TrickController extends AbstractController
         $trick = $trickRepository->findOneBy(['slug' => $slug]);
 
         //get images
-        // $trick->getImages();
-        // dd($trick->getImages(), $trick->getVideos());
-        // // die;
-        // $images = $imagesRepository->findAll();
-        $selImages = $trick->getImages();
-        // foreach ($images as $image) {
 
-        //     if ($trick->getId() === $image->getTrick()->getId()) {
-        //         $selImages[] = $image;
-        //     }
-        // }
+        $selImages = $trick->getImages();
 
         //get videos
-        //  $videos = $videosRepository->findAll();
-        $selVideos = $trick->getVideos();
-        // foreach ($videos as $video) {
 
-        //     if ($trick->getId() === $video->getTrick()->getId()) {
-        //         $selVideos[] = $video;
-        //     }
-        // }
+        $selVideos = $trick->getVideos();
 
         //get comments
         $comments = $commentRepository->find(['id' => $trick->getId()]);
@@ -87,7 +72,7 @@ class TrickController extends AbstractController
 
             }
         }
-//adding pagenation to the comments list
+        //adding pagenation to the comments list
         $selCommentspag = $paginator->paginate(
             $selComments,
             $request->query->getInt('page', 1),
@@ -457,12 +442,7 @@ class TrickController extends AbstractController
         $reqData = $request->getContent();
 
         $data = json_decode($reqData, true);
-        // error_log("************************************");
-        // error_log(var_export($data, true));
 
-        // error_log($data['_token']);
-        // error_log($data['_token']);
-        //error_log(($request->getContent()));
         //check if the token valid
         if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
 
@@ -475,13 +455,9 @@ class TrickController extends AbstractController
             $em->remove($image);
             $em->flush();
 
-            //return new JsonReponse(['success' => 1]);
-            // error_log("******************TOKEN OK******************");
             return new Response("OKy");
         } else {
-            // return new JsonReponse(['error' => 'Invalide token'], 400);
 
-            // error_log("******************TOKEN ERR******************");
             return new Response("KOy");
         }
     }
@@ -494,12 +470,7 @@ class TrickController extends AbstractController
         $reqData = $request->getContent();
 
         $data = json_decode($reqData, true);
-        // error_log("************************************");
-        // error_log(var_export($data, true));
 
-        // error_log($data['_token']);
-        // error_log($data['_token']);
-        //error_log(($request->getContent()));
         //check if the token valid
         if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
 
@@ -512,13 +483,9 @@ class TrickController extends AbstractController
             $em->remove($image);
             $em->flush();
 
-            //return new JsonReponse(['success' => 1]);
-            // error_log("******************TOKEN OK******************");
             return new Response("OKy");
         } else {
-            // return new JsonReponse(['error' => 'Invalide token'], 400);
 
-            // error_log("******************TOKEN ERR******************");
             return new Response("KOy");
         }
 
@@ -532,32 +499,22 @@ class TrickController extends AbstractController
         $reqData = $request->getContent();
 
         $data = json_decode($reqData, true);
-        // error_log("************************************");
-        // error_log(var_export($data, true));
 
-        // error_log($data['_token']);
-        // error_log($data['_token']);
-        //error_log(($request->getContent()));
         //check if the token valid
         if ($this->isCsrfTokenValid('delete' . $Videos->getId(), $data['_token'])) {
 
             //getting image name from the DB
             $name = $Videos->getUrl();
             //Deleting the image from the directory
-            // unlink($this->getParameter('video_directory') . '/' . $name);
 
             //deleting the image from the DB
             $em = $this->getDoctrine()->getManager();
             $em->remove($Videos);
             $em->flush();
 
-            //return new JsonReponse(['success' => 1]);
-            // error_log("******************TOKEN OK******************");
             return new Response("OKy");
         } else {
-            // return new JsonReponse(['error' => 'Invalide token'], 400);
 
-            // error_log("******************TOKEN ERR******************");
             return new Response("KOy");
         }
 
