@@ -15,8 +15,9 @@
       >
    
         <div class="card card_tricks md-3">
-          {% for image in images %} {% if trick.id == image.Trick.id %} {% if
-          image.isMainImage == true %}
+          {% for image in images %}
+           {% if trick.id == image.Trick.id %} 
+           {% if image.isMainImage == true %}
          
       
           <img
@@ -24,8 +25,20 @@
             src="{{ asset('/images/'~ image.name) }}"
             alt="Trick image"
           />
-          {% endif %} {% endif %} 
+          {% endif %} 
+
+{% if trick.images is empty %} 
+<img
+class="display-top img-fluid"
+src="https://via.placeholder.com/130.png/09f/fff"
+alt=""
+width="600px"
+/>
+{% endif %}
+
+          {% endif %}
         
+       
           {% endfor %}
       
         </div>
