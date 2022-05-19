@@ -134,6 +134,7 @@ class TrickController extends AbstractController
             $trick->setUser($this->getUser());
 
             //get Main image data
+
             $mainimages = $form->get('images')->getData();
 
             foreach ($mainimages as $mainimage) {
@@ -145,9 +146,11 @@ class TrickController extends AbstractController
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
+
                 // save image name to the DB
 
                 $img->setName($imageDocument);
+                $img->setIsMainImage(1);
 
                 $trick->addImage($img);
 
@@ -167,13 +170,16 @@ class TrickController extends AbstractController
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
+
                 // save image name to the DB
 
-                $img->setNameGallaryImages($imageDocument);
+                $img->setName($imageDocument);
+
+                $img->setIsMainImage(0);
                 $img->setTrick($trick);
                 $trick->addImage($img);
-            }
 
+            }
             //set slug name
 
             $trick->setslug($slugname);
@@ -257,9 +263,9 @@ class TrickController extends AbstractController
             //get Main image data
             $mainimages = $form->get('images')->getData();
 
-            $mainImageTemp = null;
+            //$mainImageTemp = null;
             foreach ($mainimages as $mainimage) {
-                $mainImageTemp = $mainimage;
+                // $mainImageTemp = $mainimage;
 
                 $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
 
@@ -271,6 +277,7 @@ class TrickController extends AbstractController
                 // save image name to the DB
 
                 $img->setName($imageDocument);
+                $img->setIsMainImage(1);
                 $trick->addImage($img);
 
             }
@@ -287,7 +294,8 @@ class TrickController extends AbstractController
                 );
                 // save image name to the DB
 
-                $img->setNameGallaryImages($imageDocument);
+                $img->setName($imageDocument);
+                $img->setIsMainImage(0);
 
                 $trick->addImage($img);
 
@@ -442,7 +450,7 @@ class TrickController extends AbstractController
         $reqData = $request->getContent();
 
         $data = json_decode($reqData, true);
-
+//$imageId =
         //check if the token valid
         if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
 
@@ -467,27 +475,29 @@ class TrickController extends AbstractController
      */
     public function deleteGalleryImage(Images $image, Request $request)
     {
-        $reqData = $request->getContent();
+        // $reqData = $request->getContent();
 
-        $data = json_decode($reqData, true);
+        // $data = json_decode($reqData, true);
 
-        //check if the token valid
-        if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
+        // //check if the token valid
+        // if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
 
-            //getting image name from the DB
-            $name = $image->getNameGallaryImages();
-            //Deleting the image from the directory
-            unlink($this->getParameter('images_directory') . '/' . $name);
-            //deleting the image from the DB
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($image);
-            $em->flush();
+        //     //getting image name from the DB
+        //     // $name = $image->getIsMainImage();
 
-            return new Response("OKy");
-        } else {
+        //     $name = $image->getName();
+        //     //Deleting the image from the directory
+        //     unlink($this->getParameter('images_directory') . '/' . $name);
+        //     //deleting the image from the DB
+        //     $em = $this->getDoctrine()->getManager();
+        //     $em->remove($image);
+        //     $em->flush();
 
-            return new Response("KOy");
-        }
+        //     return new Response("OKy");
+        // } else {
+
+        //     return new Response("KOy");
+        // }
 
     }
 

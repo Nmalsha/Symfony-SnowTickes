@@ -29,7 +29,16 @@
           <div class="col text-center">
             <h3>Image principle</h3>
             {% for mainimage in trick.images %}
-            {% if mainimage.name is not null %}
+          
+          {% if trick.images is empty %}
+          <img
+          class="display-top img-fluid"
+          src="https://via.placeholder.com/130.png/09f/fff"
+          alt=""
+          width="400px"
+        />
+          {% endif %}
+            {% if mainimage.isMainImage == true %}
            
                 <div class="">
                   
@@ -44,7 +53,7 @@
                     ><i class="fas fa-trash-alt"></i
                   >
                    </a>
-                  
+               
                   </div>
                   {% endif %}
               {% endfor %}
@@ -58,7 +67,7 @@
 <div class="row p-3">
 <div class="d-flex p-3 align-items-center center">
   {% for galleryimg in trick.images %}
-  {% if galleryimg.nameGallaryImages is not null %}
+  {% if galleryimg.isMainImage == false %}
 {# <pre>
     {{ dump(galleryimg.nameGallaryImages) }}
 </pre> #}
@@ -66,10 +75,10 @@
    <div class="margin">
     <img
     class="tricks add-tricks img-fluid width"
-      src="{{ asset('/images/'~ galleryimg.nameGallaryImages) }}"
+      src="{{ asset('/images/'~ galleryimg.name) }}"
       alt=""
       />
-    <a href="{{ path('delete_gallery_image', { id: galleryimg.id }) }}" data-delete data-token="{{csrf_token('delete'~ galleryimg.id)}}"
+    <a href="{{ path('delete_main_image', { id: galleryimg.id }) }}" data-delete data-token="{{csrf_token('delete'~ galleryimg.id)}}"
     ><i class="fas fa-trash-alt"></i  > </a>
     </div>   
  
@@ -182,6 +191,7 @@
 {% endblock %} 
 {% block javascripts %}
 <script src="{{ asset('/js/visibleMedia.js') }}"></script>
+<script src="{{ asset('js/image.js')}}"></script>
 
 {% endblock %}
 
@@ -192,126 +202,3 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{# <h3 class="creation_topic">Edit d'un Trick</h3>
-<section class="tickes">
-  <div class="card trickcard_style">
-    {{ form_start(form) }}
-    <div class="form_row">
-      {{ form_row(form.TrickName,{'attr':{'placeholder':"Add name"}}) }}
-    </div>
-    <div class="form_row">
-      {{ form_row(form.description,{'attr':{'placeholder':"Add description"}}) }}
-    </div>
-    <div class="form_row">
-      {{ form_row(form.categorie,{'attr':{'placeholder':"Add categorie"}})
-      }} #}
-
-   {# </div> #}
-{# <pre>
-    {{ dump( form.data) }}
-</pre> #}
-{# {% for mainimage in trick.images %}
-{% if mainimage.name is not null %}
-<pre>
-    {{ dump( mainimage.name) }}
-</pre>
-    <div>
-      
-        <img
-          src="{{ asset('/images/'~ mainimage.name) }}"
-          alt=""
-          width="200"
-        />
-        
-        <a href="{{ path('delete_main_image', { id: mainimage.id }) }}" data-delete data-token="{{csrf_token('delete'~ mainimage.id)}}"
-        ><i class="fas fa-trash-alt">supmain</i
-      >
-       </a>
-      
-      </div>
-
-      {% endif %}
-  {% endfor %}
-   #}
-
-  {# <div class="form_row">
-  {{ form_row(form.images) }}
-  <a type="button" class="btn btn-primary mr-auto m-2" href="#"
-  >Choisir une image pour changer le image principle
-</a>
-<a type="button" class="btn btn-primary mr-auto m-2" href="{{ path('add_video',{ id: trick.id })}}"
->Add video
-</a>
-</div>
-
- 
-  {% for galleryimg in trick.images %}
-  {% if galleryimg.nameGallaryImages is not null %}
-<pre>
-    {{ dump(galleryimg.nameGallaryImages) }}
-</pre> #}
-{# <div class="form_row">
-  {{ form_row(form.images)
-  }}
-</div> #}
-
-  {# <div class="form_row">
-      
-    <img
-      src="{{ asset('/images/'~ galleryimg.nameGallaryImages) }}"
-      alt=""
-      width="150"
-    />
-    <a href="{{ path('delete_gallery_image', { id: galleryimg.id }) }}" data-delete data-token="{{csrf_token('delete'~ galleryimg.id)}}"
-    ><i class="fas fa-trash-alt">supGalleryimages</i
-  >
-   </a>
-   <div>
-    
-    <a type="button" class="btn btn-primary mr-auto m-2" href="#"
-    >Choisir une image pour changer le gallary image
-  </a>
-
-
-  </div>
-  </div>
-
-
-{% endif %}
-  
-  {% endfor %}
-  
-  <div class="form_row">
-    <a type="button" class="btn btn-primary mr-auto m-2" href="{{ path('add_video',{ id: trick.id })}}"
-    >Add video
-  </a>
-    <div class="form_row">
-      <button type="submit" class="btn btn-success">
-     Editer le trick 
-      </button>
-    
-      {{ form_end(form) }}
-    </div>
-</div>
-  </div>
-</section>
-
-{% endblock %}
-{% block javascript %}
-<script src="{{ asset('js/image.js')}}"
-{% endblock javascript %} #}
