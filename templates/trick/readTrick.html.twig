@@ -9,7 +9,7 @@
 
       <div class="card mt-5">
      
-        {% for image in selImages %} {% if image.name is not empty %}
+        {% for image in selImages %} {% if image.isMainImage == true %}
       
         <img
           class="display-top img-fluid"
@@ -17,7 +17,16 @@
           alt=""
         />
         
-        {% endif %} {% endfor %}
+        {% endif %}
+        {% else %}
+        <img
+        class="display-top img-fluid"
+        src="https://via.placeholder.com/130.png/09f/fff"
+        alt=""
+        width="600px"
+      />
+
+        {% endfor %}
         
         <div class="card-body">
           <ul class="list-inline trick-data">
@@ -42,15 +51,14 @@
        
           <div class="row ">
          
-          {% for image in selImages %} {% if image.nameGallaryImages is not
-            null %}
+          {% for image in selImages %} {% if image.isMainImage == false %}
             <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
               <div
                 class="bg-image hover-overlay ripple shadow-1-strong rounded"
                 data-ripple-color="light"
               >
                 <img
-                  src="{{ asset('/images/'~ image.nameGallaryImages) }}"
+                  src="{{ asset('/images/'~ image.name) }}"
                   class="w-100"
                 />
                 <a

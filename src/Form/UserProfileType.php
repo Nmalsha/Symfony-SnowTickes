@@ -13,20 +13,15 @@ class UserProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        // ->add('firstName')
-        // ->add('secondName')
-        // ->add('email')
-        ->add('profieImage', FileType::class, [
-            'multiple' => true,
 
-            'label' => 'profile_image',
-            'mapped' => false,
-            'required' => false,
-        ])
-        // ->add('password')
-        // ->add('roles')
-        // ->add('activation_token')
-        // ->add('reset_token')
+            ->add('profieImage', FileType::class, [
+                'multiple' => true,
+
+                'label' => 'profile_image',
+                'mapped' => false,
+                'required' => false,
+            ])
+
         ;
     }
 

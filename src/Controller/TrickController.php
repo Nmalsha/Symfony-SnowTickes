@@ -52,27 +52,12 @@ class TrickController extends AbstractController
         $trick = $trickRepository->findOneBy(['slug' => $slug]);
 
         //get images
-        // $trick->getImages();
-        // dd($trick->getImages(), $trick->getVideos());
-        // // die;
-        // $images = $imagesRepository->findAll();
-        $selImages = $trick->getImages();
-        // foreach ($images as $image) {
 
-        //     if ($trick->getId() === $image->getTrick()->getId()) {
-        //         $selImages[] = $image;
-        //     }
-        // }
+        $selImages = $trick->getImages();
 
         //get videos
-        //  $videos = $videosRepository->findAll();
-        $selVideos = $trick->getVideos();
-        // foreach ($videos as $video) {
 
-        //     if ($trick->getId() === $video->getTrick()->getId()) {
-        //         $selVideos[] = $video;
-        //     }
-        // }
+        $selVideos = $trick->getVideos();
 
         //get comments
         $comments = $commentRepository->find(['id' => $trick->getId()]);
@@ -87,7 +72,7 @@ class TrickController extends AbstractController
 
             }
         }
-//adding pagenation to the comments list
+        //adding pagenation to the comments list
         $selCommentspag = $paginator->paginate(
             $selComments,
             $request->query->getInt('page', 1),
@@ -149,6 +134,7 @@ class TrickController extends AbstractController
             $trick->setUser($this->getUser());
 
             //get Main image data
+
             $mainimages = $form->get('images')->getData();
 
             foreach ($mainimages as $mainimage) {
@@ -160,9 +146,11 @@ class TrickController extends AbstractController
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
+
                 // save image name to the DB
 
                 $img->setName($imageDocument);
+                $img->setIsMainImage(1);
 
                 $trick->addImage($img);
 
@@ -182,13 +170,16 @@ class TrickController extends AbstractController
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
+
                 // save image name to the DB
 
-                $img->setNameGallaryImages($imageDocument);
+                $img->setName($imageDocument);
+
+                $img->setIsMainImage(0);
                 $img->setTrick($trick);
                 $trick->addImage($img);
-            }
 
+            }
             //set slug name
 
             $trick->setslug($slugname);
@@ -272,9 +263,9 @@ class TrickController extends AbstractController
             //get Main image data
             $mainimages = $form->get('images')->getData();
 
-            $mainImageTemp = null;
+            //$mainImageTemp = null;
             foreach ($mainimages as $mainimage) {
-                $mainImageTemp = $mainimage;
+                // $mainImageTemp = $mainimage;
 
                 $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
 
@@ -286,6 +277,7 @@ class TrickController extends AbstractController
                 // save image name to the DB
 
                 $img->setName($imageDocument);
+                $img->setIsMainImage(1);
                 $trick->addImage($img);
 
             }
@@ -302,7 +294,8 @@ class TrickController extends AbstractController
                 );
                 // save image name to the DB
 
-                $img->setNameGallaryImages($imageDocument);
+                $img->setName($imageDocument);
+                $img->setIsMainImage(0);
 
                 $trick->addImage($img);
 
@@ -457,12 +450,7 @@ class TrickController extends AbstractController
         $reqData = $request->getContent();
 
         $data = json_decode($reqData, true);
-        // error_log("************************************");
-        // error_log(var_export($data, true));
-
-        // error_log($data['_token']);
-        // error_log($data['_token']);
-        //error_log(($request->getContent()));
+//$imageId =
         //check if the token valid
         if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
 
@@ -475,13 +463,9 @@ class TrickController extends AbstractController
             $em->remove($image);
             $em->flush();
 
-            //return new JsonReponse(['success' => 1]);
-            // error_log("******************TOKEN OK******************");
             return new Response("OKy");
         } else {
-            // return new JsonReponse(['error' => 'Invalide token'], 400);
 
-            // error_log("******************TOKEN ERR******************");
             return new Response("KOy");
         }
     }
@@ -491,36 +475,29 @@ class TrickController extends AbstractController
      */
     public function deleteGalleryImage(Images $image, Request $request)
     {
-        $reqData = $request->getContent();
+        // $reqData = $request->getContent();
 
-        $data = json_decode($reqData, true);
-        // error_log("************************************");
-        // error_log(var_export($data, true));
+        // $data = json_decode($reqData, true);
 
-        // error_log($data['_token']);
-        // error_log($data['_token']);
-        //error_log(($request->getContent()));
-        //check if the token valid
-        if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
+        // //check if the token valid
+        // if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
 
-            //getting image name from the DB
-            $name = $image->getNameGallaryImages();
-            //Deleting the image from the directory
-            unlink($this->getParameter('images_directory') . '/' . $name);
-            //deleting the image from the DB
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($image);
-            $em->flush();
+        //     //getting image name from the DB
+        //     // $name = $image->getIsMainImage();
 
-            //return new JsonReponse(['success' => 1]);
-            // error_log("******************TOKEN OK******************");
-            return new Response("OKy");
-        } else {
-            // return new JsonReponse(['error' => 'Invalide token'], 400);
+        //     $name = $image->getName();
+        //     //Deleting the image from the directory
+        //     unlink($this->getParameter('images_directory') . '/' . $name);
+        //     //deleting the image from the DB
+        //     $em = $this->getDoctrine()->getManager();
+        //     $em->remove($image);
+        //     $em->flush();
 
-            // error_log("******************TOKEN ERR******************");
-            return new Response("KOy");
-        }
+        //     return new Response("OKy");
+        // } else {
+
+        //     return new Response("KOy");
+        // }
 
     }
 
@@ -532,32 +509,22 @@ class TrickController extends AbstractController
         $reqData = $request->getContent();
 
         $data = json_decode($reqData, true);
-        // error_log("************************************");
-        // error_log(var_export($data, true));
 
-        // error_log($data['_token']);
-        // error_log($data['_token']);
-        //error_log(($request->getContent()));
         //check if the token valid
         if ($this->isCsrfTokenValid('delete' . $Videos->getId(), $data['_token'])) {
 
             //getting image name from the DB
             $name = $Videos->getUrl();
             //Deleting the image from the directory
-            // unlink($this->getParameter('video_directory') . '/' . $name);
 
             //deleting the image from the DB
             $em = $this->getDoctrine()->getManager();
             $em->remove($Videos);
             $em->flush();
 
-            //return new JsonReponse(['success' => 1]);
-            // error_log("******************TOKEN OK******************");
             return new Response("OKy");
         } else {
-            // return new JsonReponse(['error' => 'Invalide token'], 400);
 
-            // error_log("******************TOKEN ERR******************");
             return new Response("KOy");
         }
 

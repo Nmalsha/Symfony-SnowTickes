@@ -39,13 +39,6 @@ class UserType extends AbstractType
                 'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
             ])
-            // ->add('profile_images', FileType::class, [
-            //     'multiple' => false,
-
-            //     'label' => 'profile Image',
-            //     'mapped' => false,
-            //     'required' => false,
-            // ])
 
         ;
     }

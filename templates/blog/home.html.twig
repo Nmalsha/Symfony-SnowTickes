@@ -13,17 +13,33 @@
         class="col-xs-12 col-sm-12  col-lg-3 trick trickcard_style"
         style="flex-shrink: 1"
       >
-     
+   
         <div class="card card_tricks md-3">
-          {% for image in images %} {% if trick.id == image.Trick.id %} {% if
-          image.name is not null %}
-
+          {% for image in images %}
+           {% if trick.id == image.Trick.id %} 
+           {% if image.isMainImage == true %}
+         
+      
           <img
             class="card-img-top margin"
             src="{{ asset('/images/'~ image.name) }}"
             alt="Trick image"
           />
-          {% endif %} {% endif %} {% endfor %}
+          {% endif %} 
+
+{% if trick.images is empty %} 
+<img
+class="display-top img-fluid"
+src="https://via.placeholder.com/130.png/09f/fff"
+alt=""
+width="600px"
+/>
+{% endif %}
+
+          {% endif %}
+        
+       
+          {% endfor %}
       
         </div>
 
