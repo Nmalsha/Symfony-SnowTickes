@@ -31,9 +31,7 @@ class BlogController extends AbstractController
             $request->query->getInt('page', 1),
 
         );
-        // dump($user);
-        // dump($tricks);
-        // die;
+
         return $this->render('blog/home.html.twig', [
             'controller_name' => "BlogController",
             'tricks' => $tricks,

@@ -151,35 +151,35 @@ class TrickController extends AbstractController
 
                 $img->setName($imageDocument);
                 $img->setIsMainImage(1);
-
+                $img->setTrick($trick);
                 $trick->addImage($img);
 
-                $img->setTrick($trick);
-
             }
+
             //get gallery images data
             $gallaryImages = $form->get('gallaryimages')->getData();
 
             //loop true the images
 
             foreach ($gallaryImages as $image) {
-                $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
+                $galleryimageDocument = md5(uniqid()) . '.' . $image->guessExtension();
 
                 //Save image to the directory
                 $image->move(
                     $this->getParameter('images_directory'),
-                    $imageDocument
+                    $galleryimageDocument
                 );
 
                 // save image name to the DB
 
-                $img->setName($imageDocument);
+                $img->setName($galleryimageDocument);
 
                 $img->setIsMainImage(0);
                 $img->setTrick($trick);
                 $trick->addImage($img);
 
             }
+
             //set slug name
 
             $trick->setslug($slugname);
@@ -335,7 +335,7 @@ class TrickController extends AbstractController
             if ($trick->getId() === $comment->getTrick()->getId()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($comment);
-                $manager->flush();
+
             }
         }
 
@@ -347,7 +347,7 @@ class TrickController extends AbstractController
             if ($trick->getId() === $video->getTrick()->getId()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($video);
-                $manager->flush();
+
             }
         }
 
@@ -376,8 +376,6 @@ class TrickController extends AbstractController
                 }
 
                 $manager->remove($image);
-
-                $manager->flush();
 
             }
 
