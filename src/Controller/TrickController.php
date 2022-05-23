@@ -192,6 +192,10 @@ class TrickController extends AbstractController
             //if the form is valid
             $manager->persist($trick);
             $manager->flush();
+            $this->addflash(
+                'success',
+                "Le trick a été crée avec succès !"
+            );
             //Redirect to the added trick view
             return $this->redirectToRoute('home');
 
@@ -227,7 +231,10 @@ class TrickController extends AbstractController
             //save to the DB
             $manager->persist($video);
             $manager->flush();
-
+            $this->addflash(
+                'success',
+                "Le video a été enregistrer avec succès !"
+            );
             return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
 
         }
@@ -306,6 +313,10 @@ class TrickController extends AbstractController
             $manager->persist($trick);
 
             $manager->flush();
+            $this->addflash(
+                'success',
+                "Le Trick a été modifier avec succès !"
+            );
             //Redirect to the added trick view
             return $this->redirectToRoute('home');
 
@@ -462,10 +473,16 @@ class TrickController extends AbstractController
             $em->remove($image);
             $em->flush();
 
-            return new Response("OKy");
+            $this->addflash(
+                'success',
+                "Le element a été supprimer avec succès !"
+            );
         } else {
 
-            return new Response("KOy");
+            $this->addflash(
+                'error',
+                "Le element n'a pas été supprimer !"
+            );
         }
     }
 
@@ -521,10 +538,16 @@ class TrickController extends AbstractController
             $em->remove($Videos);
             $em->flush();
 
-            return new Response("OKy");
+            $this->addflash(
+                'success',
+                "Le element a été supprimer avec succès !"
+            );
         } else {
 
-            return new Response("KOy");
+            $this->addflash(
+                'error',
+                "Le element n'a pas été supprimer !"
+            );
         }
 
     }

@@ -1,5 +1,15 @@
 {% extends 'base.html.twig' %} {% block body %}
 <div class="home-bg bg"></div>
+{% for message in app.flashes('success') %}
+<div class="alert alert-success">
+    {{ message }}
+</div>
+{% endfor %}
+{% for message in app.flashes('error') %}
+<div class="alert  alert-warning">
+    {{ message }}
+</div>
+{% endfor %}
 <button type="button" id="myBBtn" onclick="bottomFunction()">
   <i class="fas fa-arrow-down"></i>
 </button>
@@ -44,7 +54,7 @@ width="600px"
         </div>
 
         <div class="card-body">
-          <h5 class="card-title">{{ trick.trickName }}</h5>
+         <a href="/trick/{{ trick.slug }}" <h4 class="card-title">{{ trick.trickName }}</h4></a>
           <p class="card-text">{{ trick.description }}</p>
           <p class="card-text">{{ trick.categorie }}</p>
           <p class="card-text">
@@ -52,10 +62,7 @@ width="600px"
             {{ trick.createdOn | date('H:i') }} by {{ trick.user.secondName }}
           </p>
 
-          <a href="/trick/{{ trick.slug }}" class="btn btn-primary">Lire</a>
-
-          <br />
-
+        
           <div>
             {% if app.user %} {% if app.user.id == trick.user.id %}
             <a href="{{ path('trick_edit', { id: trick.id }) }}"

@@ -5,6 +5,11 @@
 
 {% if trick.user.id is same as app.user.id %}
 <div class="container">
+  {% for message in app.flashes('success') %}
+<div class="alert alert-success">
+    {{ message }}
+</div>
+{% endfor %}
   <h1 class="text-center">Edit d'un Trick</h1>
   <div class="row text-center">
     <div class="col">
