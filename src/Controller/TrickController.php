@@ -136,33 +136,36 @@ class TrickController extends AbstractController
             //get Main image data
 
             $mainimages = $form->get('images')->getData();
+            \dump($mainimages);
+            // die;
+            //get image name
+            // if ($mainimages) {
+            $imageDocument = $mainimages->getClientOriginalName();
 
-            foreach ($mainimages as $mainimage) {
+            //send image name to the images folder
+            $mainimages->move(
+                $this->getParameter('images_directory'),
+                $imageDocument
+            );
 
-                $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
+            // save image name to the DB
 
-                //send image name to the images folder
-                $mainimage->move(
-                    $this->getParameter('images_directory'),
-                    $imageDocument
-                );
-
-                // save image name to the DB
-
-                $img->setName($imageDocument);
-                $img->setIsMainImage(1);
-                $img->setTrick($trick);
-                $trick->addImage($img);
-
-            }
+            $img->setName($imageDocument);
+            $img->setIsMainImage(1);
+            $img->setTrick($trick);
+            $trick->addImage($img);
+            // }
 
             //get gallery images data
             $gallaryImages = $form->get('gallaryimages')->getData();
-
+            // \dump($gallaryImages);
+            \dump($gallaryImages);
+            // die;
             //loop true the images
 
             foreach ($gallaryImages as $image) {
-                $galleryimageDocument = md5(uniqid()) . '.' . $image->guessExtension();
+
+                $galleryimageDocument = $image->getClientOriginalName();
 
                 //Save image to the directory
                 $image->move(
@@ -262,32 +265,30 @@ class TrickController extends AbstractController
 
             //get Main image data
             $mainimages = $form->get('images')->getData();
-
-            //$mainImageTemp = null;
-            foreach ($mainimages as $mainimage) {
-                // $mainImageTemp = $mainimage;
-
-                $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
+            if ($mainimages) {
+                $imageDocument = $mainimages->getClientOriginalName();
 
                 //send image name to the images folder
-                $mainimage->move(
+                $mainimages->move(
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
+
                 // save image name to the DB
 
                 $img->setName($imageDocument);
                 $img->setIsMainImage(1);
+                $img->setTrick($trick);
                 $trick->addImage($img);
-
             }
+
             //Gallery Images handling
             $gallaryImages = $form->get('gallaryimages')->getData();
             //loop true the images
 
             foreach ($gallaryImages as $image) {
-                $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
 
+                $imageDocument = $image->getClientOriginalName();
                 $image->move(
                     $this->getParameter('images_directory'),
                     $imageDocument
