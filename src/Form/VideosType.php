@@ -20,6 +20,7 @@ class VideosType extends AbstractType
                 // 'help' => 'If you want to post multiple videos, press the button as many times as needed',
                 'attr' => [
                     'placeholder' => 'Add a valid URL to put a video for the trick',
+                    'multiple' => true,
                 ],
             ]);
     }

@@ -127,70 +127,87 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
+        $slugname = $form->get("TrickName")->getData();
+        //  check if the Trickname already existe
+        $trckexist = $this->getDoctrine()->getRepository(Trick::class)->findBy(array('trickName' => $slugname));
+        if (!$trckexist) {
+            if ($form->isSubmitted() && $form->isValid()) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $slugname = $form->get("TrickName")->getData();
+                $trick->setUser($this->getUser());
 
-            $trick->setUser($this->getUser());
+                //get Main image data
 
-            //get Main image data
+                $mainimages = $form->get('images')->getData();
 
-            $mainimages = $form->get('images')->getData();
+                // die;
+                //get image name
+                if ($mainimages) {
+                    $imageDocument = $mainimages->getClientOriginalName();
 
-            foreach ($mainimages as $mainimage) {
+                    //send image name to the images folder
+                    $mainimages->move(
+                        $this->getParameter('images_directory'),
+                        $imageDocument
+                    );
 
-                $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
+                    // save image name to the DB
 
-                //send image name to the images folder
-                $mainimage->move(
-                    $this->getParameter('images_directory'),
-                    $imageDocument
+                    $img->setName($imageDocument);
+                    $img->setIsMainImage(1);
+                    $img->setTrick($trick);
+                    $trick->addImage($img);
+                }
+
+                //get gallery images data
+                $gallaryImages = $form->get('gallaryimages')->getData();
+                // \dump($gallaryImages);
+                \dump($gallaryImages);
+                // die;
+                //loop true the images
+
+                foreach ($gallaryImages as $image) {
+
+                    $galleryimageDocument = $image->getClientOriginalName();
+
+                    //Save image to the directory
+                    $image->move(
+                        $this->getParameter('images_directory'),
+                        $galleryimageDocument
+                    );
+
+                    // save image name to the DB
+
+                    $img->setName($galleryimageDocument);
+
+                    $img->setIsMainImage(0);
+                    $img->setTrick($trick);
+                    $trick->addImage($img);
+
+                }
+
+                //set slug name
+
+                $trick->setslug($slugname);
+                //set created date
+                $trick->setCreatedOn(new \DateTime());
+
+                //if the form is valid
+                $manager->persist($trick);
+                $manager->flush();
+                $this->addflash(
+                    'success',
+                    "Le trick a été crée avec succès !"
                 );
-
-                // save image name to the DB
-
-                $img->setName($imageDocument);
-                $img->setIsMainImage(1);
-                $img->setTrick($trick);
-                $trick->addImage($img);
+                //Redirect to the added trick view
+                return $this->redirectToRoute('home');
 
             }
-
-            //get gallery images data
-            $gallaryImages = $form->get('gallaryimages')->getData();
-
-            //loop true the images
-
-            foreach ($gallaryImages as $image) {
-                $galleryimageDocument = md5(uniqid()) . '.' . $image->guessExtension();
-
-                //Save image to the directory
-                $image->move(
-                    $this->getParameter('images_directory'),
-                    $galleryimageDocument
-                );
-
-                // save image name to the DB
-
-                $img->setName($galleryimageDocument);
-
-                $img->setIsMainImage(0);
-                $img->setTrick($trick);
-                $trick->addImage($img);
-
-            }
-
-            //set slug name
-
-            $trick->setslug($slugname);
-            //set created date
-            $trick->setCreatedOn(new \DateTime());
-
-            //if the form is valid
-            $manager->persist($trick);
-            $manager->flush();
-            //Redirect to the added trick view
-            return $this->redirectToRoute('home');
+        } else {
+            $this->addflash(
+                'error',
+                "Le nom de trick deja existe !"
+            );
+            return $this->redirectToRoute('trick_create');
 
         }
 
@@ -224,7 +241,10 @@ class TrickController extends AbstractController
             //save to the DB
             $manager->persist($video);
             $manager->flush();
-
+            $this->addflash(
+                'success',
+                "Le video a été enregistrer avec succès !"
+            );
             return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
 
         }
@@ -262,32 +282,30 @@ class TrickController extends AbstractController
 
             //get Main image data
             $mainimages = $form->get('images')->getData();
-
-            //$mainImageTemp = null;
-            foreach ($mainimages as $mainimage) {
-                // $mainImageTemp = $mainimage;
-
-                $imageDocument = md5(uniqid()) . '.' . $mainimage->guessExtension();
+            if ($mainimages) {
+                $imageDocument = $mainimages->getClientOriginalName();
 
                 //send image name to the images folder
-                $mainimage->move(
+                $mainimages->move(
                     $this->getParameter('images_directory'),
                     $imageDocument
                 );
+
                 // save image name to the DB
 
                 $img->setName($imageDocument);
                 $img->setIsMainImage(1);
+                $img->setTrick($trick);
                 $trick->addImage($img);
-
             }
+
             //Gallery Images handling
             $gallaryImages = $form->get('gallaryimages')->getData();
             //loop true the images
 
             foreach ($gallaryImages as $image) {
-                $imageDocument = md5(uniqid()) . '.' . $image->guessExtension();
 
+                $imageDocument = $image->getClientOriginalName();
                 $image->move(
                     $this->getParameter('images_directory'),
                     $imageDocument
@@ -305,6 +323,10 @@ class TrickController extends AbstractController
             $manager->persist($trick);
 
             $manager->flush();
+            $this->addflash(
+                'success',
+                "Le Trick a été modifier avec succès !"
+            );
             //Redirect to the added trick view
             return $this->redirectToRoute('home');
 
@@ -461,10 +483,16 @@ class TrickController extends AbstractController
             $em->remove($image);
             $em->flush();
 
-            return new Response("OKy");
+            $this->addflash(
+                'success',
+                "Le element a été supprimer avec succès !"
+            );
         } else {
 
-            return new Response("KOy");
+            $this->addflash(
+                'error',
+                "Le element n'a pas été supprimer !"
+            );
         }
     }
 
@@ -520,10 +548,16 @@ class TrickController extends AbstractController
             $em->remove($Videos);
             $em->flush();
 
-            return new Response("OKy");
+            $this->addflash(
+                'success',
+                "Le element a été supprimer avec succès !"
+            );
         } else {
 
-            return new Response("KOy");
+            $this->addflash(
+                'error',
+                "Le element n'a pas été supprimer !"
+            );
         }
 
     }

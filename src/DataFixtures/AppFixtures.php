@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
             $tricks->setTrickName("Titre de l'article n°$u")
                 ->setDescription("Contenu de l'article n°$u")
                 ->setslug('trick')
-                ->setCreatedAt(new \DateTime())
+                ->setCreatedOn(new \DateTime())
                 ->setCategorie('Cat 1');
 
             $manager->persist($tricks);
@@ -44,10 +44,8 @@ class AppFixtures extends Fixture
 
                 $comment = new Comments();
 
-                $now = new \DateTime();
-
                 $comment->setContent("Commentaire de l'article n°$u")
-                    ->setCreatedAt($now)
+                    ->setCreatedAt(new \DateTimeImmutable())
                     ->setTrick($tricks);
 
                 $manager->persist($comment);
@@ -56,9 +54,9 @@ class AppFixtures extends Fixture
                 for ($l = 1; $l <= mt_rand(1, 4); $l++) {
 
                     $image = new Images();
-                    $image->setPath('https://via.placeholder.com/130.png/09f/fff')
-                        ->setName('nom image $l')
-                        ->setNameGallaryImages('nom image $l')
+                    $image->setName('https://via.placeholder.com/140.png/09f/fff')
+                        ->setIsMainImage(1)
+
                         ->setTrick($tricks);
 
                     $manager->persist($image);
@@ -67,7 +65,7 @@ class AppFixtures extends Fixture
                     for ($v = 1; $v <= mt_rand(1, 4); $v++) {
 
                         $video = new Videos();
-                        $video->setUrl('https://via.placeholder.com/140.png/09f/fff')
+                        $video->setUrl('https://www.youtube.com/embed/XUFLq6dKQok')
                             ->setTrick($tricks);
 
                         $manager->persist($video);
