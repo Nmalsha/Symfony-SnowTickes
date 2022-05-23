@@ -2,7 +2,16 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block body %} 
-
+{% for message in app.flashes('success') %}
+<div class="alert alert-success">
+    {{ message }}
+</div>
+{% endfor %}
+{% for message in app.flashes('error') %}
+<div class="alert  alert-warning">
+    {{ message }}
+</div>
+{% endfor %}
 <h3 class="creation_topic">Création d'un Trick</h3>
 <section class="tickes">
   <div class="card trickcard_style">

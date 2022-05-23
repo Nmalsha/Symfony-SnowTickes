@@ -127,77 +127,87 @@ class TrickController extends AbstractController
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
+        $slugname = $form->get("TrickName")->getData();
+        //  check if the Trickname already existe
+        $trckexist = $this->getDoctrine()->getRepository(Trick::class)->findBy(array('trickName' => $slugname));
+        if (!$trckexist) {
+            if ($form->isSubmitted() && $form->isValid()) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $slugname = $form->get("TrickName")->getData();
+                $trick->setUser($this->getUser());
 
-            $trick->setUser($this->getUser());
+                //get Main image data
 
-            //get Main image data
+                $mainimages = $form->get('images')->getData();
 
-            $mainimages = $form->get('images')->getData();
-            \dump($mainimages);
-            // die;
-            //get image name
-            // if ($mainimages) {
-            $imageDocument = $mainimages->getClientOriginalName();
+                // die;
+                //get image name
+                if ($mainimages) {
+                    $imageDocument = $mainimages->getClientOriginalName();
 
-            //send image name to the images folder
-            $mainimages->move(
-                $this->getParameter('images_directory'),
-                $imageDocument
-            );
+                    //send image name to the images folder
+                    $mainimages->move(
+                        $this->getParameter('images_directory'),
+                        $imageDocument
+                    );
 
-            // save image name to the DB
+                    // save image name to the DB
 
-            $img->setName($imageDocument);
-            $img->setIsMainImage(1);
-            $img->setTrick($trick);
-            $trick->addImage($img);
-            // }
+                    $img->setName($imageDocument);
+                    $img->setIsMainImage(1);
+                    $img->setTrick($trick);
+                    $trick->addImage($img);
+                }
 
-            //get gallery images data
-            $gallaryImages = $form->get('gallaryimages')->getData();
-            // \dump($gallaryImages);
-            \dump($gallaryImages);
-            // die;
-            //loop true the images
+                //get gallery images data
+                $gallaryImages = $form->get('gallaryimages')->getData();
+                // \dump($gallaryImages);
+                \dump($gallaryImages);
+                // die;
+                //loop true the images
 
-            foreach ($gallaryImages as $image) {
+                foreach ($gallaryImages as $image) {
 
-                $galleryimageDocument = $image->getClientOriginalName();
+                    $galleryimageDocument = $image->getClientOriginalName();
 
-                //Save image to the directory
-                $image->move(
-                    $this->getParameter('images_directory'),
-                    $galleryimageDocument
+                    //Save image to the directory
+                    $image->move(
+                        $this->getParameter('images_directory'),
+                        $galleryimageDocument
+                    );
+
+                    // save image name to the DB
+
+                    $img->setName($galleryimageDocument);
+
+                    $img->setIsMainImage(0);
+                    $img->setTrick($trick);
+                    $trick->addImage($img);
+
+                }
+
+                //set slug name
+
+                $trick->setslug($slugname);
+                //set created date
+                $trick->setCreatedOn(new \DateTime());
+
+                //if the form is valid
+                $manager->persist($trick);
+                $manager->flush();
+                $this->addflash(
+                    'success',
+                    "Le trick a été crée avec succès !"
                 );
-
-                // save image name to the DB
-
-                $img->setName($galleryimageDocument);
-
-                $img->setIsMainImage(0);
-                $img->setTrick($trick);
-                $trick->addImage($img);
+                //Redirect to the added trick view
+                return $this->redirectToRoute('home');
 
             }
-
-            //set slug name
-
-            $trick->setslug($slugname);
-            //set created date
-            $trick->setCreatedOn(new \DateTime());
-
-            //if the form is valid
-            $manager->persist($trick);
-            $manager->flush();
+        } else {
             $this->addflash(
-                'success',
-                "Le trick a été crée avec succès !"
+                'error',
+                "Le nom de trick deja existe !"
             );
-            //Redirect to the added trick view
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('trick_create');
 
         }
 
