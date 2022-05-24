@@ -21,7 +21,7 @@
         {% else %}
         <img
         class="display-top img-fluid"
-        src="https://via.placeholder.com/130.png/09f/fff"
+        src="{{ asset('/images/default.jpeg') }}"
         alt=""
         width="600px"
       />
@@ -147,11 +147,14 @@
 
                   <div class=" mb-3 pl-2 bg-light  flex">
                     <div class="col-md-2 col-sm-4 col-xs-6 text-center sty_comment">
-                     
+                    
                       <img
                         class="user-profile"
                       src="{{ asset('/images/'~ comment.user.profieImage) }}" 
                       />
+                
+                   
+                       
                     </div>
 
                     <div class="col-10 col-sm-8 col-xs-6 comment_sec">

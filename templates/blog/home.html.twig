@@ -27,37 +27,31 @@
         <div class="card card_tricks md-3">
     
           {% for image in images %}
-       
-           {% if trick.id == image.Trick.id %}
-           {%  if (image == null ) and (image.isMainImage == null) %}
-           <img
-           class="display-top img-fluid"
-           src="https://via.placeholder.com/130.png/09f/fff"
-           alt=""
-           width="400px"
-         />
-         {% endif %}
-
-           {% if image.isMainImage is same as true  %}
-       
         
-   
+           {% if trick.id == image.Trick.id %}
+        
+           {% if image is not null  %}
+       
           <img
             class="card-img-top margin"
             src="{{ asset('/images/'~ image.name) }}"
             alt="Trick image"
           />
           {% endif %} 
-       
+      
           {% endif %}
         
-        
-        
-
           {% endfor %}
-      
+        
+          {% if trick.images.snapshot is empty %}
+          <img
+          class="card-img-top margin"
+          src="{{ asset('/images/default.jpeg') }}"
+          alt="Trick image"
+        />
+          {% endif %}
         </div>
-
+       
         <div class="card-body">
          <a href="/trick/{{ trick.slug }}" <h4 class="card-title">{{ trick.trickName }}</h4></a>
           <p class="card-text">{{ trick.description }}</p>
