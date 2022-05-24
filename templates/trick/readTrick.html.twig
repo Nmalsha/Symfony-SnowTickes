@@ -4,6 +4,16 @@
   <button type="button" >
    Go back
    </button></a>
+   {% for message in app.flashes('success') %}
+<div class="alert alert-success">
+    {{ message }}
+</div>
+{% endfor %}
+{% for message in app.flashes('error') %}
+<div class="alert  alert-warning">
+    {{ message }}
+</div>
+{% endfor %}
   <div class="row justify-content-center">
     <div class="col-md-10 col-md-offset-1 mb-4">
 
@@ -147,14 +157,20 @@
 
                   <div class=" mb-3 pl-2 bg-light  flex">
                     <div class="col-md-2 col-sm-4 col-xs-6 text-center sty_comment">
-                    
+                 
+                    {% if comment.user.profieImage is same as null %}
+                    <img
+                    class="user-profile"
+                  src="{{ asset('/images/defaultuser.webp') }}" 
+                  />
+                  {% endif %}
+                
                       <img
                         class="user-profile"
                       src="{{ asset('/images/'~ comment.user.profieImage) }}" 
                       />
                 
-                   
-                       
+                
                     </div>
 
                     <div class="col-10 col-sm-8 col-xs-6 comment_sec">
