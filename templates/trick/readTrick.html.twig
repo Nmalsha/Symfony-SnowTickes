@@ -10,7 +10,9 @@
       <div class="card mt-5">
      
         {% for image in selImages %} {% if image.isMainImage == true %}
-      
+      <pre>
+        {{ dump(image) }}
+      </pre>
         <img
           class="display-top img-fluid"
           src="{{ asset('/images/'~ image.name) }}"

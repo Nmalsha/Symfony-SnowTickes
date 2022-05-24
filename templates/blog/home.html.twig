@@ -23,12 +23,24 @@
         class="col-xs-12 col-sm-12  col-lg-3 trick trickcard_style"
         style="flex-shrink: 1"
       >
-   
+  
         <div class="card card_tricks md-3">
+    
           {% for image in images %}
-           {% if trick.id == image.Trick.id %} 
+       
+           {% if trick.id == image.Trick.id %}
+           {%  if (image == null ) and (image.isMainImage == null) %}
+           <img
+           class="display-top img-fluid"
+           src="https://via.placeholder.com/130.png/09f/fff"
+           alt=""
+           width="400px"
+         />
+         {% endif %}
+
            {% if image.isMainImage is same as true  %}
        
+        
    
           <img
             class="card-img-top margin"
