@@ -26,7 +26,7 @@ class AppFixtures extends Fixture
         $user->setFirstName('David')
             ->setSecondName('Levin')
             ->setEmail('david@gmail.com')
-            ->setprofieImage('https://via.placeholder.com/120.png/09f/fff')
+            ->setprofieImage('defaultuser.webp')
             ->setPassword($hash);
 
         $manager->persist($user);
@@ -56,7 +56,7 @@ class AppFixtures extends Fixture
                 for ($l = 1; $l <= mt_rand(1, 2); $l++) {
 
                     $image = new Images();
-                    $image->setName('https://via.placeholder.com/120.png/09f/fff')
+                    $image->setName('default.jpeg')
                         ->setIsMainImage(0)
 
                         ->setTrick($tricks);
@@ -73,6 +73,14 @@ class AppFixtures extends Fixture
                 }
 
             }
+
+            $mainimage = new Images();
+            $mainimage->setName('default.jpeg')
+                ->setIsMainImage(1)
+
+                ->setTrick($tricks);
+
+            $manager->persist($mainimage);
 
         }
 
