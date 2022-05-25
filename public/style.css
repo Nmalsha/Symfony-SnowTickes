@@ -13,8 +13,6 @@
   justify-content: center;
 }
 .trickcard_style {
-  width: 40rem;
-  height: 500px;
   margin: 15px;
   box-shadow: 3px 3px 5px 0 rgba(0, 0, 0, 0.5);
   border-radius: 0.625em;
@@ -23,12 +21,17 @@
   width: 50rem;
   height: 30rem;
 }
+.height {
+  height: 20rem;
+}
+.btn_align {
+  display: flex;
+  justify-content: center;
+}
 .margin {
   margin-top: 8px;
 }
-.trick {
-  height: 40rem;
-}
+
 .trickinfo {
   display: flex;
   justify-content: space-around;
@@ -103,6 +106,14 @@ form {
 }
 .videos_btn {
   width: 300px;
+}
+.visibility_footer {
+  display: flex;
+  justify-content: center;
+}
+.position {
+  display: flex;
+  justify-content: end;
 }
 .style_btn {
   margin-top: 27px;

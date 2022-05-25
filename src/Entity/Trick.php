@@ -66,6 +66,8 @@ class Trick
      */
     private $user;
 
+    public $mainImage = null;
+
     public function __construct()
     {
 

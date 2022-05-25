@@ -21,17 +21,29 @@ class BlogController extends AbstractController
     {
         $repo = $this->getDoctrine()->getRepository(Trick::class);
 
-        $donees = $repo->findBy([], ['createdOn' => 'desc']);
+        $tricks = $repo->findBy([], ['createdOn' => 'desc']);
         $repoImage = $this->getDoctrine()->getRepository(Images::class);
-        $Images = $repoImage->findAll();
+        $Images = $repoImage->findBy(array('isMainImage' => '1'));
+
         $repoUser = $this->getDoctrine()->getRepository(User::class);
         $user = $repoUser->findAll();
-        $tricks = $paginator->paginate(
-            $donees,
-            $request->query->getInt('page', 1),
+        // $tricks = $paginator->paginate(
+        //     $donees,
+        //     $request->query->getInt('page', 1),
 
-        );
+        // );
 
+        foreach ($tricks as &$trick) {
+            foreach ($Images as $image) {
+                if ($image->getTrick()->getId() === $trick->getId()) {
+                    dump($trick->getId());
+                    $trick->mainImage = $image;
+                }
+            }
+        }
+
+        //mainImage
+        //dump($Images);die();
         return $this->render('blog/home.html.twig', [
             'controller_name' => "BlogController",
             'tricks' => $tricks,
