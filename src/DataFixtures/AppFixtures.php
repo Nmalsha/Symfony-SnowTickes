@@ -63,17 +63,16 @@ class AppFixtures extends Fixture
 
                     $manager->persist($image);
 
-                    // Ajout des vidéos à l'article
-                    $video = new Videos();
-                    $video->setUrl('https://www.youtube.com/embed/XUFLq6dKQok')
-                        ->setTrick($tricks);
-
-                    $manager->persist($video);
-
                 }
 
             }
+            // Ajout des vidéos à l'article
+            $video = new Videos();
+            $video->setUrl('https://www.youtube.com/embed/XUFLq6dKQok')
+                ->setTrick($tricks);
 
+            $manager->persist($video);
+            // Ajout des mainimage à l'articl
             $mainimage = new Images();
             $mainimage->setName('default.jpeg')
                 ->setIsMainImage(1)

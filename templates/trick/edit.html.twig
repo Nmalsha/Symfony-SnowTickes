@@ -11,6 +11,19 @@
 </div>
 {% endfor %}
   <h1 class="text-center">Edit d'un Trick</h1>
+  <div class="position">
+    {% if app.user %} {% if app.user.id == trick.user.id %}
+    <a href="{{ path('trick_edit', { id: trick.id }) }}"
+      ><i class="fas fa-edit"></i
+    ></a>
+    <a
+      href="{{ path('trick_delete', { id: trick.id }) }}"
+      trick-delete
+      data-token="{{csrf_token('delete'~ trick.id)}}"
+      ><i class="fas fa-trash-alt"></i
+    ></a>
+    {% endif %} {% endif %}
+  </div>
   <div class="row text-center">
     <div class="col">
       <div class="p-3 mb-2 bg-light">
@@ -62,7 +75,14 @@
                   </div>
                   {% endif %}
               {% endfor %}
-              
+              {% if trick.mainImage is null %}
+        <img
+        class="display-top img-fluid"
+        src="{{ asset('/images/default.jpeg') }}"
+        alt=""
+        width="600px"
+      />
+      {% endif %}
           </div>
         </div>
          <!--END display main image-->

@@ -33,6 +33,17 @@ class BlogController extends AbstractController
 
         // );
 
+        foreach ($tricks as &$trick) {
+            foreach ($Images as $image) {
+                if ($image->getTrick()->getId() === $trick->getId()) {
+                    dump($trick->getId());
+                    $trick->mainImage = $image;
+                }
+            }
+        }
+
+        //mainImage
+        //dump($Images);die();
         return $this->render('blog/home.html.twig', [
             'controller_name' => "BlogController",
             'tricks' => $tricks,

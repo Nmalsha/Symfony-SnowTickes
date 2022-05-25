@@ -50,10 +50,26 @@ class TrickController extends AbstractController
 
         //get trick
         $trick = $trickRepository->findOneBy(['slug' => $slug]);
+        //get main image
+        $repoImage = $this->getDoctrine()->getRepository(Images::class);
+        // $Images = $repoImage->findBy(array('isMainImage' => '1'));
+        // foreach ($Images as $image) {
+        //     if ($image->getTrick()->getId() === $trick->getId()) {
 
+        //         $trick->mainImage = $image;
+        //     }
+        // }
+        // $trick->mainImage = $image;
         //get images
 
         $selImages = $trick->getImages();
+        foreach ($selImages as $mainimg) {
+            if ($mainimg->getIsMainImage() === true) {
+                $trick->mainImage = $mainimg;
+            }
+
+        }
+        // $mainimg = $trick->mainimage;
 
         //get videos
 
@@ -121,7 +137,6 @@ class TrickController extends AbstractController
     function new (Request $request, EntityManagerInterface $manager) {
 
         $trick = new Trick();
-        $img = new Images();
 
         //adding fields to the form
         $form = $this->createForm(TrickType::class, $trick);
@@ -150,7 +165,7 @@ class TrickController extends AbstractController
                     );
 
                     // save image name to the DB
-
+                    $img = new Images();
                     $img->setName($imageDocument);
                     $img->setIsMainImage(1);
                     $img->setTrick($trick);
@@ -158,9 +173,9 @@ class TrickController extends AbstractController
 
                 }
 
-                if ($mainimages) {
+                $gallaryImages = $form->get('gallaryimages')->getData();
+                if ($gallaryImages) {
                     //get gallery images data
-                    $gallaryImages = $form->get('gallaryimages')->getData();
                     // \dump($gallaryImages);
 
                     // die;
@@ -177,12 +192,13 @@ class TrickController extends AbstractController
                         );
 
                         // save image name to the DB
-
+                        $img = new Images();
                         $img->setName($galleryimageDocument);
 
                         $img->setIsMainImage(0);
                         $img->setTrick($trick);
                         $trick->addImage($img);
+                        //$manager->persist($img);
 
                     }
                 }
@@ -196,6 +212,7 @@ class TrickController extends AbstractController
                 //if the form is valid
                 $manager->persist($trick);
                 $manager->flush();
+
                 $this->addflash(
                     'success',
                     "Le trick a été crée avec succès !"
@@ -314,12 +331,13 @@ class TrickController extends AbstractController
                     );
                     // save image name to the DB
 
+                    $img = new Images();
+                    $img->setName($imageDocument);
+                    $img->setIsMainImage(0);
+                    $img->setTrick($trick);
+                    $trick->addImage($img);
+
                 }
-                $img = new Images();
-                $img->setName($imageDocument);
-                $img->setIsMainImage(0);
-                $img->setTrick($trick);
-                $trick->addImage($img);
 
                 // \dump('upl');
                 // die;

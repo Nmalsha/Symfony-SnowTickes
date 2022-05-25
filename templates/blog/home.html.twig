@@ -18,16 +18,18 @@
   <div class="container">
     <div class="row">
       {% for trick in tricks %}
-
+     
       <div
-        class="col-xs-12 col-sm-12  col-lg-3 trick trickcard_style"
+        class="col-xs-12 col-sm-12  col-lg-3 trick trickcard_style height"
         style="flex-shrink: 1"
       >
   
         <div class="card card_tricks md-3">
-    
+       
+          
+
           {% for image in images %}
-        
+         
            {% if trick.id == image.Trick.id %}
         
            {% if image is not null  %}
@@ -42,8 +44,8 @@
           {% endif %}
         
           {% endfor %}
-        
-          {% if trick.images.snapshot is empty %}
+       
+          {% if trick.mainImage is empty %}
           <img
           class="card-img-top margin"
           src="{{ asset('/images/default.jpeg') }}"
@@ -52,16 +54,9 @@
           {% endif %}
         </div>
        
-        <div class="card-body">
-         <a href="/trick/{{ trick.slug }}" <h4 class="card-title">{{ trick.trickName }}</h4></a>
-          <p class="card-text">{{ trick.description }}</p>
-          <p class="card-text">{{ trick.categorie }}</p>
-          <p class="card-text">
-            Created on:{{ trick.createdOn | date('d/m/y') }} a
-            {{ trick.createdOn | date('H:i') }} by {{ trick.user.secondName }}
-          </p>
-
-        
+        <div class="card-body btn_align">
+         <a class = "btn btn-outline-info btn-sm " href="/trick/{{ trick.slug }}" <h4 class="card-title">{{ trick.trickName }}</h4></a>
+         
           <div>
             {% if app.user %} {% if app.user.id == trick.user.id %}
             <a href="{{ path('trick_edit', { id: trick.id }) }}"

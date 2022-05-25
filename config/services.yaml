@@ -6,7 +6,6 @@
 parameters:
   images_directory: "%kernel.project_dir%/public/images"
 
-  video_directory: "%kernel.project_dir%/public/videos"
   default_email: "sudani.malsha@gmail.com"
 
 services:
