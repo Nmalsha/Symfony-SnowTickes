@@ -558,6 +558,9 @@
     "symfony/serializer": {
         "version": "v5.4.6"
     },
+    "symfony/serializer-pack": {
+        "version": "v1.1.0"
+    },
     "symfony/service-contracts": {
         "version": "v2.5.0"
     },
@@ -612,9 +615,6 @@
             "config/packages/twig.yaml",
             "templates/base.html.twig"
         ]
-    },
-    "symfony/twig-pack": {
-        "version": "v1.0.1"
     },
     "symfony/validator": {
         "version": "5.4",

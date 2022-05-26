@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Trick;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,20 +15,20 @@ class TrickType extends AbstractType
     {
         $builder
             ->add('TrickName')
-            ->add('description')
+            ->add('description', TextareaType::class)
             ->add('categorie')
 
             ->add('images', FileType::class, [
                 'multiple' => false,
 
-                'label' => 'Add main_img',
+                'label' => 'Ajouter le image principle',
                 'mapped' => false,
                 'required' => false,
             ])
             ->add('gallaryimages', FileType::class, [
                 'multiple' => true,
 
-                'label' => 'Add Gallary_imgs',
+                'label' => 'Ajouter les gallery images',
                 'mapped' => false,
                 'required' => false,
             ])

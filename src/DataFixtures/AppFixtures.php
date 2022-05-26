@@ -42,7 +42,7 @@ class AppFixtures extends Fixture
             $manager->persist($tricks);
 
             // Ajout des commentaires à l'article
-            for ($k = 1; $k <= mt_rand(1, 4); $k++) {
+            for ($k = 1; $k <= mt_rand(1, 15); $k++) {
 
                 $comment = new Comments();
 
@@ -52,18 +52,17 @@ class AppFixtures extends Fixture
                 $comment->setUser($user);
                 $manager->persist($comment);
 
-                // Ajout des images à l'article
-                for ($l = 1; $l <= mt_rand(1, 2); $l++) {
+            }
+            // Ajout des images à l'article
+            for ($l = 1; $l <= mt_rand(1, 5); $l++) {
 
-                    $image = new Images();
-                    $image->setName('default.jpeg')
-                        ->setIsMainImage(0)
+                $image = new Images();
+                $image->setName('default.jpeg')
+                    ->setIsMainImage(0)
 
-                        ->setTrick($tricks);
+                    ->setTrick($tricks);
 
-                    $manager->persist($image);
-
-                }
+                $manager->persist($image);
 
             }
             // Ajout des vidéos à l'article

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
-
+{% set theMainImage = NULL %}
 {% block body %} 
 
 {% if trick.user.id is same as app.user.id %}
@@ -41,23 +41,16 @@
         </div>
          <!--display main image-->
          <a type="button" class="  btn btn-primary mr-auto m-2  media_btn" 
-           >See medias</a>
-<div class="media_visibility " >
+           >Voir les medias</a>
+<div class="media_visibility media_box " >
         <div class="row ">
           <div class="col text-center">
-            <h3>Image principle</h3>
+       
             {% for mainimage in trick.images %}
           
-          {% if trick.images is empty %}
-          <img
-          class="display-top img-fluid"
-          src="https://via.placeholder.com/130.png/09f/fff"
-          alt=""
-          width="400px"
-        />
-          {% endif %}
+        
             {% if mainimage.isMainImage == true %}
-           
+            {% set theMainImage = mainimage %}
                 <div class="">
                   
                     <img class="img_main"tricks-big img-fluid   p-3""
@@ -75,20 +68,25 @@
                   </div>
                   {% endif %}
               {% endfor %}
-              {% if trick.mainImage is null %}
-        <img
-        class="display-top img-fluid"
-        src="{{ asset('/images/default.jpeg') }}"
-        alt=""
-        width="600px"
+             
+              
+      {% if theMainImage is empty %}
+      <img
+      class="display-top img-fluid"
+      src="{{ asset('/images/default.jpeg') }}"
+      alt=""
+      width="600px"
       />
       {% endif %}
+
+
+
           </div>
         </div>
          <!--END display main image-->
          <!-- display image gallery-->
-         <h3>Image gallery</h3>
-         <div class="visibility_gallery">
+      
+         <div class="visibility_gallery ">
 <div class="row p-3">
 <div class="d-flex p-3 align-items-center center">
   {% for galleryimg in trick.images %}
@@ -114,9 +112,9 @@
 </div>
 <!-- END display image gallery-->
 <!--display video gallery-->
-<h3>Video gallery</h3>
+
       <div class="row p-5">
-       <div class="d-flex  p-3 justify-content-around">
+       <div class="d_flex  p-3 justify-content-around">
      
         {% for video in selVideos %}
         
@@ -148,7 +146,7 @@
    {{ form_row(form.gallaryimages,{'attr':{'class':"btn btn-primary mr-auto m-2"}}) }}
 <div class="style_btn">
 <a type="button" class="btn btn-primary mr-auto m-2 videos_btn" href="{{ path('add_video',{ id: trick.id })}}"
->Add video
+>Ajouter video
 </a>
 </div>
 </div>
@@ -159,7 +157,7 @@
     </div>
     <div class="form_row">
       <button type="submit" class="btn btn-success">
-     Editer le trick 
+     Valider le trick
       </button>
     
       {{ form_end(form) }}
