@@ -4,7 +4,7 @@
 <div class="container">
   <a class="nav-link active" href="{{ path('home') }}"
   <button type="button" >
-   Go back
+    <i class="fas fa-arrow-left"></i>
    </button></a>
    {% for message in app.flashes('success') %}
 <div class="alert alert-success">
@@ -42,7 +42,7 @@
       />
       {% endif %}
         <div class="card-body">
-          <ul class="list-inline trick-data">
+          <ul class="list-inline trick-data creater_info">
             <li class="list-inline-item">
               Créer par:<a
                 target=""
@@ -54,11 +54,14 @@
               {{ trick.createdOn | date('H:i') }}
             </li>
             <li class="list-inline-item">Catagorie:{{ trick.categorie }}</li>
-            <li class="list-inline-item">number Of Comments:</li>
+           
           </ul>
           <!---Start carousel-->
-          <a type="button" class=" btn btn-lg btn-primary m-3  media_btn" 
-          >See medias</a>
+          <div class="media_btn">
+            <a type="button" class=" btn btn-lg btn-primary m-3  media_btn" 
+            >See medias</a>
+          </div>
+        
 <div class="media_visibility display" >   
     
 <div class="col-lg-6 col-md-12">
@@ -88,10 +91,11 @@
   </div>
 </div>
 <div class="col-lg-6 col-md-12 videos">
-  <div id="carouselExampleInterval2" class="carousel slide" data-ride="carousel">
+  <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner">
+      {% set isFirstVideo = TRUE %}
       {% for video in selVideos %}
-      <div class="carousel-item active" data-interval="10000">
+      <div class="carousel-item {% if isFirstVideo == TRUE %}active{% endif %}" data-interval="10000">
         <iframe
         src="{{ video.url }}"
         title="YouTube video player"
@@ -102,11 +106,21 @@
       >
       </iframe>
       </div>
-     
+      {% set isFirstVideo = FALSE %}
       {% endfor %}
      
     </div>
-  
+    <a class="carousel-control-prev" href="#carouselExampleControls2" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls2" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+
+
+
     </div>
   
   </div> 
@@ -115,11 +129,11 @@
 
 </div>
  <!---End  carousel-->
- <div class="description">
-  <h4 class="card-title">
+ <div class="">
+  <h4 class="card-title description">
     <strong> Description du Trick {{ trick.trickName }} </strong>
   </h4>
-  <p class="card-text">
+  <p class="card-text padding">
     {{ trick.description }}
   </p>
 </div>
@@ -275,4 +289,5 @@
 <script>
   src="{{ asset('/js/carousel.js') }}"
 </script>
+
 {% endblock %}
