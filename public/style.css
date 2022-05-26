@@ -107,6 +107,18 @@ form {
 .videos_btn {
   width: 300px;
 }
+.display {
+  display: flex;
+}
+.videos {
+  display: flex;
+  margin-left: 20px;
+}
+.description {
+  align-content: center;
+  display: grid;
+  justify-content: center;
+}
 .visibility_footer {
   display: flex;
   justify-content: center;

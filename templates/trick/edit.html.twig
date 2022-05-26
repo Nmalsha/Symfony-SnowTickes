@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
-
+{% set theMainImage = NULL %}
 {% block body %} 
 
 {% if trick.user.id is same as app.user.id %}
@@ -48,16 +48,9 @@
             <h3>Image principle</h3>
             {% for mainimage in trick.images %}
           
-          {% if trick.images is empty %}
-          <img
-          class="display-top img-fluid"
-          src="https://via.placeholder.com/130.png/09f/fff"
-          alt=""
-          width="400px"
-        />
-          {% endif %}
+        
             {% if mainimage.isMainImage == true %}
-           
+            {% set theMainImage = mainimage %}
                 <div class="">
                   
                     <img class="img_main"tricks-big img-fluid   p-3""
@@ -75,14 +68,21 @@
                   </div>
                   {% endif %}
               {% endfor %}
-              {% if trick.mainImage is null %}
-        <img
-        class="display-top img-fluid"
-        src="{{ asset('/images/default.jpeg') }}"
-        alt=""
-        width="600px"
+              <pre>
+                {{ dump(trick) }}
+              </pre>
+              
+      {% if theMainImage is empty %}
+      <img
+      class="display-top img-fluid"
+      src="{{ asset('/images/default.jpeg') }}"
+      alt=""
+      width="600px"
       />
       {% endif %}
+
+
+
           </div>
         </div>
          <!--END display main image-->

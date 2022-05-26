@@ -63,6 +63,7 @@ class TrickController extends AbstractController
         //get images
 
         $selImages = $trick->getImages();
+        //get main images
         foreach ($selImages as $mainimg) {
             if ($mainimg->getIsMainImage() === true) {
                 $trick->mainImage = $mainimg;
