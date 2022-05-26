@@ -91,12 +91,12 @@
   </div>
 </div>
 <div class="col-lg-6 col-md-12 videos">
-  <div id="carouselExampleControls2" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
+  <div id="carouselExampleControls2" class="carousel slide  size" data-ride="carousel">
+    <div class="carousel-inner size">
       {% set isFirstVideo = TRUE %}
       {% for video in selVideos %}
-      <div class="carousel-item {% if isFirstVideo == TRUE %}active{% endif %}" data-interval="10000">
-        <iframe
+      <div class="carousel-item {% if isFirstVideo == TRUE %}active{% endif %} size" data-interval="10000">
+        <iframe class="size"
         src="{{ video.url }}"
         title="YouTube video player"
         frameborder="0"
@@ -184,20 +184,20 @@
 
                   <div class=" mb-3 pl-2 bg-light  flex">
                     <div class="col-md-2 col-sm-4 col-xs-6 text-center sty_comment">
-                 
+            
                     {% if comment.user.profieImage is same as null %}
                     <img
                     class="user-profile"
                   src="{{ asset('/images/defaultuser.webp') }}" 
                   />
                   {% endif %}
-                
+                  {% if comment.user.profieImage is not null %}
                       <img
                         class="user-profile"
                       src="{{ asset('/images/'~ comment.user.profieImage) }}" 
                       />
                 
-                
+                      {% endif %}
                     </div>
 
                     <div class="col-10 col-sm-8 col-xs-6 comment_sec">
