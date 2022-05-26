@@ -47,7 +47,7 @@
               Créer par:<a
                 target=""
                 href="{{ path('user_profile', { id: trick.user.id }) }}"
-                >{{ trick.user.secondName }} {{ trick.user.id }}</a>
+                >{{ trick.user.secondName }}</a>
             </li>
             <li class="list-inline-item">
               Ajouter le:{{ trick.createdOn | date('d/m/y') }} à
@@ -64,7 +64,7 @@
         
 <div class="media_visibility display" >   
     
-<div class="col-lg-6 col-md-12">
+<div class="col-lg-5 col-md-12">
   <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner">
       {% set isFirstImage = TRUE %}
@@ -90,7 +90,7 @@
     </a>
   </div>
 </div>
-<div class="col-lg-6 col-md-12 videos">
+<div class="col-lg-5 col-md-12 videos">
   <div id="carouselExampleControls2" class="carousel slide  size" data-ride="carousel">
     <div class="carousel-inner size">
       {% set isFirstVideo = TRUE %}
@@ -154,7 +154,7 @@
                   {{ form_row(form.content) }}
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary m-3">
-                  submit comment
+                  Valider le comment
                 </button>
                 {{ form_end(form) }}
                 {% else %}

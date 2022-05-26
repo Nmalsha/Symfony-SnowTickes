@@ -41,7 +41,7 @@
         </div>
          <!--display main image-->
          <a type="button" class="  btn btn-primary mr-auto m-2  media_btn" 
-           >See medias</a>
+           >Voir les medias</a>
 <div class="media_visibility media_box " >
         <div class="row ">
           <div class="col text-center">
@@ -85,7 +85,7 @@
         </div>
          <!--END display main image-->
          <!-- display image gallery-->
-         <h3>Image gallery</h3>
+      
          <div class="visibility_gallery ">
 <div class="row p-3">
 <div class="d-flex p-3 align-items-center center">
@@ -112,9 +112,9 @@
 </div>
 <!-- END display image gallery-->
 <!--display video gallery-->
-<h3>Video gallery</h3>
+
       <div class="row p-5">
-       <div class="d-flex  p-3 justify-content-around">
+       <div class="d_flex  p-3 justify-content-around">
      
         {% for video in selVideos %}
         
@@ -146,7 +146,7 @@
    {{ form_row(form.gallaryimages,{'attr':{'class':"btn btn-primary mr-auto m-2"}}) }}
 <div class="style_btn">
 <a type="button" class="btn btn-primary mr-auto m-2 videos_btn" href="{{ path('add_video',{ id: trick.id })}}"
->Add video
+>Ajouter video
 </a>
 </div>
 </div>

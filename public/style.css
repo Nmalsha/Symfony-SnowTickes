@@ -62,6 +62,7 @@ form {
 }
 .margin {
   display: flex;
+  height: 12rem;
 }
 .width {
   width: 200px;
@@ -110,6 +111,7 @@ form {
 }
 .display {
   display: flex;
+  justify-content: center;
 }
 .videos {
   display: flex;
@@ -158,6 +160,9 @@ form {
 .media_btn {
   display: flex;
   justify-content: center;
+}
+.d_flex {
+  display: flex;
 }
 /*Mobile*/
 @media screen and (max-width: 768px) {
@@ -227,6 +232,13 @@ form {
     display: flex;
   }
   .creater_info {
+    display: grid;
+  }
+  .videos {
+    margin-top: 25px;
+    margin-left: 0px;
+  }
+  .d_flex {
     display: grid;
   }
 }
