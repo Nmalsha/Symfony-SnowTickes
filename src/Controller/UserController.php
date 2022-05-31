@@ -102,8 +102,7 @@ class UserController extends AbstractController
 //get data from the form
             $profileImages = $form->get('profieImage')->getData();
             foreach ($profileImages as $profileImage) {
-                // \dump($profileImage.originalName);
-                // die;
+
                 $imageDocument = md5(uniqid()) . '.' . $profileImage->guessExtension();
 
                 $profileImage->move(
