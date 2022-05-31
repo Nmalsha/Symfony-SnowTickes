@@ -50,16 +50,7 @@ class TrickController extends AbstractController
 
         //get trick
         $trick = $trickRepository->findOneBy(['slug' => $slug]);
-        //get main image
-        $repoImage = $this->getDoctrine()->getRepository(Images::class);
-        // $Images = $repoImage->findBy(array('isMainImage' => '1'));
-        // foreach ($Images as $image) {
-        //     if ($image->getTrick()->getId() === $trick->getId()) {
 
-        //         $trick->mainImage = $image;
-        //     }
-        // }
-        // $trick->mainImage = $image;
         //get images
 
         $selImages = $trick->getImages();
@@ -70,7 +61,6 @@ class TrickController extends AbstractController
             }
 
         }
-        // $mainimg = $trick->mainimage;
 
         //get videos
 
@@ -177,9 +167,7 @@ class TrickController extends AbstractController
                 $gallaryImages = $form->get('gallaryimages')->getData();
                 if ($gallaryImages) {
                     //get gallery images data
-                    // \dump($gallaryImages);
 
-                    // die;
                     //loop true the images
 
                     foreach ($gallaryImages as $image) {
@@ -199,7 +187,6 @@ class TrickController extends AbstractController
                         $img->setIsMainImage(0);
                         $img->setTrick($trick);
                         $trick->addImage($img);
-                        //$manager->persist($img);
 
                     }
                 }
@@ -278,6 +265,7 @@ class TrickController extends AbstractController
      */
     public function edit($id, Trick $trick, Request $request, EntityManagerInterface $manager)
     {
+
         //video handling
 
         $repovideos = $this->getDoctrine()->getRepository(Videos::class);
@@ -340,8 +328,6 @@ class TrickController extends AbstractController
 
                 }
 
-                // \dump('upl');
-                // die;
             }
             //if the form is valid
             $manager->persist($trick);
@@ -442,53 +428,6 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/trick/{id}/comments", name="comment" , methods={"POST", "GET"})
-     */
-    public function addcomment($id, Trick $trick, Request $request, EntityManagerInterface $manager)
-    {
-        // display comment form
-
-        // $comment = new Comments;
-
-        // $form = $this->createForm(CommentsType::class, $comment);
-
-        // $form->handleRequest($request);
-
-        // if ($form->isSubmitted() && $form->isValid()) {
-
-        //     $comment->setCreatedAt(new \DateTimeImmutable());
-        //     //set user to the comment
-        //     $user = $this->getUser();
-
-        //     $comment->setUserId($user->getId());
-
-        //     $manager->persist($comment);
-
-        //     $manager->flush();
-
-        //     $comment->addTrick($trick);
-        //     $comment->addUser($this->getUser());
-
-        //     dump($comment);
-        //     // \dump($user->getId());
-        //     // die;
-        //     // $comment->setUserId();
-        //     $trick->setComments($comment);
-        //     // \dump($comment);
-        //     // die;
-        //     //Redirect to the added trick view
-        //     return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
-
-        // }
-        // return $this->render('comments/addComments.html.twig', [
-        //     'formcomment' => $form->createView(),
-        //     'comment' => $comment,
-
-        // ]);
-
-    }
-
-    /**
      * @Route("/tricks/supprime/mainimage/{id}", name="delete_main_image" , methods={"DELETE"})
      */
     public function deleteImage(Images $image, Request $request)
@@ -520,37 +459,6 @@ class TrickController extends AbstractController
                 "Le element n'a pas été supprimer !"
             );
         }
-    }
-
-    /**
-     * @Route("/tricks/supprime/galleryimage/{id}", name="delete_gallery_image" , methods={"DELETE"})
-     */
-    public function deleteGalleryImage(Images $image, Request $request)
-    {
-        // $reqData = $request->getContent();
-
-        // $data = json_decode($reqData, true);
-
-        // //check if the token valid
-        // if ($this->isCsrfTokenValid('delete' . $image->getId(), $data['_token'])) {
-
-        //     //getting image name from the DB
-        //     // $name = $image->getIsMainImage();
-
-        //     $name = $image->getName();
-        //     //Deleting the image from the directory
-        //     unlink($this->getParameter('images_directory') . '/' . $name);
-        //     //deleting the image from the DB
-        //     $em = $this->getDoctrine()->getManager();
-        //     $em->remove($image);
-        //     $em->flush();
-
-        //     return new Response("OKy");
-        // } else {
-
-        //     return new Response("KOy");
-        // }
-
     }
 
     /**
