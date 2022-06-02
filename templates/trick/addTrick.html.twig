@@ -12,6 +12,7 @@
     {{ message }}
 </div>
 {% endfor %}
+{% if app.user.id is not null %}
 <h3 class="creation_topic">Création d'un Trick</h3>
 <section class="tickes">
   <div class="card trickcard_style">
@@ -45,5 +46,5 @@
   </div>
   </div>
 </section>
-
+{% endif %}
 {% endblock %}
