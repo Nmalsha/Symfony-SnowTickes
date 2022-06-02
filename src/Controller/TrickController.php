@@ -286,20 +286,12 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $newSlugname = $form->get("TrickName")->getData();
 
-            //if the trick is already not exist and the new trick name is not same to the original trick name
-
-            //  if ($newSlugname == $trick->getSlug()) {
-            \dump($newSlugname);
-            \dump($trick->getSlug());
-
             //check if the newtrickname already exist
             $newtrickexist = $this->getDoctrine()->getRepository(Trick::class)->findBy(array('trickName' => $newSlugname));
 
             if (!empty($newtrickexist)) {
                 $newSlugname = null;
             }
-            \dump($newSlugname);
-            \dump($trick->getSlug());
 
             $trick->setUser($this->getUser());
             //Main Images handling
@@ -346,26 +338,20 @@ class TrickController extends AbstractController
 
             }
 
-            \dump($trick->getSlug());
             if ($newSlugname) {
                 $trick->setslug($newSlugname);
-                \dump("set new slug");
-                \dump($trick->getSlug());
+
             } else {
 
                 $trick->setTrickName($trick->getSlug());
             }
 
-            //die;
             //if the form is valid
             $manager->persist($trick);
 
             $manager->flush();
 
-            \dump($newSlugname);
-            \dump($trick->getSlug());
-
-            //die;
+            //if a trick name available
             if (!$newSlugname) {
                 $this->addflash(
                     'error',
