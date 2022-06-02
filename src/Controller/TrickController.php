@@ -285,76 +285,103 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $newSlugname = $form->get("TrickName")->getData();
+
+            //if the trick is already not exist and the new trick name is not same to the original trick name
+
+            //  if ($newSlugname == $trick->getSlug()) {
+            \dump($newSlugname);
+            \dump($trick->getSlug());
+
             //check if the newtrickname already exist
             $newtrickexist = $this->getDoctrine()->getRepository(Trick::class)->findBy(array('trickName' => $newSlugname));
-            //if the trick is already not exist and the new trick name is not same to the original trick name
-            if (!($newtrickexist) && ($newSlugname == $trick->getSlug())) {
 
-                $trick->setUser($this->getUser());
-                //Main Images handling
-                //get Main image data
-                $mainimages = $form->get('images')->getData();
-                if ($mainimages) {
-                    $imageDocument = $mainimages->getClientOriginalName();
+            if (!empty($newtrickexist)) {
+                $newSlugname = null;
+            }
+            \dump($newSlugname);
+            \dump($trick->getSlug());
 
-                    //send image name to the images folder
-                    $mainimages->move(
+            $trick->setUser($this->getUser());
+            //Main Images handling
+            //get Main image data
+            $mainimages = $form->get('images')->getData();
+            if ($mainimages) {
+                $imageDocument = $mainimages->getClientOriginalName();
+
+                //send image name to the images folder
+                $mainimages->move(
+                    $this->getParameter('images_directory'),
+                    $imageDocument
+                );
+
+                // save image name to the DB
+                $imgmain = new Images();
+                $imgmain->setName($imageDocument);
+                $imgmain->setIsMainImage(1);
+                $imgmain->setTrick($trick);
+                $trick->addImage($imgmain);
+            }
+
+            //Gallery Images handling
+            $gallaryImages = $form->get('gallaryimages')->getData();
+
+            //loop true the images
+            if ($gallaryImages) {
+                foreach ($gallaryImages as $image) {
+
+                    $imageDocument = $image->getClientOriginalName();
+                    $image->move(
                         $this->getParameter('images_directory'),
                         $imageDocument
                     );
-
                     // save image name to the DB
-                    $imgmain = new Images();
-                    $imgmain->setName($imageDocument);
-                    $imgmain->setIsMainImage(1);
-                    $imgmain->setTrick($trick);
-                    $trick->addImage($imgmain);
-                }
 
-                //Gallery Images handling
-                $gallaryImages = $form->get('gallaryimages')->getData();
-
-                //loop true the images
-                if ($gallaryImages) {
-                    foreach ($gallaryImages as $image) {
-
-                        $imageDocument = $image->getClientOriginalName();
-                        $image->move(
-                            $this->getParameter('images_directory'),
-                            $imageDocument
-                        );
-                        // save image name to the DB
-
-                        $img = new Images();
-                        $img->setName($imageDocument);
-                        $img->setIsMainImage(0);
-                        $img->setTrick($trick);
-                        $trick->addImage($img);
-
-                    }
+                    $img = new Images();
+                    $img->setName($imageDocument);
+                    $img->setIsMainImage(0);
+                    $img->setTrick($trick);
+                    $trick->addImage($img);
 
                 }
-                $trick->setslug($newSlugname);
-                //if the form is valid
-                $manager->persist($trick);
-
-                $manager->flush();
-
-                $this->addflash(
-                    'success',
-                    "Le Trick a été modifier avec succès !"
-                );
-                //Redirect to the added trick view
-                return $this->redirectToRoute('home');
-
-            } else {
-                $this->addflash(
-                    'error',
-                    "Le nom de trick deja existe !"
-                );
-                return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
 
             }
+
+            \dump($trick->getSlug());
+            if ($newSlugname) {
+                $trick->setslug($newSlugname);
+                \dump("set new slug");
+                \dump($trick->getSlug());
+            } else {
+
+                $trick->setTrickName($trick->getSlug());
+            }
+
+            //die;
+            //if the form is valid
+            $manager->persist($trick);
+
+            $manager->flush();
+
+            \dump($newSlugname);
+            \dump($trick->getSlug());
+
+            //die;
+            if (!$newSlugname) {
+                $this->addflash(
+                    'error',
+                    "Le nom de trick deja existe ! mais les changement d'autre elements bien pris en compte "
+                );
+                return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
+            }
+
+            $this->addflash(
+                'success',
+                "Le Trick a été modifier avec succès !"
+            );
+
+            //Redirect to the added trick view
+            return $this->redirectToRoute('home');
+
         }
 
         // }

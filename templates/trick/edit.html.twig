@@ -5,6 +5,10 @@
 
 {% if trick.user.id is same as app.user.id %}
 <div class="container">
+  <a class="nav-link active" href="{{ path('home') }}"
+  <button type="button" >
+    <i class="fas fa-arrow-left"></i>
+   </button></a>
   {% for message in app.flashes('success') %}
 <div class="alert alert-success">
     {{ message }}
