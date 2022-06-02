@@ -252,13 +252,20 @@ form {
     margin-top: 50px;
     flex-shrink: 2;
   }
+  .visibility_user {
+    visibility: visible;
+  }
+  .height {
+    height: 20rem;
+  }
   .home-bg {
     height: 30vh;
   }
-  .trick {
-    height: 50rem;
-  }
+
   .comment_sec {
     margin-left: 40px;
+  }
+  .display {
+    flex-direction: column;
   }
 }

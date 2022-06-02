@@ -278,15 +278,23 @@ class TrickController extends AbstractController
                 $selVideos[] = $video;
             }
         }
-        //Main Images handling
 
         $form = $this->createForm(TrickType::class, $trick);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setUser($this->getUser());
+            $newSlugname = $form->get("TrickName")->getData();
 
+            //check if the newtrickname already exist
+            $newtrickexist = $this->getDoctrine()->getRepository(Trick::class)->findBy(array('trickName' => $newSlugname));
+
+            if (!empty($newtrickexist)) {
+                $newSlugname = null;
+            }
+
+            $trick->setUser($this->getUser());
+            //Main Images handling
             //get Main image data
             $mainimages = $form->get('images')->getData();
             if ($mainimages) {
@@ -329,19 +337,40 @@ class TrickController extends AbstractController
                 }
 
             }
+
+            if ($newSlugname) {
+                $trick->setslug($newSlugname);
+
+            } else {
+
+                $trick->setTrickName($trick->getSlug());
+            }
+
             //if the form is valid
             $manager->persist($trick);
 
             $manager->flush();
 
+            //if a trick name available
+            if (!$newSlugname) {
+                $this->addflash(
+                    'error',
+                    "Le nom de trick deja existe ! mais les changement d'autre elements bien pris en compte "
+                );
+                return $this->redirectToRoute('trick_edit', ['id' => $trick->getId()]);
+            }
+
             $this->addflash(
                 'success',
                 "Le Trick a été modifier avec succès !"
             );
+
             //Redirect to the added trick view
             return $this->redirectToRoute('home');
 
         }
+
+        // }
 
         return $this->render('trick/edit.html.twig', [
             'form' => $form->createView(),
